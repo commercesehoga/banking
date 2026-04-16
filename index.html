@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>⚡ ThunderStudy Banking | by Wondermayank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#f5f3ff;
+  --sidebar:#ffffff;
+  --card:#ffffff;
+  --card2:#f0ebff;
+  --border:#e2d9f3;
+  --text:#1a1035;
+  --text2:#5a5070;
+  --text3:#9b8fb5;
+  --acc:#7c3aed;
+  --acc2:#a855f7;
+  --acc3:#6d28d9;
+  --light:#ede9fe;
+  --green:#10b981;
+  --red:#f43f5e;
+  --yellow:#f59e0b;
+  --orange:#f97316;
+  --pink:#ec4899;
+  --teal:#06b6d4;
+  --blue:#3b82f6;
+  --fn:'Plus Jakarta Sans',sans-serif;
+  --ff:'Playfair Display',serif;
+  --mono:'DM Mono',monospace;
+  --r:14px;
+  --r2:20px;
+  --sidebar-w:240px;
+  --sh:0 2px 20px rgba(124,58,237,.08);
+  --sh2:0 8px 40px rgba(124,58,237,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);height:100vh;
+  background:var(--sidebar);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  flex-shrink:0;overflow:hidden;
+  position:relative;z-index:10;
+  box-shadow:4px 0 28px rgba(124,58,237,.07);
+  animation:sidebarIn .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes sidebarIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* Logo */
+.sb-logo{
+  padding:22px 18px 14px;
+  display:flex;flex-direction:column;gap:2px;
+  border-bottom:1px solid var(--border);
+  animation:fadeUp .5s .1s both;
+}
+.sb-logo-row{display:flex;align-items:center;gap:10px;}
+.sb-logo-icon{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 4px 14px rgba(124,58,237,.35);
+  flex-shrink:0;
+}
+.sb-logo-text{font-size:15px;font-weight:900;color:var(--text);letter-spacing:-.3px;font-family:var(--fn);}
+.sb-logo-text span{color:var(--acc);}
+.sb-logo-sub{font-size:9px;font-weight:700;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;padding-left:48px;margin-top:1px;}
+
+/* Nav */
+.sb-nav{flex:1;overflow-y:auto;padding:12px 10px 10px;}
+.sb-nav::-webkit-scrollbar{width:0;}
+.sb-section-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:0 10px;margin:10px 0 4px;}
+
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:12px;
+  cursor:pointer;
+  transition:all .22s cubic-bezier(.34,1.56,.64,1);
+  margin-bottom:2px;color:var(--text2);
+  font-size:13px;font-weight:600;
+  position:relative;
+}
+.nav-item:hover{background:var(--light);color:var(--acc);transform:translateX(3px);}
+.nav-item.active{
+  background:linear-gradient(135deg,rgba(124,58,237,.13),rgba(168,85,247,.08));
+  color:var(--acc);
+  transform:translateX(3px);
+}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:20px;background:linear-gradient(180deg,#7c3aed,#a855f7);
+  border-radius:0 4px 4px 0;
+}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0;}
+
+/* Sub-nav items */
+.sub-nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 12px 8px 28px;
+  border-radius:10px;cursor:pointer;
+  transition:all .2s;margin-bottom:1px;
+  color:var(--text3);font-size:12px;font-weight:600;
+}
+.sub-nav-item:hover{background:var(--light);color:var(--acc);}
+.sub-nav-item.active{color:var(--acc);font-weight:800;background:rgba(124,58,237,.07);}
+
+/* Profile */
+.sb-profile{
+  padding:14px 16px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:background .2s;
+}
+.sb-profile:hover{background:var(--light);}
+.sb-av{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.sb-pname{font-size:13px;font-weight:800;color:var(--text);}
+.sb-prole{font-size:10px;color:var(--text3);}
+
+/* ── MAIN ── */
+.main{flex:1;height:100vh;overflow-y:auto;overflow-x:hidden;}
+.main::-webkit-scrollbar{width:5px;}
+.main::-webkit-scrollbar-track{background:transparent;}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
+.page{display:none;padding:30px;animation:fadeUp .3s ease both;}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
+.page-title{font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.4px;}
+.page-title-serif{font-family:var(--ff);font-size:24px;font-weight:800;}
+.page-sub{font-size:12px;color:var(--text3);margin-top:3px;}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r2);border:1px solid var(--border);box-shadow:var(--sh);}
+.card-p{padding:20px 22px;}
+
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:18px;}
+.stat-card{
+  background:var(--card);border-radius:var(--r2);
+  border:1px solid var(--border);padding:16px 18px;
+  transition:transform .2s,box-shadow .2s;
+  position:relative;overflow:hidden;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+.stat-card::before{
+  content:'';position:absolute;top:-20px;right:-20px;
+  width:70px;height:70px;border-radius:50%;
+  background:rgba(124,58,237,.06);
+}
+.stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px;}
+.stat-val{font-size:22px;font-weight:900;font-family:var(--mono);letter-spacing:-1px;}
+.stat-lbl{font-size:10px;color:var(--text3);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:.5px;}
+
+/* ── HERO CARD ── */
+.hero-card{
+  background:linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#6d28d9 100%);
+  border-radius:var(--r2);padding:26px;color:#fff;
+  position:relative;overflow:hidden;margin-bottom:20px;
+}
+.hero-card::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);}
+.hero-card::after{content:'';position:absolute;bottom:-40px;left:30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.04);}
+.hero-name{font-size:24px;font-weight:900;letter-spacing:-.4px;font-family:var(--ff);}
+.hero-sub{font-size:12px;opacity:.75;margin-bottom:16px;}
+.hero-stats{display:flex;gap:22px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-stat-val{font-size:22px;font-weight:900;font-family:var(--mono);}
+.hero-stat-lbl{font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.8px;margin-top:2px;}
+
+/* ── LEVEL / XP ── */
+.xp-wrap{position:relative;z-index:1;margin-top:16px;}
+.xp-bar-track{height:8px;background:rgba(255,255,255,.2);border-radius:8px;overflow:hidden;margin-bottom:4px;}
+.xp-bar-fill{height:100%;border-radius:8px;background:rgba(255,255,255,.8);transition:width 1.4s cubic-bezier(.34,1.56,.64,1);}
+.xp-nums{display:flex;justify-content:space-between;font-size:10px;opacity:.7;}
+
+.level-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:30px;padding:5px 14px;
+  font-size:12px;font-weight:800;
+  backdrop-filter:blur(8px);
+  margin-bottom:14px;
+}
+
+/* ── RANK TIERS ── */
+.rank-badges-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.rank-badge-mini{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:30px;
+  font-size:11px;font-weight:700;
+  border:1.5px solid;
+  transition:all .2s;
+}
+
+/* ── PROMO BANNERS ── */
+.promo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:20px;}
+.promo-card{border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;}
+.promo-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+
+/* ── EXAM SECTION (like mocks page) ── */
+.exam-section{margin-bottom:28px;}
+.exam-section-hdr{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;
+  background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.04));
+  border:1.5px solid rgba(124,58,237,.2);
+  border-radius:16px;margin-bottom:14px;cursor:pointer;
+  transition:all .2s;
+}
+.exam-section-hdr:hover{background:linear-gradient(135deg,rgba(124,58,237,.13),rgba(168,85,247,.08));}
+.exam-section-title{font-size:15px;font-weight:900;font-family:var(--ff);}
+.exam-section-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.exam-section-icon{font-size:28px;flex-shrink:0;}
+.exam-section-arrow{margin-left:auto;font-size:18px;color:var(--acc);transition:transform .3s;}
+.exam-section-arrow.open{transform:rotate(180deg);}
+
+/* ── SUB-EXAM TABS (PO, Clerk etc) ── */
+.sub-exam-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.sub-exam-tab{
+  padding:8px 16px;border-radius:30px;
+  font-size:12px;font-weight:700;cursor:pointer;
+  border:1.5px solid var(--border);
+  background:var(--card);color:var(--text2);
+  transition:all .2s;
+}
+.sub-exam-tab:hover:not(.active){border-color:var(--acc);color:var(--acc);}
+.sub-exam-tab.active{background:var(--acc);color:#fff;border-color:var(--acc);box-shadow:0 4px 14px rgba(124,58,237,.3);}
+
+/* ── PHASE TABS (Prelims/Mains) ── */
+.phase-tabs{display:flex;gap:7px;margin-bottom:16px;}
+.phase-tab{
+  flex:1;padding:10px;border-radius:12px;
+  font-size:12px;font-weight:800;border:1.5px solid var(--border);
+  background:var(--card);color:var(--text2);cursor:pointer;text-align:center;
+  transition:all .2s;
+}
+.phase-tab.active{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(124,58,237,.3);
+}
+
+/* ── SUBJECT SECTION (within phase) ── */
+.subject-section{margin-bottom:20px;}
+.subject-hdr{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:var(--card2);border-radius:12px;
+  margin-bottom:10px;font-size:13px;font-weight:800;
+  border:1px solid var(--border);
+}
+.subject-hdr-icon{font-size:20px;}
+
+/* ── MOCK CARD GRID ── */
+.mock-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;}
+.mock-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:13px;
+  transition:all .2s;position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.mock-card:hover{transform:translateY(-2px);box-shadow:var(--sh2);border-color:rgba(124,58,237,.3);}
+.mock-card.done{border-color:rgba(16,185,129,.3);}
+.mock-card.done::after{
+  content:'✓';position:absolute;top:8px;right:10px;
+  font-size:9px;font-weight:800;color:var(--green);
+  background:rgba(16,185,129,.12);border-radius:20px;padding:2px 7px;
+}
+.mock-num{font-size:24px;font-weight:900;font-family:var(--mono);color:var(--acc);opacity:.22;position:absolute;right:10px;bottom:6px;}
+.mock-type-badge{
+  display:inline-block;font-size:9px;font-weight:800;
+  padding:2px 8px;border-radius:20px;margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.mock-title{font-size:12px;font-weight:700;margin-bottom:4px;line-height:1.4;}
+.mock-score{font-size:18px;font-weight:900;font-family:var(--mono);}
+
+/* ── FULL MOCK SPECIAL CARD ── */
+.full-mock-card{
+  background:linear-gradient(135deg,rgba(124,58,237,.07),rgba(168,85,247,.04));
+  border:1.5px solid rgba(124,58,237,.25);
+  border-radius:14px;padding:13px;
+  transition:all .2s;cursor:pointer;position:relative;overflow:hidden;
+}
+.full-mock-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.2);}
+.full-mock-card.done{border-color:rgba(16,185,129,.35);}
+
+/* ── SECTION / GRIDS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.sec-title{font-size:14px;font-weight:800;color:var(--text);}
+.sec-link{font-size:12px;color:var(--acc);font-weight:700;cursor:pointer;}
+
+/* ── PROGRESS BARS ── */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+.prog-lbl{width:130px;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+.prog-track{flex:1;height:6px;background:var(--card2);border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:10px;transition:width 1.2s cubic-bezier(.34,1.56,.64,1);}
+.prog-pct{width:38px;text-align:right;font-size:11px;font-weight:700;font-family:var(--mono);}
+
+/* ── BTN ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:30px;font-size:12px;font-weight:700;border:none;cursor:pointer;text-decoration:none;font-family:var(--fn);transition:all .18s;}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.07);}
+.btn-prim{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.3);}
+.btn-ghost{background:var(--card);border:1.5px solid var(--border);color:var(--text2);}
+.btn-ghost:hover{color:var(--acc);border-color:var(--acc);}
+
+/* ── FORMS ── */
+.form-row{margin-bottom:13px;}
+.form-lbl{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.form-inp{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:11px;padding:9px 13px;font-size:13px;color:var(--text);font-family:var(--fn);outline:none;}
+.form-inp:focus{border-color:var(--acc);}
+.filter-sel{background:var(--card);border:1.5px solid var(--border);border-radius:30px;padding:7px 12px;font-size:12px;color:var(--text);font-family:var(--fn);outline:none;cursor:pointer;}
+
+/* ── MODALS ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(5px);}
+.modal-ov.open{display:flex;}
+.modal-box{background:var(--card);border-radius:var(--r2);padding:26px;max-width:480px;width:90%;border:1px solid var(--border);animation:mIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
+@keyframes mIn{from{opacity:0;transform:scale(.92) translateY(12px)}to{opacity:1;transform:none}}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{cursor:pointer;color:var(--text3);font-size:22px;line-height:1;}
+
+/* ── ONBOARDING ── */
+.ob-overlay{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(168,85,247,.08));backdrop-filter:blur(10px);z-index:2000;align-items:center;justify-content:center;padding:16px;}
+.ob-overlay.open{display:flex;}
+.ob-box{background:var(--card);border-radius:26px;padding:32px 28px;max-width:500px;width:100%;border:1px solid var(--border);box-shadow:0 24px 80px rgba(124,58,237,.2);animation:mIn .4s cubic-bezier(.34,1.56,.64,1) both;max-height:92vh;overflow-y:auto;}
+.ob-step{display:none;}.ob-step.active{display:block;}
+.ob-progress{display:flex;gap:5px;margin-bottom:24px;}
+.ob-prog-dot{flex:1;height:4px;border-radius:4px;background:var(--border);transition:background .4s;}
+.ob-prog-dot.done{background:linear-gradient(90deg,#7c3aed,#a855f7);}
+.ob-icon{font-size:40px;text-align:center;margin-bottom:12px;}
+.ob-title{font-size:20px;font-weight:900;text-align:center;margin-bottom:6px;font-family:var(--ff);}
+.ob-sub{font-size:13px;color:var(--text3);text-align:center;line-height:1.7;margin-bottom:20px;}
+.ob-btn{width:100%;padding:13px;border-radius:15px;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:var(--fn);transition:all .18s;margin-top:4px;}
+.ob-btn-prim{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.3);}
+.ob-btn-prim:hover{transform:translateY(-1px);}
+.ob-btn-prim:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* ── EXAM SELECT GRID ── */
+.ob-exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.ob-exam-card{
+  background:var(--card2);border:1.5px solid var(--border);
+  border-radius:14px;padding:14px 12px;cursor:pointer;
+  transition:all .18s;text-align:center;
+}
+.ob-exam-card:hover{border-color:var(--acc);}
+.ob-exam-card.sel{background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(168,85,247,.06));border-color:var(--acc);}
+.ob-exam-icon{font-size:26px;margin-bottom:5px;}
+.ob-exam-name{font-size:12px;font-weight:800;color:var(--text);}
+.ob-exam-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+
+/* ── TOAST ── */
+#ts-toast{display:none;}
+
+/* ── COLORS ── */
+.c-acc{color:var(--acc);}
+.c-green{color:var(--green);}
+.c-red{color:var(--red);}
+.c-yellow{color:var(--yellow);}
+.c-text3{color:var(--text3);}
+.bg-acc{background:rgba(124,58,237,.1);}
+.bg-green{background:rgba(16,185,129,.1);}
+.bg-red{background:rgba(244,63,94,.1);}
+.bg-yellow{background:rgba(245,158,11,.1);}
+
+/* ── QUICK LINKS ── */
+.quick-links{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:9px;margin-bottom:18px;}
+.ql-item{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);}
+.ql-item:hover{border-color:var(--acc);transform:translateY(-2px);box-shadow:var(--sh2);}
+.ql-icon{font-size:22px;}
+.ql-name{font-size:12px;font-weight:800;}
+.ql-desc{font-size:10px;color:var(--text3);}
+
+/* ── SETTINGS ── */
+.settings-section{background:var(--card);border-radius:var(--r2);border:1px solid var(--border);padding:20px 22px;margin-bottom:14px;}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.settings-row:last-child{border-bottom:none;}
+
+/* ── TOOLTIP ── */
+.tooltip{position:fixed;background:var(--text);color:#fff;border-radius:8px;padding:5px 10px;font-size:11px;pointer-events:none;z-index:9999;display:none;}
+
+/* ── MOBILE DOCK ── */
+.mobile-dock{display:none;}
+
+/* ── SKELETON ── */
+.skeleton{background:linear-gradient(90deg,var(--card2) 25%,var(--border) 50%,var(--card2) 75%);background-size:200% 100%;animation:skeletonShimmer 1.4s infinite;border-radius:8px;}
+@keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-line{height:12px;margin-bottom:8px;}
+
+/* ── BOOT SCREEN ── */
+#ts-boot{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff);
+  overflow:hidden;
+}
+#ts-boot::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(124,58,237,.1) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+.boot-stage{display:flex;flex-direction:column;align-items:center;gap:0;z-index:2;position:relative;}
+.boot-logo-wrap{
+  width:90px;height:90px;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  border-radius:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:44px;margin-bottom:20px;
+  box-shadow:0 12px 40px rgba(124,58,237,.45);
+  animation:bootDrop .5s cubic-bezier(.34,1.56,.64,1) .3s both;
+}
+@keyframes bootDrop{from{transform:translateY(-60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.boot-title{font-size:clamp(22px,5vw,32px);font-weight:900;color:#1a1035;text-align:center;letter-spacing:-.5px;animation:fadeUp .5s .8s both;}
+.boot-title span{color:var(--acc);}
+.boot-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-top:6px;animation:fadeUp .5s .95s both;}
+.boot-line{width:60px;height:3px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:3px;margin:16px auto;animation:fadeUp .5s 1.1s both;}
+.boot-loader-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;animation:fadeUp .5s 1.3s both;}
+.boot-loader{width:36px;height:36px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--acc);animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.boot-loader-text{font-family:var(--fn);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--text3);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media(max-width:768px){
+  .sidebar{display:none;}
+  body{flex-direction:column;}
+  .main{height:100dvh;padding-bottom:80px;}
+  .page{padding:16px 14px;}
+  .mobile-dock{
+    display:flex;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);
+    width:calc(100% - 20px);max-width:400px;height:60px;
+    background:#fff;border-radius:24px;border:1px solid var(--border);
+    z-index:100;padding:0 4px;box-shadow:0 4px 24px rgba(0,0,0,.1);
+    align-items:center;justify-content:space-around;
+  }
+  .dock-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;padding:6px 0;}
+  .dock-icon{font-size:18px;}
+  .dock-label{font-size:8px;font-weight:700;color:var(--text3);}
+  .dock-item.active .dock-label{color:var(--acc);}
+  .mock-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="ts-boot">
+  <div class="boot-stage">
+    <div class="boot-logo-wrap">⚡</div>
+    <div class="boot-title">Thunder<span>Study</span> Banking</div>
+    <div class="boot-sub">by Wondermayank</div>
+    <div class="boot-line"></div>
+    <div class="boot-loader-wrap">
+      <div class="boot-loader"></div>
+      <div class="boot-loader-text">Loading</div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-row">
+      <div class="sb-logo-icon">⚡</div>
+      <div>
+        <div class="sb-logo-text">Thunder<span>Study</span></div>
+      </div>
+    </div>
+    <div class="sb-logo-sub">Banking · by Wondermayank</div>
+  </div>
+
+  <div class="sb-nav">
+    <div class="sb-section-label">Main</div>
+    <div class="nav-item active" onclick="goPage('home')" id="nav-home">
+      <span class="nav-icon">🏠</span> Home
+    </div>
+
+    <div class="sb-section-label" style="margin-top:10px;">Exams</div>
+
+    <!-- IBPS -->
+    <div class="nav-item" onclick="goPage('ibps')" id="nav-ibps">
+      <span class="nav-icon">🏦</span> IBPS
+    </div>
+
+    <!-- SBI -->
+    <div class="nav-item" onclick="goPage('sbi')" id="nav-sbi">
+      <span class="nav-icon">🏛️</span> SBI
+    </div>
+
+    <!-- RBI -->
+    <div class="nav-item" onclick="goPage('rbi')" id="nav-rbi">
+      <span class="nav-icon">🏅</span> RBI
+    </div>
+
+    <div class="sb-section-label" style="margin-top:10px;">Account</div>
+    <div class="nav-item" onclick="goPage('settings')" id="nav-settings">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sb-profile" onclick="openProfileModal()">
+    <div class="sb-av" id="sb-av">S</div>
+    <div>
+      <div class="sb-pname" id="sb-name">Student</div>
+      <div class="sb-prole" id="sb-role">Banking Aspirant</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="main-scroll">
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="topbar">
+      <div>
+        <div class="page-title page-title-serif" id="home-greeting">👋 Hello, Aspirant!</div>
+        <div class="page-sub" id="home-sub">Your Banking Exam Preparation Dashboard</div>
+      </div>
+    </div>
+    <div id="home-content"></div>
+  </div>
+
+  <!-- IBPS PAGE -->
+  <div class="page" id="page-ibps">
+    <div class="topbar">
+      <div>
+        <div class="page-title page-title-serif">🏦 IBPS Exams</div>
+        <div class="page-sub">Institute of Banking Personnel Selection · PO · Clerk · RRB</div>
+      </div>
+    </div>
+    <div id="ibps-content"></div>
+  </div>
+
+  <!-- SBI PAGE -->
+  <div class="page" id="page-sbi">
+    <div class="topbar">
+      <div>
+        <div class="page-title page-title-serif">🏛️ SBI Exams</div>
+        <div class="page-sub">State Bank of India · PO · Clerk</div>
+      </div>
+    </div>
+    <div id="sbi-content"></div>
+  </div>
+
+  <!-- RBI PAGE -->
+  <div class="page" id="page-rbi">
+    <div class="topbar">
+      <div>
+        <div class="page-title page-title-serif">🏅 RBI Exams</div>
+        <div class="page-sub">Reserve Bank of India · Assistant · Grade B</div>
+      </div>
+    </div>
+    <div id="rbi-content"></div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="topbar">
+      <div>
+        <div class="page-title page-title-serif">⚙️ Settings</div>
+        <div class="page-sub">Manage your profile and data</div>
+      </div>
+    </div>
+    <div id="settings-content"></div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ONBOARDING OVERLAY -->
+<div class="ob-overlay" id="ob-overlay">
+  <div class="ob-box">
+    <div class="ob-progress">
+      <div class="ob-prog-dot done" id="ob-dot-1"></div>
+      <div class="ob-prog-dot" id="ob-dot-2"></div>
+      <div class="ob-prog-dot" id="ob-dot-3"></div>
+    </div>
+
+    <!-- STEP 1: Name & ID -->
+    <div class="ob-step active" id="ob-step-1">
+      <div class="ob-icon">⚡</div>
+      <div class="ob-title">Welcome to ThunderStudy Banking!</div>
+      <div class="ob-sub">Let's set up your banking exam dashboard in 3 quick steps.</div>
+      <div class="form-row">
+        <div class="form-lbl">Your Full Name</div>
+        <input class="form-inp" id="ob-name" placeholder="Enter your name" oninput="obValidate1()">
+      </div>
+      <div class="form-row">
+        <div class="form-lbl">Student ID</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input class="form-inp" id="ob-sid" placeholder="Click Generate →" readonly style="font-family:var(--mono);font-size:15px;font-weight:800;color:var(--acc);flex:1;">
+          <button onclick="generateStudentID()" style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:11px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);white-space:nowrap;">🎲 Generate</button>
+        </div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;">Unique 5-digit Student ID — used on leaderboard</div>
+      </div>
+      <button class="ob-btn ob-btn-prim" id="ob-next-1" onclick="obNext(2)" disabled>Continue →</button>
+    </div>
+
+    <!-- STEP 2: Select Exam -->
+    <div class="ob-step" id="ob-step-2">
+      <div class="ob-icon">🏦</div>
+      <div class="ob-title">Choose Your Target Exam</div>
+      <div class="ob-sub">Select the main exam you're preparing for. You can practice all exams anytime!</div>
+      <div class="ob-exam-grid" id="ob-exam-grid">
+        <!-- Filled by JS -->
+      </div>
+      <button class="ob-btn ob-btn-prim" id="ob-next-2" onclick="obNext(3)" disabled>Next Step →</button>
+    </div>
+
+    <!-- STEP 3: Sub-exam & Phase -->
+    <div class="ob-step" id="ob-step-3">
+      <div class="ob-icon">🎯</div>
+      <div class="ob-title">Which Post & Phase?</div>
+      <div class="ob-sub" id="ob-step3-sub">Choose your target post and current preparation phase.</div>
+      <div id="ob-subexam-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;"></div>
+      <div id="ob-phase-grid" style="display:flex;gap:8px;margin-bottom:16px;"></div>
+      <button class="ob-btn ob-btn-prim" id="ob-finish-btn" onclick="obFinish()" disabled>🚀 Start Preparing!</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-ov" id="profile-modal">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span>✏️ Edit Profile</span>
+      <span class="modal-close" onclick="closeModal('profile-modal')">×</span>
+    </div>
+    <div class="form-row">
+      <div class="form-lbl">Full Name</div>
+      <input class="form-inp" id="pf-name" placeholder="Your name">
+    </div>
+    <div class="form-row">
+      <div class="form-lbl">Target Exam</div>
+      <select class="form-inp" id="pf-exam">
+        <option value="ibps_po">IBPS PO</option>
+        <option value="ibps_clerk">IBPS Clerk</option>
+        <option value="ibps_rrb_po">IBPS RRB PO</option>
+        <option value="ibps_rrb_clerk">IBPS RRB Clerk</option>
+        <option value="sbi_po">SBI PO</option>
+        <option value="sbi_clerk">SBI Clerk</option>
+        <option value="rbi_assistant">RBI Assistant</option>
+        <option value="rbi_grade_b">RBI Grade B</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-lbl">Current Phase</div>
+      <select class="form-inp" id="pf-phase">
+        <option value="prelims">Prelims</option>
+        <option value="mains">Mains</option>
+        <option value="both">Both</option>
+      </select>
+    </div>
+    <button class="btn btn-prim" onclick="saveProfile()" style="width:100%;justify-content:center;margin-top:4px;">💾 Save Profile</button>
+  </div>
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip"></div>
+
+<!-- MOBILE DOCK -->
+<nav class="mobile-dock">
+  <div class="dock-item active" id="dock-home" onclick="goPage('home')">
+    <div class="dock-icon">🏠</div>
+    <div class="dock-label">Home</div>
+  </div>
+  <div class="dock-item" id="dock-ibps" onclick="goPage('ibps')">
+    <div class="dock-icon">🏦</div>
+    <div class="dock-label">IBPS</div>
+  </div>
+  <div class="dock-item" id="dock-sbi" onclick="goPage('sbi')">
+    <div class="dock-icon">🏛️</div>
+    <div class="dock-label">SBI</div>
+  </div>
+  <div class="dock-item" id="dock-rbi" onclick="goPage('rbi')">
+    <div class="dock-icon">🏅</div>
+    <div class="dock-label">RBI</div>
+  </div>
+  <div class="dock-item" id="dock-settings" onclick="goPage('settings')">
+    <div class="dock-icon">⚙️</div>
+    <div class="dock-label">Settings</div>
+  </div>
+</nav>
+<script>
+/* ══════════════════════════════════════════
+   EXAM DATA CONFIG
+══════════════════════════════════════════ */
+const EXAM_DATA = {
+  ibps: {
+    name: 'IBPS', icon: '🏦', color: '#7c3aed',
+    label: 'Institute of Banking Personnel Selection',
+    subExams: {
+      ibps_po: {
+        name: 'IBPS PO', icon: '👔', label: 'Probationary Officer',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'ibps_po_pre_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'ibps_po_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'ibps_po_pre_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'ibps_po_main_reason', name: 'Reasoning & Computer Aptitude', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_po_main_data', name: 'Data Analysis & Interpretation', icon: '📊', color: '#7c3aed', mocks: 30 },
+              { id: 'ibps_po_main_gk', name: 'General/Economy/Banking Awareness', icon: '🏦', color: '#f59e0b', mocks: 30 },
+              { id: 'ibps_po_main_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      },
+      ibps_clerk: {
+        name: 'IBPS Clerk', icon: '📋', label: 'Clerical Cadre',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'ibps_cl_pre_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'ibps_cl_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'ibps_cl_pre_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'ibps_cl_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'ibps_cl_main_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'ibps_cl_main_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_cl_main_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      },
+      ibps_rrb_po: {
+        name: 'RRB PO', icon: '🌾', label: 'Officer Scale I',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'ibps_rrb_po_pre_reason', name: 'Reasoning', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_rrb_po_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'ibps_rrb_po_main_reason', name: 'Reasoning', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_rrb_po_main_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'ibps_rrb_po_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'ibps_rrb_po_main_eng', name: 'English / Hindi', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'ibps_rrb_po_main_comp', name: 'Computer Knowledge', icon: '💻', color: '#06b6d4', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      },
+      ibps_rrb_clerk: {
+        name: 'RRB Clerk', icon: '📁', label: 'Office Assistant',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'ibps_rrb_cl_pre_reason', name: 'Reasoning', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_rrb_cl_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'ibps_rrb_cl_main_reason', name: 'Reasoning', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'ibps_rrb_cl_main_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'ibps_rrb_cl_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'ibps_rrb_cl_main_eng', name: 'English / Hindi', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'ibps_rrb_cl_main_comp', name: 'Computer Knowledge', icon: '💻', color: '#06b6d4', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      }
+    }
+  },
+  sbi: {
+    name: 'SBI', icon: '🏛️', color: '#3b82f6',
+    label: 'State Bank of India',
+    subExams: {
+      sbi_po: {
+        name: 'SBI PO', icon: '👔', label: 'Probationary Officer',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'sbi_po_pre_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'sbi_po_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'sbi_po_pre_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'sbi_po_main_reason', name: 'Reasoning & Computer', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'sbi_po_main_data', name: 'Data Analysis & Interpretation', icon: '📊', color: '#7c3aed', mocks: 30 },
+              { id: 'sbi_po_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'sbi_po_main_eng', name: 'English (Descriptive)', icon: '📝', color: '#ec4899', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      },
+      sbi_clerk: {
+        name: 'SBI Clerk', icon: '📋', label: 'Junior Associates',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'sbi_cl_pre_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'sbi_cl_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'sbi_cl_pre_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'sbi_cl_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'sbi_cl_main_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'sbi_cl_main_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'sbi_cl_main_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      }
+    }
+  },
+  rbi: {
+    name: 'RBI', icon: '🏅', color: '#f59e0b',
+    label: 'Reserve Bank of India',
+    subExams: {
+      rbi_assistant: {
+        name: 'RBI Assistant', icon: '🧑‍💼', label: 'Assistant',
+        phases: {
+          prelims: {
+            name: 'Prelims',
+            subjects: [
+              { id: 'rbi_asst_pre_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'rbi_asst_pre_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'rbi_asst_pre_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          mains: {
+            name: 'Mains',
+            subjects: [
+              { id: 'rbi_asst_main_reason', name: 'Reasoning', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'rbi_asst_main_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'rbi_asst_main_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+              { id: 'rbi_asst_main_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'rbi_asst_main_comp', name: 'Computer Knowledge', icon: '💻', color: '#06b6d4', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      },
+      rbi_grade_b: {
+        name: 'RBI Grade B', icon: '⭐', label: 'Officer Grade B',
+        phases: {
+          phase1: {
+            name: 'Phase I',
+            subjects: [
+              { id: 'rbi_gb_p1_gk', name: 'General Awareness', icon: '🌐', color: '#f59e0b', mocks: 30 },
+              { id: 'rbi_gb_p1_quant', name: 'Quantitative Aptitude', icon: '🔢', color: '#7c3aed', mocks: 30 },
+              { id: 'rbi_gb_p1_reason', name: 'Reasoning Ability', icon: '🧠', color: '#3b82f6', mocks: 30 },
+              { id: 'rbi_gb_p1_eng', name: 'English Language', icon: '📝', color: '#ec4899', mocks: 30 },
+            ],
+            fullMocks: 10
+          },
+          phase2: {
+            name: 'Phase II',
+            subjects: [
+              { id: 'rbi_gb_p2_esi', name: 'Economic & Social Issues', icon: '📈', color: '#10b981', mocks: 30 },
+              { id: 'rbi_gb_p2_fm', name: 'Finance & Management', icon: '💰', color: '#f97316', mocks: 30 },
+              { id: 'rbi_gb_p2_eng', name: 'English (Descriptive)', icon: '📝', color: '#ec4899', mocks: 30 },
+            ],
+            fullMocks: 10
+          }
+        }
+      }
+    }
+  }
+};
+
+/* ══════════════════════════════════════════
+   XP / LEVEL / RANK
+══════════════════════════════════════════ */
+const XP_LEVELS = [
+  { level:1, min:0,    name:'Beginner',  icon:'📚', color:'#9298b5' },
+  { level:2, min:200,  name:'Learner',   icon:'🎓', color:'#06b6d4' },
+  { level:3, min:500,  name:'Scholar',   icon:'📖', color:'#7c3aed' },
+  { level:4, min:1000, name:'Analyst',   icon:'🌟', color:'#10b981' },
+  { level:5, min:2000, name:'Expert',    icon:'🏆', color:'#f59e0b' },
+  { level:6, min:3500, name:'Thunder',   icon:'⚡', color:'#f97316' },
+];
+
+const RANK_TIERS = [
+  { name:'Probationer',  icon:'🥉', color:'#cd7f32', threshold:100 },
+  { name:'Associate',    icon:'🥈', color:'#94a3b8', threshold:200 },
+  { name:'Officer',      icon:'🥇', color:'#f59e0b', threshold:350 },
+  { name:'Senior',       icon:'💎', color:'#60a8f0', threshold:500 },
+  { name:'Manager',      icon:'💠', color:'#10c8a0', threshold:750 },
+  { name:'Deputy',       icon:'⚜️',  color:'#a855f7', threshold:1000 },
+  { name:'Director',     icon:'👑', color:'#f97316', threshold:Infinity },
+];
+
+function getXP() {
+  const results = getAllResults();
+  const base = results.reduce((s,r) => s + 10 + Math.round((r.percentage||0)/2), 0);
+  const bonus = parseInt(localStorage.getItem('ts_bank_bonus_xp')||'0');
+  return base + bonus;
+}
+
+function getXPLevel(xp) {
+  let lv = XP_LEVELS[0];
+  for (const x of XP_LEVELS) { if (xp >= x.min) lv = x; else break; }
+  const i = XP_LEVELS.indexOf(lv), n = XP_LEVELS[i+1];
+  const p = n ? ((xp - lv.min)/(n.min - lv.min))*100 : 100;
+  return { ...lv, xp, nextMin:n?.min, nextName:n?.name, progress:Math.min(p,100) };
+}
+
+function getRankTier() {
+  try { return RANK_TIERS[JSON.parse(localStorage.getItem('ts_bank_rp')||'{"ri":0}').ri] || RANK_TIERS[0]; } catch(e) { return RANK_TIERS[0]; }
+}
+
+/* ══════════════════════════════════════════
+   LOCAL STORAGE HELPERS
+══════════════════════════════════════════ */
+function rKey(subjectId, mockNum) { return `tsbank_result_${subjectId}_m${mockNum}`; }
+function fmKey(examId, phase, mockNum) { return `tsbank_fm_${examId}_${phase}_fm${mockNum}`; }
+
+function lR(subjectId, mockNum) {
+  try { return JSON.parse(localStorage.getItem(rKey(subjectId, mockNum))); } catch(e) { return null; }
+}
+function lFM(examId, phase, mockNum) {
+  try { return JSON.parse(localStorage.getItem(fmKey(examId, phase, mockNum))); } catch(e) { return null; }
+}
+
+function getAllResults() {
+  const all = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('tsbank_result_')) {
+      try {
+        const r = JSON.parse(localStorage.getItem(k));
+        if (r) all.push(r);
+      } catch(e) {}
+    }
+  }
+  return all;
+}
+
+function getProfile() { try { return JSON.parse(localStorage.getItem('ts_bank_profile')||'{}'); } catch(e) { return {}; } }
+function getStudentID() { return localStorage.getItem('ts_bank_sid')||null; }
+
+function generateStudentID() {
+  const id = 'TB' + String(Math.floor(Math.random()*100000)).padStart(5,'0');
+  localStorage.setItem('ts_bank_sid', id);
+  const el = document.getElementById('ob-sid');
+  if (el) { el.value = id; el.style.color = '#10b981'; }
+  obValidate1();
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function rClr(p) { return p>=75?'#10b981':p>=50?'#7c3aed':p>=35?'#f59e0b':'#f43f5e'; }
+function fd(iso) { try { return new Date(iso).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); } catch(e) { return '—'; } }
+function escH(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg, type='success', dur=2400) {
+  let t = document.getElementById('ts-toast');
+  if (!t) { t = document.createElement('div'); t.id = 'ts-toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:${type==='error'?'#f43f5e':type==='warn'?'#f59e0b':'#7c3aed'};
+    color:#fff;padding:9px 20px;border-radius:30px;font-size:13px;font-weight:700;
+    font-family:var(--fn);z-index:9999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 4px 20px rgba(0,0,0,.18);pointer-events:none;white-space:nowrap;`;
+  requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)'; }, dur);
+}
+
+/* ══════════════════════════════════════════
+   PAGE NAV
+══════════════════════════════════════════ */
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.id === 'nav-'+id);
+  });
+  document.querySelectorAll('.dock-item').forEach(d => {
+    d.classList.toggle('active', d.id === 'dock-'+id);
+  });
+  const map = { home:renderHome, ibps:()=>renderExamPage('ibps'), sbi:()=>renderExamPage('sbi'), rbi:()=>renderExamPage('rbi'), settings:renderSettings };
+  if (map[id]) setTimeout(()=>map[id](), 60);
+}
+
+/* ══════════════════════════════════════════
+   HOME PAGE
+══════════════════════════════════════════ */
+function renderHome() {
+  const prof = getProfile();
+  const sid = getStudentID();
+  const uname = prof.name || 'Aspirant';
+  const results = getAllResults();
+  const xp = getXP();
+  const xpInfo = getXPLevel(xp);
+  const rank = getRankTier();
+  const totalDone = results.length;
+  const avgPct = totalDone ? results.reduce((s,r)=>s+(r.percentage||0),0)/totalDone : 0;
+  const streak = calcStreak(results);
+
+  document.getElementById('home-greeting').textContent = `👋 Hello, ${uname}!`;
+  document.getElementById('home-sub').textContent = `${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'})} · ${rank.icon} ${rank.name}`;
+  document.getElementById('sb-av').textContent = (uname[0]||'S').toUpperCase();
+  document.getElementById('sb-name').textContent = uname;
+  document.getElementById('sb-role').textContent = prof.exam ? getExamLabel(prof.exam) : 'Banking Aspirant';
+
+  const targetExam = prof.exam || 'ibps_po';
+  const examGroup = getExamGroup(targetExam);
+
+  let H = '';
+
+  /* ── HERO CARD ── */
+  H += `<div class="hero-card" style="margin-bottom:20px;">
+    <div style="position:relative;z-index:1;">
+      <div class="level-pill">${xpInfo.icon} Level ${xpInfo.level} · ${xpInfo.name} &nbsp;|&nbsp; ${rank.icon} ${rank.name}</div>
+      <div class="hero-name">${escH(uname)}</div>
+      <div class="hero-sub">🪪 ${sid||'No ID'} · ${getExamLabel(targetExam)}</div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-val">${totalDone}</div><div class="hero-stat-lbl">Mocks Done</div></div>
+        <div><div class="hero-stat-val">${avgPct.toFixed(1)}%</div><div class="hero-stat-lbl">Avg Score</div></div>
+        <div><div class="hero-stat-val">${xp}</div><div class="hero-stat-lbl">XP Earned</div></div>
+        <div><div class="hero-stat-val">${streak}🔥</div><div class="hero-stat-lbl">Day Streak</div></div>
+      </div>
+      <div class="xp-wrap">
+        <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-fill" style="width:0%"></div></div>
+        <div class="xp-nums"><span>${xp} XP</span><span>${xpInfo.progress.toFixed(0)}% to ${xpInfo.nextName||'MAX'}</span></div>
+      </div>
+    </div>
+  </div>`;
+
+  /* ── STAT CARDS ── */
+  H += `<div class="stat-grid">
+    <div class="stat-card"><div class="stat-icon bg-acc">📝</div><div class="stat-val c-acc">${totalDone}</div><div class="stat-lbl">Tests Done</div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:rgba(16,185,129,.1)">🎯</div><div class="stat-val" style="color:var(--green)">${avgPct.toFixed(1)}%</div><div class="stat-lbl">Accuracy</div></div>
+    <div class="stat-card"><div class="stat-icon bg-yellow">⚡</div><div class="stat-val c-yellow">${xp}</div><div class="stat-lbl">Total XP</div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:rgba(249,115,22,.1)">🔥</div><div class="stat-val" style="color:var(--orange)">${streak}</div><div class="stat-lbl">Streak</div></div>
+  </div>`;
+
+  /* ── RANK TIERS ── */
+  H += `<div class="card card-p" style="margin-bottom:18px;">
+    <div class="sec-hdr"><div class="sec-title">🏅 Rank Journey</div></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;">
+    ${RANK_TIERS.map((t,i) => {
+      const isCur = t.name === rank.name;
+      const isEarned = RANK_TIERS.indexOf(rank) >= i;
+      return `<div style="display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:30px;font-size:11px;font-weight:700;border:1.5px solid;background:${isEarned?t.color+'15':'var(--card2)'};border-color:${isEarned?t.color+'45':'var(--border)'};color:${isEarned?t.color:'var(--text3)'};${isCur?'box-shadow:0 0 0 2px '+t.color+'50;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;
+    }).join('')}
+    </div>
+  </div>`;
+
+  /* ── PROMO BANNERS ── */
+  H += `<div class="sec-hdr"><div class="sec-title">🌐 Quick Links</div></div>
+  <div class="promo-grid" style="margin-bottom:20px;">
+    ${buildPromoBanners()}
+  </div>`;
+
+  /* ── QUICK ACTIONS ── */
+  H += `<div class="sec-hdr"><div class="sec-title">⚡ Quick Actions</div></div>
+  <div class="quick-links" style="margin-bottom:20px;">
+    <div class="ql-item" onclick="goPage('ibps')"><div class="ql-icon">🏦</div><div class="ql-name">IBPS Exams</div><div class="ql-desc">PO · Clerk · RRB</div></div>
+    <div class="ql-item" onclick="goPage('sbi')"><div class="ql-icon">🏛️</div><div class="ql-name">SBI Exams</div><div class="ql-desc">PO · Clerk</div></div>
+    <div class="ql-item" onclick="goPage('rbi')"><div class="ql-icon">🏅</div><div class="ql-name">RBI Exams</div><div class="ql-desc">Assistant · Grade B</div></div>
+    <div class="ql-item" onclick="goPage('settings')"><div class="ql-icon">⚙️</div><div class="ql-name">Settings</div><div class="ql-desc">Profile & data</div></div>
+  </div>`;
+
+  /* ── PROGRESS PER EXAM GROUP ── */
+  H += `<div class="sec-hdr"><div class="sec-title">📊 Your Progress by Exam</div></div>`;
+  ['ibps','sbi','rbi'].forEach(eg => {
+    const exam = EXAM_DATA[eg];
+    let total=0, done=0;
+    Object.values(exam.subExams).forEach(sub => {
+      Object.values(sub.phases).forEach(phase => {
+        phase.subjects.forEach(subj => {
+          for (let m=1; m<=subj.mocks; m++) { total++; if(lR(subj.id, m)) done++; }
+        });
+        for (let f=1; f<=phase.fullMocks; f++) { total++; if(lFM(eg+'_'+Object.keys(exam.subExams).find(k=>exam.subExams[k]===sub), Object.keys(sub.phases).find(k=>sub.phases[k]===phase), f)) done++; }
+      });
+    });
+    const pct = total > 0 ? (done/total*100) : 0;
+    H += `<div class="prog-row"><div class="prog-lbl">${exam.icon} ${exam.name}</div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${exam.color}"></div></div><div class="prog-pct" style="color:${exam.color}">${pct.toFixed(0)}%</div></div>`;
+  });
+
+  document.getElementById('home-content').innerHTML = H;
+  setTimeout(() => {
+    const xf = document.getElementById('xp-fill');
+    if (xf) xf.style.width = xpInfo.progress + '%';
+    document.querySelectorAll('.prog-fill').forEach(el => { const w=el.style.width; el.style.width='0'; setTimeout(()=>el.style.width=w, 80); });
+  }, 100);
+}
+
+/* ══════════════════════════════════════════
+   PROMO BANNERS
+══════════════════════════════════════════ */
+function buildPromoBanners() {
+  return `
+  <a href="https://wondermayank.github.io" target="_blank" class="promo-card">
+    <svg width="100%" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p1g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#4c1d95"/>
+        </linearGradient>
+      </defs>
+      <rect width="340" height="160" rx="16" fill="url(#p1g)"/>
+      <circle cx="290" cy="20" r="70" fill="rgba(255,255,255,.06)"/>
+      <circle cx="30" cy="130" r="55" fill="rgba(255,255,255,.04)"/>
+      <text x="20" y="38" font-family="'Playfair Display',serif" font-size="11" fill="rgba(255,255,255,.7)" letter-spacing="2">BUILT BY</text>
+      <text x="20" y="70" font-family="'Playfair Display',serif" font-size="22" font-weight="800" fill="#fff">Wondermayank</text>
+      <text x="20" y="92" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="rgba(255,255,255,.65)">Portfolio · Projects · Tools</text>
+      <rect x="20" y="115" width="110" height="24" rx="12" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+      <text x="75" y="131" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" font-weight="700" fill="#e9d5ff">Visit Portfolio ↗</text>
+    </svg>
+  </a>
+  <a href="#" target="_blank" class="promo-card" onclick="event.preventDefault();showToast('📚 Study Material coming soon!','warn')">
+    <svg width="100%" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p2g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#1e3a8a"/>
+        </linearGradient>
+      </defs>
+      <rect width="340" height="160" rx="16" fill="url(#p2g)"/>
+      <circle cx="300" cy="140" r="80" fill="rgba(255,255,255,.05)"/>
+      <text x="20" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="rgba(255,255,255,.7)" letter-spacing="2">FREE RESOURCES</text>
+      <text x="20" y="68" font-family="'Playfair Display',serif" font-size="20" font-weight="800" fill="#fff">Banking Study</text>
+      <text x="20" y="90" font-family="'Playfair Display',serif" font-size="20" font-weight="800" fill="#93c5fd">Material</text>
+      <text x="20" y="112" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="rgba(255,255,255,.6)">Notes · PYQs · Current Affairs</text>
+      <rect x="20" y="125" width="100" height="22" rx="11" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+      <text x="70" y="140" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="700" fill="#bfdbfe">Coming Soon →</text>
+    </svg>
+  </a>
+  <a href="#" target="_blank" class="promo-card" onclick="event.preventDefault();showToast('📰 Current Affairs coming soon!','warn')">
+    <svg width="100%" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p3g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#047857"/><stop offset="100%" stop-color="#064e3b"/>
+        </linearGradient>
+      </defs>
+      <rect width="340" height="160" rx="16" fill="url(#p3g)"/>
+      <circle cx="280" cy="30" r="70" fill="rgba(255,255,255,.05)"/>
+      <text x="20" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="rgba(255,255,255,.7)" letter-spacing="2">DAILY DOSE</text>
+      <text x="20" y="70" font-family="'Playfair Display',serif" font-size="22" font-weight="800" fill="#fff">Current Affairs</text>
+      <text x="20" y="92" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Banking · Economy · Finance</text>
+      <rect x="20" y="115" width="100" height="22" rx="11" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+      <text x="70" y="130" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="700" fill="#6ee7b7">Coming Soon →</text>
+    </svg>
+  </a>
+  <a href="#" target="_blank" class="promo-card" onclick="event.preventDefault();goPage('ibps')">
+    <svg width="100%" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="p4g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#78350f"/>
+        </linearGradient>
+      </defs>
+      <rect width="340" height="160" rx="16" fill="url(#p4g)"/>
+      <circle cx="280" cy="140" r="75" fill="rgba(255,255,255,.05)"/>
+      <text x="20" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="rgba(255,255,255,.7)" letter-spacing="2">POWERED BY</text>
+      <text x="20" y="68" font-family="'Playfair Display',serif" font-size="20" font-weight="800" fill="#fff">ThunderStudy</text>
+      <text x="20" y="90" font-family="'Playfair Display',serif" font-size="20" font-weight="800" fill="#fcd34d">Banking</text>
+      <text x="20" y="112" font-family="'Plus Jakarta Sans',sans-serif" font-size="10" fill="rgba(255,255,255,.65)">Start Your Preparation Now →</text>
+      <rect x="20" y="125" width="100" height="22" rx="11" fill="url(#p4g)" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
+      <text x="70" y="140" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-weight="700" fill="#fef3c7">Start Mocks →</text>
+    </svg>
+  </a>`;
+}
+
+/* ══════════════════════════════════════════
+   EXAM PAGE (IBPS / SBI / RBI)
+══════════════════════════════════════════ */
+let _examState = {}; // { [pageId]: { subExam, phase } }
+
+function renderExamPage(pageId) {
+  const exam = EXAM_DATA[pageId];
+  if (!exam) return;
+  const container = document.getElementById(pageId + '-content');
+  if (!container) return;
+
+  if (!_examState[pageId]) {
+    const firstSub = Object.keys(exam.subExams)[0];
+    const firstPhase = Object.keys(exam.subExams[firstSub].phases)[0];
+    _examState[pageId] = { subExam: firstSub, phase: firstPhase };
+  }
+
+  renderExamPageInner(pageId, exam, container);
+}
+
+function renderExamPageInner(pageId, exam, container) {
+  const st = _examState[pageId];
+  const subExams = exam.subExams;
+  const curSub = subExams[st.subExam];
+  const phases = curSub.phases;
+  const curPhase = phases[st.phase];
+
+  let H = '';
+
+  /* ── SUB-EXAM TABS ── */
+  H += `<div class="sub-exam-tabs">`;
+  Object.entries(subExams).forEach(([key, se]) => {
+    H += `<div class="sub-exam-tab ${key===st.subExam?'active':''}" onclick="switchSubExam('${pageId}','${key}')">
+      ${se.icon} ${se.name}
+    </div>`;
+  });
+  H += `</div>`;
+
+  /* ── PHASE TABS ── */
+  H += `<div class="phase-tabs">`;
+  Object.entries(phases).forEach(([key, ph]) => {
+    H += `<div class="phase-tab ${key===st.phase?'active':''}" onclick="switchPhase('${pageId}','${key}')">
+      ${key==='prelims'?'📋':key==='mains'?'📜':key==='phase1'?'🔵':'🟣'} ${ph.name}
+    </div>`;
+  });
+  H += `</div>`;
+
+  /* ── PHASE DESCRIPTION ── */
+  const phaseDesc = {
+    prelims: '⏱️ Objective · Speed & Accuracy · Qualifying Round',
+    mains: '📋 Detailed · Descriptive + Objective · Final Selection',
+    phase1: '📊 Objective · 200 Marks · 2 Hours',
+    phase2: '✍️ Descriptive + Objective · In-depth knowledge',
+  };
+  H += `<div style="background:rgba(124,58,237,.07);border:1.5px solid rgba(124,58,237,.2);border-radius:14px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;">
+    <div style="font-size:28px;">${curSub.icon}</div>
+    <div>
+      <div style="font-size:14px;font-weight:900;color:var(--text);">${curSub.name} — ${curPhase.name}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:2px;">${phaseDesc[st.phase]||'Practice all subjects'} · ${curPhase.subjects.length} Subjects</div>
+    </div>
+    <div style="margin-left:auto;text-align:right;">
+      <div style="font-size:18px;font-weight:900;font-family:var(--mono);color:var(--acc);">${calcPhaseDone(st.subExam, st.phase, curPhase)}%</div>
+      <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;">Completed</div>
+    </div>
+  </div>`;
+
+  /* ── SUBJECTS ── */
+  curPhase.subjects.forEach(subj => {
+    let doneCount = 0;
+    for (let m=1; m<=subj.mocks; m++) { if(lR(subj.id, m)) doneCount++; }
+    const avgPct = (() => {
+      let total=0, cnt=0;
+      for (let m=1; m<=subj.mocks; m++) { const r=lR(subj.id,m); if(r){total+=r.percentage||0;cnt++;} }
+      return cnt > 0 ? total/cnt : 0;
+    })();
+
+    H += `<div class="subject-section">
+      <div class="subject-hdr">
+        <span class="subject-hdr-icon">${subj.icon}</span>
+        <div>
+          <div style="font-size:13px;font-weight:800;">${subj.name}</div>
+          <div style="font-size:10px;color:var(--text3);font-weight:500;">${doneCount}/${subj.mocks} attempted${doneCount>0?' · Avg: '+avgPct.toFixed(1)+'%':''}</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+          <div style="width:80px;height:5px;background:var(--card2);border-radius:5px;overflow:hidden;">
+            <div style="height:100%;width:${(doneCount/subj.mocks*100).toFixed(0)}%;background:${subj.color};border-radius:5px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-grid">`;
+
+    for (let m=1; m<=subj.mocks; m++) {
+      const r = lR(subj.id, m);
+      const clr = r ? rClr(r.percentage) : 'var(--text3)';
+      H += `<div class="mock-card ${r?'done':''}" onclick="openMockAttempt('${subj.id}',${m},'${escH(subj.name)}','${subj.color}')">
+        <div class="mock-num">${m}</div>
+        <div class="mock-type-badge" style="background:${subj.color}18;color:${subj.color};">Mock ${m}</div>
+        <div class="mock-title">${subj.name}</div>
+        ${r
+          ? `<div class="mock-score" style="color:${clr}">${r.percentage.toFixed(1)}%</div>
+             <div style="font-size:9px;color:var(--text3);margin-top:2px;">${r.correct}✓ ${r.wrong||r.incorrect||0}✗ · ${fd(r.date)}</div>`
+          : `<div style="font-size:11px;color:var(--text3);">Not attempted</div>`
+        }
+      </div>`;
+    }
+
+    H += `</div></div>`;
+  });
+
+  /* ── FULL MOCKS ── */
+  H += `<div class="subject-section">
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(168,85,247,.06));border:1.5px solid rgba(124,58,237,.25);border-radius:14px;margin-bottom:12px;">
+      <span style="font-size:22px;">🗂️</span>
+      <div>
+        <div style="font-size:14px;font-weight:900;">Full Mock Tests</div>
+        <div style="font-size:10px;color:var(--text3);">${curPhase.fullMocks} complete mocks · All subjects combined · Exam pattern</div>
+      </div>
+      <div style="margin-left:auto;">
+        <span style="font-size:11px;font-weight:700;color:var(--acc);">${calcFullMockDone(pageId, st.subExam, st.phase, curPhase.fullMocks)}/${curPhase.fullMocks} done</span>
+      </div>
+    </div>
+    <div class="mock-grid">`;
+
+  for (let f=1; f<=curPhase.fullMocks; f++) {
+    const r = lFM(st.subExam, st.phase, f);
+    const clr = r ? rClr(r.percentage) : 'var(--text3)';
+    H += `<div class="full-mock-card ${r?'done':''}" onclick="openFullMockAttempt('${st.subExam}','${st.phase}',${f},'${curSub.name} ${curPhase.name}')">
+      <div class="mock-num">${f}</div>
+      <div class="mock-type-badge" style="background:rgba(124,58,237,.15);color:var(--acc);">Full Mock</div>
+      <div class="mock-title" style="font-weight:800;">${curSub.name} ${curPhase.name} · Mock ${f}</div>
+      ${r
+        ? `<div class="mock-score" style="color:${clr}">${r.percentage.toFixed(1)}%</div>
+           <div style="font-size:9px;color:var(--text3);margin-top:2px;">${fd(r.date)}</div>`
+        : `<div style="font-size:11px;color:var(--text3);margin-top:4px;">Not attempted</div>`
+      }
+    </div>`;
+  }
+
+  H += `</div></div>`;
+
+  container.innerHTML = H;
+}
+
+function calcPhaseDone(subExamId, phaseKey, phase) {
+  let done=0, total=0;
+  phase.subjects.forEach(s => {
+    for (let m=1; m<=s.mocks; m++) { total++; if(lR(s.id,m)) done++; }
+  });
+  for (let f=1; f<=phase.fullMocks; f++) { total++; if(lFM(subExamId, phaseKey, f)) done++; }
+  return total > 0 ? Math.round(done/total*100) : 0;
+}
+
+function calcFullMockDone(examId, subExamId, phaseKey, total) {
+  let done=0;
+  for (let f=1; f<=total; f++) { if(lFM(subExamId, phaseKey, f)) done++; }
+  return done;
+}
+
+function switchSubExam(pageId, subExamKey) {
+  const exam = EXAM_DATA[pageId];
+  const firstPhase = Object.keys(exam.subExams[subExamKey].phases)[0];
+  _examState[pageId] = { subExam: subExamKey, phase: firstPhase };
+  renderExamPageInner(pageId, exam, document.getElementById(pageId+'-content'));
+}
+
+function switchPhase(pageId, phaseKey) {
+  _examState[pageId].phase = phaseKey;
+  const exam = EXAM_DATA[pageId];
+  renderExamPageInner(pageId, exam, document.getElementById(pageId+'-content'));
+}
+
+/* ══════════════════════════════════════════
+   MOCK ATTEMPT MODAL
+══════════════════════════════════════════ */
+function openMockAttempt(subjectId, mockNum, subjectName, color) {
+  const existing = document.getElementById('attempt-modal');
+  if (existing) existing.remove();
+  const r = lR(subjectId, mockNum);
+
+  const modal = document.createElement('div');
+  modal.id = 'attempt-modal';
+  modal.className = 'modal-ov open';
+  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+
+  modal.innerHTML = `<div class="modal-box" style="max-width:440px;">
+    <div class="modal-title">
+      <span>${r?'📊 Result':'📝 Record Score'} — Mock ${mockNum}</span>
+      <span class="modal-close" onclick="document.getElementById('attempt-modal').remove()">×</span>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:var(--acc);margin-bottom:16px;">${subjectName}</div>
+
+    ${r ? `
+    <div style="background:var(--card2);border-radius:14px;padding:14px 16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-bottom:3px;">LAST ATTEMPT</div>
+        <div style="font-size:28px;font-weight:900;font-family:var(--mono);color:${rClr(r.percentage)}">${r.percentage.toFixed(1)}%</div>
+        <div style="font-size:11px;color:var(--text3);">${r.score}/${r.maxScore} · ${fd(r.date)}</div></div>
+        <div style="display:flex;gap:12px;">
+          <div style="text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--green)">${r.correct}</div><div style="font-size:9px;color:var(--text3);">Correct</div></div>
+          <div style="text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--red)">${r.wrong||r.incorrect||0}</div><div style="font-size:9px;color:var(--text3);">Wrong</div></div>
+          <div style="text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--text3)">${r.skipped||r.unanswered||0}</div><div style="font-size:9px;color:var(--text3);">Skipped</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;margin-bottom:12px;color:var(--text);">Update your score:</div>
+    ` : ''}
+
+    <div class="form-row"><div class="form-lbl">Score Obtained</div><input class="form-inp" id="am-score" type="number" placeholder="e.g. 62" min="0"></div>
+    <div class="form-row"><div class="form-lbl">Max Score</div><input class="form-inp" id="am-max" type="number" placeholder="e.g. 100" min="1" value="${r?r.maxScore:100}"></div>
+    <div class="form-row"><div class="form-lbl">Correct Answers</div><input class="form-inp" id="am-correct" type="number" placeholder="e.g. 35" min="0" value="${r?r.correct:0}"></div>
+    <div class="form-row"><div class="form-lbl">Wrong Answers</div><input class="form-inp" id="am-wrong" type="number" placeholder="e.g. 10" min="0" value="${r?r.wrong||r.incorrect||0:0}"></div>
+    <div class="form-row"><div class="form-lbl">Skipped</div><input class="form-inp" id="am-skipped" type="number" placeholder="e.g. 5" min="0" value="${r?r.skipped||r.unanswered||0:0}"></div>
+    <button class="btn btn-prim" style="width:100%;justify-content:center;margin-top:4px;" onclick="saveMockResult('${subjectId}',${mockNum},'${subjectName}')">
+      💾 Save Result
+    </button>
+    ${r ? `<button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px;" onclick="deleteMockResult('${subjectId}',${mockNum})">🗑️ Delete Result</button>` : ''}
+  </div>`;
+
+  document.body.appendChild(modal);
+}
+
+function saveMockResult(subjectId, mockNum, subjectName) {
+  const score = parseFloat(document.getElementById('am-score').value);
+  const maxScore = parseFloat(document.getElementById('am-max').value)||100;
+  const correct = parseInt(document.getElementById('am-correct').value)||0;
+  const wrong = parseInt(document.getElementById('am-wrong').value)||0;
+  const skipped = parseInt(document.getElementById('am-skipped').value)||0;
+  if (isNaN(score)) { showToast('❌ Enter a valid score', 'error'); return; }
+  const percentage = Math.min(100, (score/maxScore)*100);
+  const accuracy = (correct+wrong)>0 ? Math.round(correct/(correct+wrong)*100) : 0;
+  const data = { subjectId, mockNum, subjectName, score, maxScore, correct, wrong, incorrect:wrong, skipped, unanswered:skipped, percentage, accuracy, date:new Date().toISOString() };
+  localStorage.setItem(rKey(subjectId, mockNum), JSON.stringify(data));
+  document.getElementById('attempt-modal').remove();
+  showToast(`✅ Mock ${mockNum} result saved! ${percentage.toFixed(1)}%`, 'success');
+  goPage(getCurrentPage());
+}
+
+function deleteMockResult(subjectId, mockNum) {
+  if (!confirm('Delete this result?')) return;
+  localStorage.removeItem(rKey(subjectId, mockNum));
+  document.getElementById('attempt-modal').remove();
+  showToast('🗑️ Result deleted', 'success');
+  goPage(getCurrentPage());
+}
+
+function openFullMockAttempt(subExamId, phase, mockNum, label) {
+  const existing = document.getElementById('attempt-modal');
+  if (existing) existing.remove();
+  const r = lFM(subExamId, phase, mockNum);
+  const modal = document.createElement('div');
+  modal.id = 'attempt-modal';
+  modal.className = 'modal-ov open';
+  modal.addEventListener('click', e => { if(e.target===modal) modal.remove(); });
+  modal.innerHTML = `<div class="modal-box">
+    <div class="modal-title">
+      <span>🗂️ Full Mock ${mockNum}</span>
+      <span class="modal-close" onclick="document.getElementById('attempt-modal').remove()">×</span>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:var(--acc);margin-bottom:16px;">${label}</div>
+    ${r ? `<div style="background:var(--card2);border-radius:12px;padding:12px;margin-bottom:14px;"><div style="font-size:11px;color:var(--text3);">Last attempt</div><div style="font-size:26px;font-weight:900;font-family:var(--mono);color:${rClr(r.percentage)}">${r.percentage.toFixed(1)}%</div><div style="font-size:11px;color:var(--text3);">${r.score}/${r.maxScore} · ${fd(r.date)}</div></div>` : ''}
+    <div class="form-row"><div class="form-lbl">Score Obtained</div><input class="form-inp" id="am-score" type="number" placeholder="e.g. 120" min="0"></div>
+    <div class="form-row"><div class="form-lbl">Max Score</div><input class="form-inp" id="am-max" type="number" placeholder="e.g. 200" value="${r?r.maxScore:200}"></div>
+    <div class="form-row"><div class="form-lbl">Correct</div><input class="form-inp" id="am-correct" type="number" placeholder="0" value="${r?r.correct:0}"></div>
+    <div class="form-row"><div class="form-lbl">Wrong</div><input class="form-inp" id="am-wrong" type="number" placeholder="0" value="${r?r.wrong||0:0}"></div>
+    <div class="form-row"><div class="form-lbl">Skipped</div><input class="form-inp" id="am-skipped" type="number" placeholder="0" value="${r?r.skipped||0:0}"></div>
+    <button class="btn btn-prim" style="width:100%;justify-content:center;" onclick="saveFullMockResult('${subExamId}','${phase}',${mockNum})">💾 Save Result</button>
+    ${r ? `<button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px;" onclick="deleteFullMock('${subExamId}','${phase}',${mockNum})">🗑️ Delete</button>` : ''}
+  </div>`;
+  document.body.appendChild(modal);
+}
+
+function saveFullMockResult(subExamId, phase, mockNum) {
+  const score = parseFloat(document.getElementById('am-score').value);
+  const maxScore = parseFloat(document.getElementById('am-max').value)||200;
+  if (isNaN(score)) { showToast('❌ Enter a valid score','error'); return; }
+  const correct = parseInt(document.getElementById('am-correct').value)||0;
+  const wrong = parseInt(document.getElementById('am-wrong').value)||0;
+  const skipped = parseInt(document.getElementById('am-skipped').value)||0;
+  const percentage = Math.min(100, (score/maxScore)*100);
+  const data = { subExamId, phase, mockNum, score, maxScore, correct, wrong, skipped, percentage, date:new Date().toISOString() };
+  localStorage.setItem(fmKey(subExamId, phase, mockNum), JSON.stringify(data));
+  document.getElementById('attempt-modal').remove();
+  showToast(`✅ Full Mock ${mockNum} saved! ${percentage.toFixed(1)}%`);
+  goPage(getCurrentPage());
+}
+
+function deleteFullMock(subExamId, phase, mockNum) {
+  if (!confirm('Delete this result?')) return;
+  localStorage.removeItem(fmKey(subExamId, phase, mockNum));
+  document.getElementById('attempt-modal').remove();
+  showToast('🗑️ Deleted');
+  goPage(getCurrentPage());
+}
+
+function getCurrentPage() {
+  const active = document.querySelector('.page.active');
+  if (!active) return 'home';
+  return active.id.replace('page-','');
+}
+
+/* ══════════════════════════════════════════
+   SETTINGS PAGE
+══════════════════════════════════════════ */
+function renderSettings() {
+  const prof = getProfile();
+  const sid = getStudentID();
+  const results = getAllResults();
+  let H = '';
+
+  H += `<div class="settings-section">
+    <div class="sec-hdr"><div class="sec-title">👤 Profile</div><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit</button></div>
+    <div class="settings-row">
+      <div><div style="font-size:13px;font-weight:700;">Full Name</div><div style="font-size:11px;color:var(--text3);">${escH(prof.name||'Not set')}</div></div>
+    </div>
+    <div class="settings-row">
+      <div><div style="font-size:13px;font-weight:700;">Student ID</div><div style="font-size:11px;font-family:var(--mono);color:var(--acc);">${sid||'Not generated'}</div></div>
+    </div>
+    <div class="settings-row">
+      <div><div style="font-size:13px;font-weight:700;">Target Exam</div><div style="font-size:11px;color:var(--text3);">${getExamLabel(prof.exam||'ibps_po')}</div></div>
+    </div>
+    <div class="settings-row">
+      <div><div style="font-size:13px;font-weight:700;">Current Phase</div><div style="font-size:11px;color:var(--text3);">${(prof.phase||'prelims').charAt(0).toUpperCase()+(prof.phase||'prelims').slice(1)}</div></div>
+    </div>
+  </div>`;
+
+  H += `<div class="settings-section">
+    <div class="sec-hdr"><div class="sec-title">📦 Data</div></div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap;">
+      <button class="btn btn-prim" onclick="exportData()">⬇️ Export Backup</button>
+      <label class="btn btn-ghost" style="cursor:pointer;">📂 Import Backup<input type="file" accept=".json" style="display:none" onchange="importData(this.files[0])"></label>
+      <button class="btn" style="background:rgba(244,63,94,.1);color:var(--red);border:1.5px solid rgba(244,63,94,.2);" onclick="clearAllData()">🗑️ Clear All</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px;">${results.length} mock results saved locally</div>
+  </div>`;
+
+  H += `<div class="settings-section">
+    <div class="sec-hdr"><div class="sec-title">⌨️ Keyboard Shortcuts</div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      ${[['1','Home'],['2','IBPS'],['3','SBI'],['4','RBI'],['5','Settings']].map(([k,l])=>`<div style="display:inline-flex;align-items:center;gap:5px;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;font-size:11px;"><span style="font-family:var(--mono);font-weight:700;color:var(--acc)">${k}</span><span style="color:var(--text3)">${l}</span></div>`).join('')}
+    </div>
+  </div>`;
+
+  H += `<div class="settings-section">
+    <div class="sec-hdr"><div class="sec-title">🌐 Community</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <a href="https://wondermayank.github.io" target="_blank" class="btn btn-prim">🌐 Wondermayank</a>
+      <a href="https://t.me/THUNDERSTUDY" target="_blank" class="btn btn-ghost">💬 Telegram</a>
+    </div>
+    <div style="margin-top:12px;padding:12px;background:var(--light);border-radius:12px;display:flex;align-items:center;gap:10px;">
+      <div style="font-size:22px;">⚡</div>
+      <div>
+        <div style="font-size:12px;font-weight:800;">ThunderStudy Banking</div>
+        <div style="font-size:10px;color:var(--text3);">by <a href="https://wondermayank.github.io" target="_blank" style="color:var(--acc);text-decoration:none;font-weight:700;">Wondermayank</a> · All rights reserved</div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('settings-content').innerHTML = H;
+}
+
+/* ══════════════════════════════════════════
+   EXPORT / IMPORT
+══════════════════════════════════════════ */
+function exportData() {
+  const data = {};
+  for (let i=0; i<localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('tsbank_') || k.startsWith('ts_bank_'))) data[k] = localStorage.getItem(k);
+  }
+  data['_exported_at'] = new Date().toISOString();
+  const prof = getProfile();
+  const a = document.createElement('a');
+  a.download = `thunderstudy_banking_${(prof.name||'student').replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.json`;
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.click();
+  showToast('⬇️ Backup downloaded!');
+}
+
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data || typeof data !== 'object') throw new Error('Invalid file');
+      const importable = Object.entries(data).filter(([k]) => k.startsWith('tsbank_')||k.startsWith('ts_bank_'));
+      if (!importable.length) throw new Error('No ThunderStudy Banking data found');
+      if (!confirm(`Import ${importable.length} records? This overwrites current data.`)) return;
+      importable.forEach(([k,v]) => localStorage.setItem(k,v));
+      showToast(`✅ ${importable.length} records imported! Reloading…`);
+      setTimeout(() => location.reload(), 1500);
+    } catch(err) {
+      showToast('❌ ' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function clearAllData() {
+  if (!confirm('Delete all your banking exam results? This cannot be undone.')) return;
+  const keys = [];
+  for (let i=0; i<localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('tsbank_')||k.startsWith('ts_bank_'))) keys.push(k);
+  }
+  keys.forEach(k => localStorage.removeItem(k));
+  showToast('🗑️ All data cleared');
+  setTimeout(() => location.reload(), 1000);
+}
+
+/* ══════════════════════════════════════════
+   PROFILE MODAL
+══════════════════════════════════════════ */
+function openProfileModal() {
+  const p = getProfile();
+  document.getElementById('pf-name').value = p.name||'';
+  document.getElementById('pf-exam').value = p.exam||'ibps_po';
+  document.getElementById('pf-phase').value = p.phase||'prelims';
+  openModal('profile-modal');
+}
+
+function saveProfile() {
+  const p = {
+    name: document.getElementById('pf-name').value.trim(),
+    exam: document.getElementById('pf-exam').value,
+    phase: document.getElementById('pf-phase').value,
+  };
+  localStorage.setItem('ts_bank_profile', JSON.stringify(p));
+  closeModal('profile-modal');
+  showToast('✅ Profile saved!');
+  renderHome();
+}
+
+/* ══════════════════════════════════════════
+   ONBOARDING
+══════════════════════════════════════════ */
+let _obData = { name:'', sid:'', exam:'', subExam:'', phase:'' };
+
+function obValidate1() {
+  const name = (document.getElementById('ob-name')?.value||'').trim();
+  const sid = (document.getElementById('ob-sid')?.value||'').trim();
+  const btn = document.getElementById('ob-next-1');
+  if (btn) btn.disabled = !(name.length >= 2 && sid.length >= 2);
+}
+
+function obNext(step) {
+  if (step === 2) {
+    _obData.name = document.getElementById('ob-name').value.trim();
+    _obData.sid = document.getElementById('ob-sid').value.trim();
+    // Build exam grid
+    const grid = document.getElementById('ob-exam-grid');
+    const exams = [
+      { id:'ibps', label:'IBPS', icon:'🏦', sub:'PO · Clerk · RRB' },
+      { id:'sbi',  label:'SBI',  icon:'🏛️', sub:'PO · Clerk' },
+      { id:'rbi',  label:'RBI',  icon:'🏅', sub:'Assistant · Grade B' },
+    ];
+    grid.innerHTML = exams.map(e => `
+      <div class="ob-exam-card" id="obex-${e.id}" onclick="obSelectExam('${e.id}')">
+        <div class="ob-exam-icon">${e.icon}</div>
+        <div class="ob-exam-name">${e.label}</div>
+        <div class="ob-exam-sub">${e.sub}</div>
+      </div>`).join('');
+  }
+  if (step === 3 && _obData.exam) {
+    const exam = EXAM_DATA[_obData.exam];
+    const subEl = document.getElementById('ob-subexam-grid');
+    const phEl = document.getElementById('ob-phase-grid');
+    document.getElementById('ob-step3-sub').textContent = `Choose your target post and preparation phase for ${exam.name}.`;
+    subEl.innerHTML = Object.entries(exam.subExams).map(([key,se]) => `
+      <div class="ob-exam-card" id="obsub-${key}" onclick="obSelectSub('${key}')">
+        <div class="ob-exam-icon">${se.icon}</div>
+        <div class="ob-exam-name">${se.name}</div>
+        <div class="ob-exam-sub">${se.label}</div>
+      </div>`).join('');
+    phEl.innerHTML = '';
+    document.getElementById('ob-finish-btn').disabled = true;
+  }
+  document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('ob-step-'+step).classList.add('active');
+  [1,2,3].forEach(i => { const d=document.getElementById('ob-dot-'+i); if(d) d.classList.toggle('done',i<=step); });
+}
+
+function obSelectExam(examId) {
+  _obData.exam = examId;
+  document.querySelectorAll('.ob-exam-card').forEach(c => c.classList.remove('sel'));
+  document.getElementById('obex-'+examId).classList.add('sel');
+  document.getElementById('ob-next-2').disabled = false;
+}
+
+function obSelectSub(subKey) {
+  _obData.subExam = subKey;
+  const exam = EXAM_DATA[_obData.exam];
+  const phases = exam.subExams[subKey].phases;
+  document.querySelectorAll('[id^="obsub-"]').forEach(c => c.classList.remove('sel'));
+  document.getElementById('obsub-'+subKey).classList.add('sel');
+  // Show phase buttons
+  const phEl = document.getElementById('ob-phase-grid');
+  phEl.innerHTML = Object.entries(phases).map(([key,ph]) => `
+    <div class="phase-tab" id="obph-${key}" onclick="obSelectPhase('${key}')" style="flex:1;">
+      ${key==='prelims'?'📋':key==='mains'?'📜':key==='phase1'?'🔵':'🟣'} ${ph.name}
+    </div>`).join('');
+  _obData.phase = '';
+  document.getElementById('ob-finish-btn').disabled = true;
+}
+
+function obSelectPhase(phaseKey) {
+  _obData.phase = phaseKey;
+  document.querySelectorAll('[id^="obph-"]').forEach(c => c.classList.remove('active'));
+  const el = document.getElementById('obph-'+phaseKey);
+  if (el) el.classList.add('active');
+  document.getElementById('ob-finish-btn').disabled = !(_obData.subExam && _obData.phase);
+}
+
+function obFinish() {
+  localStorage.setItem('ts_bank_sid', _obData.sid);
+  localStorage.setItem('ts_bank_profile', JSON.stringify({
+    name: _obData.name, exam: _obData.subExam, phase: _obData.phase,
+  }));
+  localStorage.setItem('ts_bank_ob_done', '1');
+  document.getElementById('ob-overlay').classList.remove('open');
+  renderHome();
+  showToast(`🚀 Welcome, ${_obData.name}! Let's start!`);
+}
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function getExamLabel(examId) {
+  const map = {
+    ibps_po:'IBPS PO', ibps_clerk:'IBPS Clerk',
+    ibps_rrb_po:'IBPS RRB PO', ibps_rrb_clerk:'IBPS RRB Clerk',
+    sbi_po:'SBI PO', sbi_clerk:'SBI Clerk',
+    rbi_assistant:'RBI Assistant', rbi_grade_b:'RBI Grade B',
+  };
+  return map[examId] || examId;
+}
+
+function getExamGroup(examId) {
+  if (examId.startsWith('ibps')) return 'ibps';
+  if (examId.startsWith('sbi')) return 'sbi';
+  if (examId.startsWith('rbi')) return 'rbi';
+  return 'ibps';
+}
+
+function calcStreak(results) {
+  const dates = new Set(results.map(r => r.date ? r.date.substring(0,10) : null).filter(Boolean));
+  if (!dates.size) return 0;
+  const today = new Date();
+  const todayStr = today.toISOString().substring(0,10);
+  const yestStr = new Date(+today-86400000).toISOString().substring(0,10);
+  if (!dates.has(todayStr) && !dates.has(yestStr)) return 0;
+  let cur = new Date(dates.has(todayStr) ? today : new Date(+today-86400000));
+  let s = 0;
+  while (true) {
+    const x = cur.toISOString().substring(0,10);
+    if (dates.has(x)) { s++; cur = new Date(+cur-86400000); } else break;
+  }
+  return s;
+}
+
+/* ══════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════ */
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-ov').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+
+/* ══════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input,textarea,select')) return;
+  const pages = ['home','ibps','sbi','rbi','settings'];
+  const n = parseInt(e.key)-1;
+  if (!isNaN(n) && n>=0 && n<pages.length) goPage(pages[n]);
+});
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  // Remove boot screen
+  setTimeout(() => {
+    const boot = document.getElementById('ts-boot');
+    if (boot) { boot.style.transition='opacity .6s ease'; boot.style.opacity='0'; setTimeout(()=>boot.remove(),650); }
+  }, 2200);
+
+  // Check onboarding
+  if (!localStorage.getItem('ts_bank_ob_done')) {
+    document.getElementById('ob-overlay').classList.add('open');
+  } else {
+    renderHome();
+  }
+});
+</script>
+</html>
