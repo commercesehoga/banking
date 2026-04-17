@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -178,10 +179,52 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
 .filter-inp:focus{border-color:var(--acc);}
 
 /* ── ONBOARDING ── */
+/* --- Updated ONBOARDING Styles --- */
+/* --- Updated ONBOARDING Styles --- */
+.ob-box {
+    background: var(--card);
+    border-radius: 26px;
+    padding: 24px;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 80px rgba(37,99,235,.2);
+    animation: mIn .4s cubic-bezier(.34,1.56,.64,1) both;
+    
+    /* FIX: Prevents the modal from going off-screen on mobile */
+    max-height: 95vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.ob-step {
+    /* FIX: Removed !important so JS can toggle it easily */
+    display: none; 
+    width: 100%;
+}
+
+.ob-step.active {
+    /* FIX: This ensures the active step ALWAYS shows over the hidden ones */
+    display: block !important;
+}
+
+.ob-exam-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+    
+    /* FIX: Makes the exam list scrollable so the 'Start' button is visible */
+    max-height: 300px; 
+    overflow-y: auto;
+    padding: 4px;
+}
+
+/* Custom scrollbar for the exam grid */
+.ob-exam-grid::-webkit-scrollbar { width: 4px; }
+.ob-exam-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 .ob-overlay{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(124,58,237,.08));backdrop-filter:blur(10px);z-index:2000;align-items:center;justify-content:center;padding:16px;}
 .ob-overlay.open{display:flex;}
-.ob-box{background:var(--card);border-radius:26px;padding:30px 26px;max-width:500px;width:100%;border:1px solid var(--border);box-shadow:0 24px 80px rgba(37,99,235,.2);animation:mIn .4s cubic-bezier(.34,1.56,.64,1) both;max-height:92vh;overflow-y:auto;}
-.ob-step{display:none;}.ob-step.active{display:block;}
 .ob-progress{display:flex;gap:5px;margin-bottom:22px;}
 .ob-prog-dot{flex:1;height:4px;border-radius:4px;background:var(--border);transition:background .4s;}
 .ob-prog-dot.done{background:linear-gradient(90deg,#2563eb,#7c3aed);}
@@ -191,7 +234,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
 .ob-btn{width:100%;padding:12px;border-radius:14px;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:var(--fn);transition:all .18s;}
 .ob-btn-prim{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.3);}
 .ob-btn-prim:disabled{opacity:.4;cursor:not-allowed;}
-.ob-exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
 .ob-exam-card{background:var(--card2);border:1.5px solid var(--border);border-radius:13px;padding:14px 12px;cursor:pointer;transition:all .18s;text-align:center;}
 .ob-exam-card:hover{border-color:var(--acc);}
 .ob-exam-card.sel{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(124,58,237,.06));border-color:var(--acc);}
@@ -339,7 +381,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
   <div class="page active" id="page-home">
     <div class="topbar">
       <div><div class="page-title" id="home-greeting">👋 Hello, Aspirant!</div><div class="page-sub" id="home-sub">Banking Exam Dashboard</div></div>
-      <div class="topbar-right"><button class="btn btn-prim" onclick="openAddSubjModal()">+ Add Exam</button></div>
+      <div class="topbar-right"><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
     </div>
     <div id="home-content"></div>
   </div>
@@ -393,11 +435,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
       <div class="ob-sub">Set up your banking exam prep dashboard in 2 steps.</div>
       <div class="form-row"><div class="form-lbl">Your Full Name</div><input class="form-inp" id="ob-name" placeholder="Enter your name" oninput="obVal1()"></div>
       <div class="form-row">
-        <div class="form-lbl">Student ID</div>
-        <div style="display:flex;gap:8px;">
-          <input class="form-inp" id="ob-sid" placeholder="Click Generate →" readonly style="font-family:var(--mono);font-size:15px;font-weight:800;color:var(--acc);flex:1;">
-          <button onclick="genSID()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);white-space:nowrap;">🎲 Generate</button>
-        </div>
+  <div class="form-lbl">Student ID</div>
+  <div style="display:flex;gap:8px;">
+    <input class="form-inp" id="ob-sid" placeholder="Auto-fetched or click Generate →" readonly style="font-family:var(--mono);font-size:15px;font-weight:800;color:var(--acc);flex:1;">
+    <button onclick="genSID()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);white-space:nowrap;">🎲 Generate</button>
+  </div>
+  <div id="ob-cuet-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
+</div>
       </div>
       <button class="ob-btn ob-btn-prim" id="ob-next-1" onclick="obNext(2)" disabled>Continue →</button>
       <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
@@ -473,8 +517,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;}
   <div class="dock-item" id="dock-rank" onclick="goPage('rank')"><div class="dock-icon">🏆</div><div class="dock-label">Rank</div></div>
   <div class="dock-item" id="dock-settings" onclick="goPage('settings')"><div class="dock-icon">⚙️</div><div class="dock-label">Settings</div></div>
 </nav>
-
 <script>
+  
 /* ════════════════════════════════════════════════════════
    CONFIG — URL PATTERNS
    commercesehoga.github.io/banking/{bank}/{post}/{phase}/{mockId}
@@ -1513,19 +1557,77 @@ function obImport(file){
    ONBOARDING
 ════════════════════════════════════════════════════════ */
 let _obSelExam='';
-function genSID(){const id='TB'+String(Math.floor(Math.random()*100000)).padStart(5,'0');localStorage.setItem('tsb_sid',id);const el=document.getElementById('ob-sid');if(el){el.value=id;el.style.color='var(--green)';}obVal1();}
-function obVal1(){const name=(document.getElementById('ob-name')?.value||'').trim(),sid=(document.getElementById('ob-sid')?.value||'').trim();const btn=document.getElementById('ob-next-1');if(btn)btn.disabled=!(name.length>=2&&sid.length>=2);}
-function obNext(step){
-  if(step===2){
-    const name=document.getElementById('ob-name').value.trim(),sid=document.getElementById('ob-sid').value.trim();
-    localStorage.setItem('tsb_profile',JSON.stringify({name}));localStorage.setItem('tsb_sid',sid);
-    const grid=document.getElementById('ob-exam-grid');
-    const opts=[{id:'ibps_po',label:'IBPS PO',icon:'🏦',sub:'Probationary Officer'},{id:'ibps_clerk',label:'IBPS Clerk',icon:'📋',sub:'Clerical Cadre'},{id:'ibps_rrb_po',label:'RRB PO',icon:'🌾',sub:'Officer Scale I'},{id:'sbi_po',label:'SBI PO',icon:'🏛️',sub:'Probationary Officer'},{id:'sbi_clerk',label:'SBI Clerk',icon:'📁',sub:'Junior Associates'},{id:'rbi_assistant',label:'RBI Assistant',icon:'🏅',sub:'Assistant'},{id:'rbi_grade_b',label:'RBI Grade B',icon:'⭐',sub:'Officer Grade B'},{id:'ibps_rrb_clerk',label:'RRB Clerk',icon:'📝',sub:'Office Assistant'}];
-    grid.innerHTML=opts.map(o=>`<div class="ob-exam-card" id="obex-${o.id}" onclick="obSelExam('${o.id}')"><div class="ob-exam-icon">${o.icon}</div><div class="ob-exam-name">${o.label}</div><div class="ob-exam-sub">${o.sub}</div></div>`).join('');
+function genSID(){
+  const cuetSID=localStorage.getItem('ts_student_id');
+  const cuetProfile=JSON.parse(localStorage.getItem('ts_profile')||'{}');
+  if(cuetSID){
+    localStorage.setItem('tsb_sid',cuetSID);
+    const el=document.getElementById('ob-sid');if(el){el.value=cuetSID;el.style.color='var(--green)';}
+    if(cuetProfile.name){const ne=document.getElementById('ob-name');if(ne){ne.value=cuetProfile.name;}}
+    obVal1();
+    return;
   }
-  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
-  document.getElementById('ob-step-'+step).classList.add('active');
-  [1,2].forEach(i=>{const d=document.getElementById('ob-dot-'+i);if(d)d.classList.toggle('done',i<=step);});
+  const id='TB'+String(Math.floor(Math.random()*100000)).padStart(5,'0');
+  localStorage.setItem('tsb_sid',id);
+  const el=document.getElementById('ob-sid');if(el){el.value=id;el.style.color='var(--green)';}obVal1();
+}
+function obVal1(){const name=(document.getElementById('ob-name')?.value||'').trim(),sid=(document.getElementById('ob-sid')?.value||'').trim();const btn=document.getElementById('ob-next-1');if(btn)btn.disabled=!(name.length>=2&&sid.length>=2);}
+function obNext(step) {
+    // 1. Logic: Hard-hide all steps first
+    const allSteps = document.querySelectorAll('.ob-step');
+    allSteps.forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none'; // Force hide
+    });
+
+    // 2. Prepare content for Step 2
+    if (step === 2) {
+        const nameInput = document.getElementById('ob-name');
+        const sidInput = document.getElementById('ob-sid');
+        
+        // Save data to storage
+        localStorage.setItem('tsb_profile', JSON.stringify({ name: nameInput.value.trim() }));
+        localStorage.setItem('tsb_sid', sidInput.value.trim());
+
+        const grid = document.getElementById('ob-exam-grid');
+        const opts = [
+            {id:'ibps_po',label:'IBPS PO',icon:'🏦',sub:'Probationary Officer'},
+            {id:'ibps_clerk',label:'IBPS Clerk',icon:'📋',sub:'Clerical Cadre'},
+            {id:'ibps_rrb_po',label:'RRB PO',icon:'🌾',sub:'Officer Scale I'},
+            {id:'sbi_po',label:'SBI PO',icon:'🏛️',sub:'Probationary Officer'},
+            {id:'sbi_clerk',label:'SBI Clerk',icon:'📁',sub:'Junior Associates'},
+            {id:'rbi_assistant',label:'RBI Assistant',icon:'🏅',sub:'Assistant'},
+            {id:'rbi_grade_b',label:'RBI Grade B',icon:'⭐',sub:'Officer Grade B'},
+            {id:'ibps_rrb_clerk',label:'RRB Clerk',icon:'📝',sub:'Office Assistant'}
+        ];
+        
+        grid.innerHTML = opts.map(o => `
+            <div class="ob-exam-card" id="obex-${o.id}" onclick="obSelExam('${o.id}')">
+                <div class="ob-exam-icon">${o.icon}</div>
+                <div class="ob-exam-name">${o.label}</div>
+                <div class="ob-exam-sub">${o.sub}</div>
+            </div>
+        `).join('');
+    }
+
+    // 3. Show the requested step
+    const targetStep = document.getElementById('ob-step-' + step);
+    if (targetStep) {
+        targetStep.classList.add('active');
+        targetStep.style.display = 'block'; // Force block display
+    }
+
+    // 4. Update dots
+    [1, 2].forEach(i => {
+        const dot = document.getElementById('ob-dot-' + i);
+        if (dot) dot.classList.toggle('done', i <= step);
+    });
+
+    // 5. Hide the Step 1 "Continue" button explicitly if we are on Step 2
+    const step1Btn = document.getElementById('ob-next-1');
+    if (step === 2 && step1Btn) {
+        step1Btn.style.display = 'none';
+    }
 }
 function obSelExam(id){_obSelExam=id;document.querySelectorAll('.ob-exam-card').forEach(c=>c.classList.remove('sel'));document.getElementById('obex-'+id)?.classList.add('sel');document.getElementById('ob-finish').disabled=false;}
 function obFinish(){
@@ -1568,11 +1670,25 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('load',()=>{
   setTimeout(()=>{const b=document.getElementById('ts-boot');if(b){b.style.transition='opacity .6s ease';b.style.opacity='0';setTimeout(()=>b.remove(),650);}},2200);
   if(!localStorage.getItem('tsb_ob_done')){
+    // Auto-fetch CUET data
+const _cuetSID=localStorage.getItem('ts_student_id');
+const _cuetProf=JSON.parse(localStorage.getItem('ts_profile')||'{}');
+if(_cuetSID){
+  localStorage.setItem('tsb_sid',_cuetSID);
+  const ne=document.getElementById('ob-name');const se=document.getElementById('ob-sid');const st=document.getElementById('ob-cuet-status');
+  if(_cuetProf.name&&ne)ne.value=_cuetProf.name;
+  if(se){se.value=_cuetSID;se.style.color='var(--green)';}
+  if(st)st.innerHTML=`<span style="color:var(--green)">✅ Auto-fetched from ThunderStudy CUET dashboard!</span>`;
+  obVal1();
+}
     document.getElementById('ob-overlay').classList.add('open');
   } else {
     checkSectionGifts();renderHome();
   }
 });
+function openAddSubjModal(){
+  openProfileModal();
+}
 </script>
 </body>
 </html>
