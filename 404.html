@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commerce | Coming Soon</title>
+    <style>
+        /* Same styles as index.html — keeping it consistent */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 102, 255, 0.15), 0 8px 24px -6px rgba(0, 0, 0, 0.05);
+            padding: 3.5rem 2.5rem;
+            text-align: center;
+            border: 1px solid rgba(0, 112, 243, 0.08);
+            transition: transform 0.2s ease;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 2.5rem 1.5rem;
+                border-radius: 24px;
+            }
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(145deg, #0070f3 0%, #00a2ff 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 24px -8px rgba(0, 112, 243, 0.25);
+        }
+
+        .icon svg {
+            width: 44px;
+            height: 44px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #0070f3 0%, #00a2ff 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #4a5568;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .message {
+            background: #f0f7ff;
+            padding: 1.25rem 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #0070f3;
+        }
+
+        .message p {
+            color: #1e293b;
+            font-size: 1.125rem;
+            line-height: 1.6;
+            font-weight: 450;
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-label {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .contact-link {
+            background: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 100px;
+            color: #0070f3;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border: 1.5px solid #0070f3;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 112, 243, 0.1);
+        }
+
+        .contact-link:hover {
+            background: #0070f3;
+            color: white;
+            border-color: #0070f3;
+            box-shadow: 0 8px 16px -6px rgba(0, 112, 243, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .footer-note span {
+            color: #0070f3;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e6f0ff;
+            color: #0070f3;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            margin-top: 1.5rem;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3.75h10.5a1.5 1.5 0 011.5 1.5v13.5a1.5 1.5 0 01-1.5 1.5H6.75a1.5 1.5 0 01-1.5-1.5V5.25a1.5 1.5 0 011.5-1.5z" />
+            </svg>
+        </div>
+
+      
+        <div class="badge">
+            ✦ LAUNCHING SOON ✦
+        </div>
+        
+        <h1>Hello There</h1>
+        <div class="subtitle">Something big is coming</div>
+        
+        <div class="message">
+            <p>This Section is Under construction<br>We'll be here soon with a great experience.</p>
+        </div>
+
+        <div class="contact">
+            <span class="contact-label">Need it faster?</span>
+            <a href="https://t.me/mindmaster_robot" target="_blank" rel="noopener" class="contact-link">
+                t.me/mindmaster_robot
+            </a>
+        </div>
+
+        
+        <div class="footer-note">
+            <span>commercesehoga</span> — we build with purpose
+        </div>
+    </div>
+</body>
+</html>
