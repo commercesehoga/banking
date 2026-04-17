@@ -998,24 +998,16 @@ function updateProgress(){
 /* ════════ SECTION SUBMIT ════════ */
 function confirmSectionSubmit(){
   const sec = currentSection();
-  const answered = sec.questions.filter(q => q.userAnswer !== undefined && q.userAnswer !== null).length;
+  const answered = sec.questions.filter(q=>q.userAnswer!==undefined&&q.userAnswer!==null).length;
   const unanswered = sec.questions.length - answered;
-
-  showConfirmModal(
-    `⚠️ Submit ${sec.name}?`,
-    `<div style="display:flex;flex-direction:column;gap:8px;">
-      <div style="padding:10px 14px;background:rgba(16,185,129,.08);border-radius:10px;border:1px solid rgba(16,185,129,.2);">
-        ✅ <strong>Answered:</strong> ${answered} / ${sec.questions.length}
-      </div>
-      <div style="padding:10px 14px;background:rgba(244,63,94,.07);border-radius:10px;border:1px solid rgba(244,63,94,.2);">
-        ⏭️ <strong>Unanswered:</strong> ${unanswered}
-      </div>
-      <div style="padding:10px 14px;background:rgba(245,158,11,.08);border-radius:10px;border:1px solid rgba(245,158,11,.2);font-size:13px;">
-        🔒 <strong>Warning:</strong> You <u>cannot go back</u> to this section after submitting!
-      </div>
-    </div>`,
-    () => submitSection()
-  );
+  document.getElementById('csm-title').textContent = `Submit "${sec.name}"?`;
+  document.getElementById('csm-answered').textContent = answered;
+  document.getElementById('csm-total').textContent = sec.questions.length;
+  document.getElementById('csm-unanswered').textContent = unanswered;
+  document.getElementById('confirm-section-modal').classList.add('open');
+}
+function closeConfirmSectionModal(){
+  document.getElementById('confirm-section-modal').classList.remove('open');
 }
 function autoSubmitSection(){ submitSection(true); }
 
@@ -1107,14 +1099,17 @@ function submitFullTest(){
   const name = (() => { try { return JSON.parse(localStorage.getItem('tsb_profile')||'{}').name||''; } catch(e){ return ''; } })() || localStorage.getItem('cbtUserName') || 'Student';
 const sid = localStorage.getItem('tsb_sid') || localStorage.getItem('ts_student_id') || '';
   const resultData = {
-    studentId:sid, name, subject:'banking', chapter:'banking-fullmock-1',
-    exam:'ibps', post:'po', phase:'prelims', mockNum:1,
-    date:new Date().toISOString(), score:parseFloat(totalScore.toFixed(2)),
-    maxScore, correct:totalCorrect, wrong:totalWrong, skipped:totalSkipped,
-    totalQ:100, percentage:parseFloat(pct.toFixed(2)), accuracy:parseFloat(acc.toFixed(2)),
-    timeTaken, sections: state.sectionResults.map(r=>({id:r.secId,name:r.secName,score:r.score,maxScore:r.maxScore,correct:r.correct,wrong:r.wrong,skipped:r.skipped,percentage:r.percentage}))
-  };
-  localStorage.setItem('tsb_fullmock_ibps_po_1', JSON.stringify(resultData));
+  // Keep all your existing fields, just make sure these are present:
+  score: parseFloat(totalScore.toFixed(2)),
+  maxScore: 100,
+  percentage: parseFloat(pct.toFixed(2)),
+  correct: totalCorrect,
+  wrong: totalWrong,          // dashboard checks both "wrong" and "incorrect"
+  skipped: totalSkipped,
+  date: new Date().toISOString(),
+  // your other fields (studentId, name, etc.) can stay
+};
+  localStorage.setItem('tsb_fm_ibps_po_prelims_1', JSON.stringify(resultData));
   const history = JSON.parse(localStorage.getItem('tsb_fullmock_ibps_po_1_history')||'[]');
   history.unshift(resultData); if(history.length>20) history.splice(20);
   localStorage.setItem('tsb_fullmock_ibps_po_1_history', JSON.stringify(history));
@@ -1323,7 +1318,7 @@ function triggerViolation(reason){
   document.getElementById('violation-count').textContent = `${state.violations}/${state.MAX_VIOLATIONS}`;
   showViolationBanner(reason);
   if(state.violations >= state.MAX_VIOLATIONS){
-    alert('🚨 You have reached the maximum violations. Test is being submitted.');
+    showToast('🚨 Max violations reached. Auto-submitting...','error',3000);
     cancelCountdown(); submitFullTest(); return;
   }
   const secs = reason==='tab' ? 2 : 5;
@@ -1404,17 +1399,29 @@ function showConfirmModal(title, bodyHTML, onConfirm){
   document.getElementById('confirm-modal').classList.add('open');
 }
 </script>
-<!-- CUSTOM CONFIRM MODAL -->
-<div class="modal-ov" id="confirm-modal">
-  <div class="modal-content" style="max-width:420px;">
+<!-- CONFIRM SECTION SUBMIT MODAL -->
+<div class="modal-ov" id="confirm-section-modal">
+  <div class="modal-content" style="max-width:400px;">
     <div class="modal-header">
-      <h2 id="confirm-modal-title">⚠️ Submit Section?</h2>
-      <button class="close-btn" onclick="closeConfirmModal()">×</button>
+      <h2 id="csm-title">Submit Section?</h2>
+      <button class="close-btn" onclick="closeConfirmSectionModal()">×</button>
     </div>
-    <div id="confirm-modal-body" style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px;"></div>
-    <div style="display:flex;gap:10px;">
-      <button onclick="closeConfirmModal()" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fn);">✗ Cancel</button>
-      <button id="confirm-modal-ok" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--fn);">✅ Yes, Submit</button>
+    <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:11px;font-size:14px;">
+        <span style="color:var(--text2);font-weight:600;">✅ Answered</span>
+        <span style="font-weight:900;font-family:var(--mono);color:var(--green);"><span id="csm-answered">0</span> / <span id="csm-total">0</span></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:11px 14px;background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.2);border-radius:11px;font-size:14px;">
+        <span style="color:var(--text2);font-weight:600;">⏭️ Unanswered</span>
+        <span style="font-weight:900;font-family:var(--mono);color:var(--red);" id="csm-unanswered">0</span>
+      </div>
+      <div style="padding:11px 14px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:11px;font-size:13px;color:var(--text2);">
+        🔒 <strong>Warning:</strong> You <u>cannot return</u> to this section after submitting!
+      </div>
+    </div>
+    <div style="display:flex;gap:9px;">
+      <button onclick="closeConfirmSectionModal()" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fn);">✗ Cancel</button>
+      <button onclick="closeConfirmSectionModal();submitSection();" style="flex:1;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:var(--fn);">✅ Yes, Submit</button>
     </div>
   </div>
 </div>
