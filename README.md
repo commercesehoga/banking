@@ -132,7 +132,7 @@ Contributions, bug reports and feature requests are welcome!
 
 ## 👤 Author
 
-**Wondermayank** — [commercesehoga.github.io](https://commercesehoga.github.io)
+**Wondermayank** — [wondermayank.github.io](https://wondermayank.github.io)
 
 ---
 
