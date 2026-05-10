@@ -1,0 +1,64 @@
+{
+  "name": "ThunderStudy Banking",
+  "short_name": "ThunderStudy",
+  "description": "Free mock tests and dashboard for IBPS PO, SBI PO, RBI Grade B and all banking exam preparation.",
+  "start_url": "/banking/",
+  "scope": "/banking/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f0f4ff",
+  "theme_color": "#2563eb",
+  "lang": "en-IN",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "label": "ThunderStudy Banking Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "IBPS Mock Tests",
+      "short_name": "IBPS",
+      "description": "Practice IBPS PO and Clerk mock tests",
+      "url": "/banking/#ibps",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "SBI Mock Tests",
+      "short_name": "SBI",
+      "description": "Practice SBI PO and Clerk mock tests",
+      "url": "/banking/#sbi",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Analytics",
+      "short_name": "Analytics",
+      "description": "View your preparation analytics",
+      "url": "/banking/#analytics",
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

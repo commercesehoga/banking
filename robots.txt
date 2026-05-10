@@ -1,0 +1,28 @@
+# ThunderStudy Banking — robots.txt
+# https://commercesehoga.github.io/banking/
+
+User-agent: *
+Allow: /banking/
+Disallow: /banking/test1.html
+Disallow: /banking/test2.html
+
+# Sitemap location
+Sitemap: https://commercesehoga.github.io/banking/sitemap.xml
+
+# Crawl delay (be polite)
+Crawl-delay: 1
+
+# Specific rules for major crawlers
+User-agent: Googlebot
+Allow: /banking/
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /banking/
+Crawl-delay: 1
+
+User-agent: facebot
+Allow: /banking/
+
+User-agent: Twitterbot
+Allow: /banking/

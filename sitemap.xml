@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Home / Dashboard -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://commercesehoga.github.io/banking/"/>
+    <image:image>
+      <image:loc>https://commercesehoga.github.io/banking/og-image.png</image:loc>
+      <image:title>ThunderStudy Banking Dashboard</image:title>
+      <image:caption>Free banking exam preparation dashboard for IBPS, SBI and RBI exams</image:caption>
+    </image:image>
+  </url>
+
+  <!-- IBPS Section -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/#ibps</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- SBI Section -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/#sbi</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- RBI Section -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/#rbi</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Analytics -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/#analytics</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- FAQ -->
+  <url>
+    <loc>https://commercesehoga.github.io/banking/#faq</loc>
+    <lastmod>2025-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

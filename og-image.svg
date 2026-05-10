@@ -1,0 +1,90 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a"/>
+      <stop offset="50%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.12)"/>
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0.04)"/>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Decorative blobs -->
+  <circle cx="1050" cy="120" r="180" fill="rgba(124,58,237,0.25)" filter="url(#blur1)"/>
+  <circle cx="150" cy="500" r="200" fill="rgba(37,99,235,0.3)" filter="url(#blur1)"/>
+  <circle cx="600" cy="650" r="150" fill="rgba(14,165,233,0.2)" filter="url(#blur1)"/>
+
+  <!-- Grid dots -->
+  <g opacity="0.08">
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="white"/>
+    </pattern>
+    <rect width="1200" height="630" fill="url(#dots)"/>
+  </g>
+
+  <!-- Logo badge -->
+  <rect x="60" y="60" width="64" height="64" rx="18" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+  <text x="92" y="103" font-size="32" text-anchor="middle" fill="white">⚡</text>
+
+  <!-- Brand name -->
+  <text x="144" y="88" font-family="'Segoe UI',Arial,sans-serif" font-size="28" font-weight="900" fill="white">Thunder</text>
+  <text x="144" y="88" font-family="'Segoe UI',Arial,sans-serif" font-size="28" font-weight="900" fill="white">
+    <tspan fill="white">Thunder</tspan><tspan fill="#93c5fd">Study</tspan>
+  </text>
+  <text x="144" y="112" font-family="'Segoe UI',Arial,sans-serif" font-size="13" font-weight="600" fill="rgba(255,255,255,0.6)" letter-spacing="2">BANKING · BY WONDERMAYANK</text>
+
+  <!-- Main headline -->
+  <text x="60" y="230" font-family="'Segoe UI',Arial,sans-serif" font-size="58" font-weight="900" fill="white">Free Banking Exam</text>
+  <text x="60" y="300" font-family="'Segoe UI',Arial,sans-serif" font-size="58" font-weight="900" fill="white">Prep Dashboard</text>
+
+  <!-- Subheadline -->
+  <text x="60" y="360" font-family="'Segoe UI',Arial,sans-serif" font-size="24" fill="rgba(255,255,255,0.75)">Mock tests · Analytics · Live Leaderboard · PWA</text>
+
+  <!-- Exam pills -->
+  <g transform="translate(60, 400)">
+    <!-- IBPS pill -->
+    <rect x="0" y="0" width="130" height="40" rx="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="65" y="26" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="700" fill="white" text-anchor="middle">🏦 IBPS PO</text>
+    <!-- SBI pill -->
+    <rect x="146" y="0" width="130" height="40" rx="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="211" y="26" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="700" fill="white" text-anchor="middle">🏛️ SBI PO</text>
+    <!-- RBI pill -->
+    <rect x="292" y="0" width="150" height="40" rx="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="367" y="26" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="700" fill="white" text-anchor="middle">🏅 RBI Grade B</text>
+    <!-- Clerk pill -->
+    <rect x="458" y="0" width="150" height="40" rx="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="533" y="26" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="700" fill="white" text-anchor="middle">📋 IBPS Clerk</text>
+  </g>
+
+  <!-- Stats cards on right side -->
+  <g transform="translate(740, 180)">
+    <!-- Card 1 -->
+    <rect x="0" y="0" width="200" height="90" rx="16" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <text x="20" y="32" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.7)">📝 Mock Tests</text>
+    <text x="20" y="68" font-family="'Segoe UI',Arial,sans-serif" font-size="36" font-weight="900" fill="white">50+</text>
+    <!-- Card 2 -->
+    <rect x="220" y="0" width="200" height="90" rx="16" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <text x="240" y="32" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.7)">🏦 Exams Covered</text>
+    <text x="240" y="68" font-family="'Segoe UI',Arial,sans-serif" font-size="36" font-weight="900" fill="white">8</text>
+    <!-- Card 3 -->
+    <rect x="0" y="110" width="200" height="90" rx="16" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <text x="20" y="142" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.7)">🏆 Leaderboard</text>
+    <text x="20" y="178" font-family="'Segoe UI',Arial,sans-serif" font-size="22" font-weight="900" fill="white">Live</text>
+    <!-- Card 4 -->
+    <rect x="220" y="110" width="200" height="90" rx="16" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.4)" stroke-width="1"/>
+    <text x="240" y="142" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.7)">💰 Price</text>
+    <text x="240" y="178" font-family="'Segoe UI',Arial,sans-serif" font-size="22" font-weight="900" fill="#34d399">FREE</text>
+    <!-- Card 5 -->
+    <rect x="0" y="220" width="420" height="80" rx="16" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="20" y="252" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.7)">🌐 commercesehoga.github.io/banking</text>
+    <text x="20" y="278" font-family="'Segoe UI',Arial,sans-serif" font-size="15" font-weight="700" fill="white">Start your free prep today →</text>
+  </g>
+</svg>

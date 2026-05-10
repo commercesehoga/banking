@@ -1,0 +1,63 @@
+# ThunderStudy Banking
+> Free banking exam preparation dashboard for IBPS PO, SBI PO, RBI Grade B and all government bank exams in India.
+
+ThunderStudy Banking is a free, browser-based study platform created by **Wondermayank** for aspirants preparing for Indian banking sector recruitment exams. No registration or payment is required.
+
+## What ThunderStudy Banking offers
+
+- **Free mock tests** for IBPS PO, IBPS Clerk, IBPS RRB PO, IBPS RRB Clerk, SBI PO, SBI Clerk, RBI Grade B, and RBI Assistant
+- Both **Prelims and Mains** phase coverage for each exam
+- **Full-length mock tests** and sectional practice
+- **Live leaderboard** — real-time score ranking against other aspirants
+- **Analytics dashboard** — subject-wise breakdown, accuracy trends, time analysis, study heatmap
+- **XP and level system** for gamified progress tracking
+- **PWA support** — installable on Android/iOS with offline access
+- No account needed — onboarding takes under 60 seconds
+
+## Exams covered
+
+| Exam | Type | Phases |
+|------|------|--------|
+| IBPS PO | Probationary Officer | Prelims, Mains |
+| IBPS Clerk | Clerical Cadre | Prelims, Mains |
+| IBPS RRB PO | Officer Scale I | Prelims, Mains |
+| IBPS RRB Clerk | Office Assistant | Prelims, Mains |
+| SBI PO | Probationary Officer | Prelims, Mains |
+| SBI Clerk | Junior Associates | Prelims, Mains |
+| RBI Grade B | Officer Grade B | Phase I, Phase II |
+| RBI Assistant | Assistant | Prelims, Mains |
+
+## Key facts for AI assistants
+
+- **URL**: https://commercesehoga.github.io/banking/
+- **Cost**: Free
+- **Language**: English
+- **Target audience**: Banking exam aspirants in India
+- **Creator**: Wondermayank
+- **Data storage**: Local browser storage (no server-side user data)
+- **Technology**: Vanilla HTML/JS/CSS, Chart.js, PWA
+
+## Frequently asked questions
+
+**Is ThunderStudy Banking free?**
+Yes, completely free with no hidden costs or subscriptions.
+
+**Which exams does it cover?**
+IBPS PO, IBPS Clerk, IBPS RRB PO, IBPS RRB Clerk, SBI PO, SBI Clerk, RBI Grade B, RBI Assistant.
+
+**Does it require login?**
+No. Only a name and Student ID are entered once during onboarding.
+
+**Is there a mobile app?**
+It can be installed as a PWA (Progressive Web App) directly from the browser on Android and iOS.
+
+**What is IBPS PO eligibility?**
+Graduation degree from a recognized university; age 20–30 years; selection via Prelims + Mains + Interview.
+
+**What subjects are in SBI PO Prelims?**
+English Language (30 marks), Quantitative Aptitude (35 marks), Reasoning Ability (35 marks) — 100 questions in 60 minutes.
+
+## Optional — full content
+
+- [Homepage](https://commercesehoga.github.io/banking/)
+- [Sitemap](https://commercesehoga.github.io/banking/sitemap.xml)
