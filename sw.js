@@ -3,7 +3,7 @@
    Caches shell for offline-first PWA experience
 ══════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'thunderstudy-banking-v2';
+const CACHE_NAME = 'thunderstudy-banking-v3';
 const STATIC_ASSETS = [
   '/banking/',
   '/banking/index.html',
