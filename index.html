@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -392,67 +390,56 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .filter-inp:focus{border-color:var(--acc);}
 
 /* ── ONBOARDING ── */
-/* --- Updated ONBOARDING Styles --- */
-/* --- Updated ONBOARDING Styles --- */
-.ob-box {
-    background: var(--card);
-    border-radius: 26px;
-    padding: 24px;
-    max-width: 500px;
-    width: 100%;
-    border: 1px solid var(--border);
-    box-shadow: 0 24px 80px rgba(37,99,235,.2);
-    animation: mIn .4s cubic-bezier(.34,1.56,.64,1) both;
-    
-    /* FIX: Prevents the modal from going off-screen on mobile */
-    max-height: 95vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.ob-step {
-    /* FIX: Removed !important so JS can toggle it easily */
-    display: none; 
-    width: 100%;
-}
-
-.ob-step.active {
-    /* FIX: This ensures the active step ALWAYS shows over the hidden ones */
-    display: block !important;
-}
-
-.ob-exam-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 16px;
-    
-    /* FIX: Makes the exam list scrollable so the 'Start' button is visible */
-    max-height: 300px; 
-    overflow-y: auto;
-    padding: 4px;
-}
-
-/* Custom scrollbar for the exam grid */
-.ob-exam-grid::-webkit-scrollbar { width: 4px; }
-.ob-exam-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-.ob-overlay{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(124,58,237,.08));backdrop-filter:blur(10px);z-index:2000;align-items:center;justify-content:center;padding:16px;}
+.ob-overlay{display:none;position:fixed;inset:0;background:linear-gradient(135deg,rgba(17,24,39,.65),rgba(37,99,235,.18));backdrop-filter:blur(14px);z-index:2000;align-items:center;justify-content:center;padding:16px;}
 .ob-overlay.open{display:flex;}
-.ob-progress{display:flex;gap:5px;margin-bottom:22px;}
-.ob-prog-dot{flex:1;height:4px;border-radius:4px;background:var(--border);transition:background .4s;}
+.ob-box{background:var(--card);border-radius:28px;padding:0;max-width:520px;width:100%;border:1px solid var(--border);box-shadow:0 32px 90px rgba(37,99,235,.22),0 0 0 1px rgba(255,255,255,.08);animation:mIn .4s cubic-bezier(.34,1.56,.64,1) both;max-height:95vh;display:flex;flex-direction:column;overflow:hidden;}
+.ob-header{padding:28px 28px 0;flex-shrink:0;}
+.ob-body{padding:0 28px 24px;overflow-y:auto;flex:1;}
+.ob-body::-webkit-scrollbar{width:4px;}
+.ob-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+.ob-progress{display:flex;gap:6px;margin-bottom:24px;}
+.ob-prog-dot{flex:1;height:5px;border-radius:5px;background:var(--border);transition:all .4s cubic-bezier(.34,1.56,.64,1);}
 .ob-prog-dot.done{background:linear-gradient(90deg,#2563eb,#7c3aed);}
-.ob-icon{font-size:40px;text-align:center;margin-bottom:12px;}
-.ob-title{font-size:19px;font-weight:900;text-align:center;margin-bottom:6px;}
-.ob-sub{font-size:13px;color:var(--text3);text-align:center;line-height:1.7;margin-bottom:18px;}
-.ob-btn{width:100%;padding:12px;border-radius:14px;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:var(--fn);transition:all .18s;}
-.ob-btn-prim{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.3);}
-.ob-btn-prim:disabled{opacity:.4;cursor:not-allowed;}
-.ob-exam-card{background:var(--card2);border:1.5px solid var(--border);border-radius:13px;padding:14px 12px;cursor:pointer;transition:all .18s;text-align:center;}
-.ob-exam-card:hover{border-color:var(--acc);}
-.ob-exam-card.sel{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(124,58,237,.06));border-color:var(--acc);}
-.ob-exam-icon{font-size:26px;margin-bottom:5px;}
-.ob-exam-name{font-size:12px;font-weight:800;color:var(--text);}
-.ob-exam-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.ob-step{display:none;width:100;}
+.ob-step.active{display:block!important;}
+.ob-icon{font-size:46px;text-align:center;margin-bottom:14px;filter:drop-shadow(0 4px 12px rgba(37,99,235,.3));}
+.ob-title{font-size:20px;font-weight:900;text-align:center;margin-bottom:6px;letter-spacing:-.4px;}
+.ob-sub{font-size:13px;color:var(--text3);text-align:center;line-height:1.7;margin-bottom:20px;}
+.ob-btn{width:100%;padding:13px;border-radius:14px;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:var(--fn);transition:all .2s;letter-spacing:.1px;}
+.ob-btn-prim{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;box-shadow:0 6px 24px rgba(37,99,235,.35);}
+.ob-btn-prim:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(37,99,235,.45);}
+.ob-btn-prim:disabled{opacity:.35;cursor:not-allowed;}
+
+/* SID row */
+.ob-sid-row{display:flex;gap:8px;align-items:stretch;}
+.ob-sid-inp{flex:1;font-family:var(--mono);font-size:15px;font-weight:800;color:var(--acc);background:var(--card2);border:1.5px solid var(--border);border-radius:11px;padding:10px 13px;outline:none;}
+.ob-sid-inp:focus{border-color:var(--acc);}
+.ob-sid-inp.fetched{border-color:var(--green);color:var(--green);}
+.ob-sid-action{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:11px;padding:10px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);white-space:nowrap;transition:all .18s;}
+.ob-sid-action:hover{transform:translateY(-1px);filter:brightness(1.1);}
+.ob-status{font-size:11px;margin-top:5px;min-height:14px;line-height:1.5;}
+
+/* Step 2 exam grid */
+.ob-exam-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px;max-height:320px;overflow-y:auto;padding:2px;}
+.ob-exam-grid::-webkit-scrollbar{width:4px;}
+.ob-exam-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+.ob-exam-card{background:var(--card2);border:2px solid var(--border);border-radius:15px;padding:15px 12px;cursor:pointer;transition:all .2s;text-align:center;position:relative;overflow:hidden;}
+.ob-exam-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(124,58,237,.04));opacity:0;transition:opacity .2s;}
+.ob-exam-card:hover{border-color:rgba(37,99,235,.4);transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,99,235,.12);}
+.ob-exam-card:hover::before{opacity:1;}
+.ob-exam-card.sel{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(124,58,237,.07));border-color:var(--acc);box-shadow:0 4px 18px rgba(37,99,235,.2);}
+.ob-exam-card.sel::after{content:'✓';position:absolute;top:8px;right:10px;font-size:9px;font-weight:900;color:#fff;background:var(--acc);border-radius:20px;padding:2px 7px;}
+.ob-exam-icon{font-size:28px;margin-bottom:7px;}
+.ob-exam-name{font-size:12px;font-weight:900;color:var(--text);margin-bottom:2px;}
+.ob-exam-sub{font-size:10px;color:var(--text3);}
+.ob-exam-badge{display:inline-block;font-size:8px;font-weight:800;padding:2px 7px;border-radius:20px;background:rgba(37,99,235,.1);color:var(--acc);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;}
+
+/* import strip */
+.ob-import-strip{margin-top:14px;border-top:1px solid var(--border);padding-top:14px;}
+.ob-import-label{font-size:11px;font-weight:700;color:var(--text3);text-align:center;margin-bottom:9px;}
+.ob-import-drop{display:block;border:2px dashed var(--border);border-radius:13px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--card2);}
+.ob-import-drop:hover{border-color:var(--acc);background:rgba(37,99,235,.04);}
+
 
 /* ── ANALYTICS ── */
 .analytics-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
@@ -649,93 +636,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
       <div class="topbar-right"><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
     </div>
     <div id="home-content"></div>
-    <section class="faq-section" id="faq" aria-label="Frequently Asked Questions">
-  <h2 class="faq-section-title">⚡ Frequently Asked Questions</h2>
-  <p class="faq-section-sub">Everything you need to know about ThunderStudy Banking and banking exam preparation.</p>
-  <div class="faq-grid">
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">Is ThunderStudy Banking completely free?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">Yes — ThunderStudy Banking is 100% free. All mock tests for IBPS PO, SBI PO, RBI Grade B, IBPS Clerk, SBI Clerk and RBI Assistant are available at zero cost with no hidden subscription.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">Which banking exams are covered?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">ThunderStudy covers <strong>IBPS PO, IBPS Clerk, IBPS RRB PO, IBPS RRB Clerk, SBI PO, SBI Clerk, RBI Grade B</strong> and <strong>RBI Assistant</strong> — both Prelims and Mains phases with full-length and sectional mocks.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">Do I need to create an account?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">No sign-up or email is required. Enter your name and Student ID once during setup. All progress is saved locally in your browser — your data stays on your device.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">How does the live leaderboard work?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">After completing mock tests, your score is submitted to a cloud backend and ranked in real time against other aspirants preparing for the same exam. Pull down to refresh on mobile to see the latest rankings.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">What does the Analytics section show?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">Analytics gives you subject-wise score breakdown, accuracy trends over time, time-per-question analysis, a study activity heatmap and an XP-based level system so you can track your long-term progress visually.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">What subjects are in SBI PO Prelims?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">SBI PO Prelims has 3 sections: <strong>English Language</strong> (30 Q, 30 marks), <strong>Quantitative Aptitude</strong> (35 Q, 35 marks) and <strong>Reasoning Ability</strong> (35 Q, 35 marks) — 100 questions in 60 minutes total.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">What is the eligibility for IBPS PO?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">IBPS PO requires a graduation degree from a recognized university. Age limit is 20–30 years (with relaxation for reserved categories). The selection process has Prelims, Mains and an Interview round.</span>
-      </div>
-    </div>
-
-    <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-      <div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
-        <span class="faq-q-text" itemprop="name">Can I use ThunderStudy on mobile?</span>
-        <span class="faq-arrow">▾</span>
-      </div>
-      <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-        <span itemprop="text">Yes, ThunderStudy Banking is fully responsive and works on all devices. It also supports PWA installation — tap "Add to Home Screen" in your browser to get an app-like experience with offline access.</span>
-      </div>
-    </div>
-
-  </div>
-</section>
   </div>
 
   <div class="page" id="page-ibps">
@@ -847,7 +747,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
             <span class="fl-icon" style="background:rgba(37,99,235,.15);">🏦</span> Banking Mocks
           </a>
           <a href="https://commercesehoga.github.io/cuet" target="_blank" rel="noopener" class="ts-footer-link">
-            <span class="fl-icon" style="background:rgba(16,185,129,.1);">🎓</span> CUET Dashboard
+            <span class="fl-icon" style="background:rgba(124,58,237,.1);">🎓</span> CUET Dashboard
+          </a>
+          <a href="https://commercesehoga.github.io/dashboard" target="_blank" rel="noopener" class="ts-footer-link">
+            <span class="fl-icon" style="background:rgba(16,185,129,.1);">📊</span> Dashboard
           </a>
           <a href="https://commercesehoga.blogspot.com" target="_blank" rel="noopener" class="ts-footer-link">
             <span class="fl-icon" style="background:rgba(239,68,68,.1);">✍️</span> Blog
@@ -918,44 +821,70 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 <!-- ONBOARDING -->
 <div class="ob-overlay" id="ob-overlay">
   <div class="ob-box">
-    <div class="ob-progress">
-      <div class="ob-prog-dot done" id="ob-dot-1"></div>
-      <div class="ob-prog-dot" id="ob-dot-2"></div>
-    </div>
-    <div class="ob-step active" id="ob-step-1">
-      <div class="ob-icon">⚡</div>
-      <div class="ob-title">Welcome to ThunderStudy Banking!</div>
-      <div class="ob-sub">Set up your banking exam prep dashboard in 2 steps.</div>
-      <div class="form-row"><div class="form-lbl">Your Full Name</div><input class="form-inp" id="ob-name" placeholder="Enter your name" oninput="obVal1()"></div>
-      <div class="form-row">
-  <div class="form-lbl">Student ID</div>
-  <div style="display:flex;gap:8px;">
-    <input class="form-inp" id="ob-sid" placeholder="Auto-fetched or click Generate →" readonly style="font-family:var(--mono);font-size:15px;font-weight:800;color:var(--acc);flex:1;">
-    <button onclick="genSID()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:none;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);white-space:nowrap;">🎲 Generate</button>
-  </div>
-  <div id="ob-cuet-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
-</div>
-      </div>
-      <button class="ob-btn ob-btn-prim" id="ob-next-1" onclick="obNext(2)" disabled>Continue →</button>
-      <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--text3);text-align:center;margin-bottom:9px;">Already used this dashboard?</div>
-        <label style="display:block;border:2px dashed var(--border);border-radius:13px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;background:var(--card2);" onmouseenter="this.style.borderColor='var(--acc)'" onmouseleave="this.style.borderColor='var(--border)'">
-          <div style="font-size:24px;margin-bottom:4px;">📂</div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:2px;">Import Backup</div>
-          <div style="font-size:11px;color:var(--text3);">Tap to choose .json backup</div>
-          <input type="file" accept=".json" style="display:none" onchange="obImport(this.files[0])">
-        </label>
-        <div id="ob-import-st" style="font-size:12px;font-weight:600;margin-top:7px;text-align:center;min-height:16px;"></div>
+
+    <!-- Header (always visible, not scrolled) -->
+    <div class="ob-header">
+      <div class="ob-progress">
+        <div class="ob-prog-dot done" id="ob-dot-1"></div>
+        <div class="ob-prog-dot" id="ob-dot-2"></div>
       </div>
     </div>
-    <div class="ob-step" id="ob-step-2">
-      <div class="ob-icon">🏦</div>
-      <div class="ob-title">Which Exam Are You Preparing For?</div>
-      <div class="ob-sub">Select your primary target. You can access all exam mocks anytime!</div>
-      <div class="ob-exam-grid" id="ob-exam-grid"></div>
-      <button class="ob-btn ob-btn-prim" id="ob-finish" onclick="obFinish()" disabled>🚀 Start Preparing!</button>
-    </div>
-  </div>
+
+    <!-- Scrollable body -->
+    <div class="ob-body">
+
+      <!-- ── STEP 1: Profile Setup ── -->
+      <div class="ob-step active" id="ob-step-1">
+        <div class="ob-icon">⚡</div>
+        <div class="ob-title">Welcome to ThunderStudy Banking!</div>
+        <div class="ob-sub">Set up your banking exam prep dashboard in 2 quick steps.</div>
+
+        <!-- Name -->
+        <div class="form-row">
+          <div class="form-lbl">Your Full Name</div>
+          <input class="form-inp" id="ob-name" placeholder="Enter your full name" oninput="obVal1()">
+        </div>
+
+        <!-- Student ID -->
+        <div class="form-row">
+          <div class="form-lbl">Student ID</div>
+          <div class="ob-sid-row" id="ob-sid-row">
+            <input class="ob-sid-inp" id="ob-sid" placeholder="Auto-fetched or click Generate →" readonly>
+            <button class="ob-sid-action" id="ob-sid-btn" onclick="obSIDAction()">🎲 Generate</button>
+          </div>
+          <div class="ob-status" id="ob-cuet-status"></div>
+        </div>
+
+        <button class="ob-btn ob-btn-prim" id="ob-next-1" onclick="obNext(2)" disabled style="margin-bottom:16px;">Continue →</button>
+
+        <!-- Import strip -->
+        <div class="ob-import-strip">
+          <div class="ob-import-label">Already used this dashboard?</div>
+          <label class="ob-import-drop"
+            onmouseenter="this.style.borderColor='var(--acc)'"
+            onmouseleave="this.style.borderColor='var(--border)'">
+            <div style="font-size:24px;margin-bottom:4px;">📂</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:2px;">Import Backup</div>
+            <div style="font-size:11px;color:var(--text3);">Tap to choose .json backup</div>
+            <input type="file" accept=".json" style="display:none" onchange="obImport(this.files[0])">
+          </label>
+          <div id="ob-import-st" style="font-size:12px;font-weight:600;margin-top:7px;text-align:center;min-height:16px;"></div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Exam Selection ── -->
+      <div class="ob-step" id="ob-step-2">
+        <div class="ob-icon">🏦</div>
+        <div class="ob-title">Which Exam Are You Preparing For?</div>
+        <div class="ob-sub">Pick your <strong>primary target exam</strong>. You can always switch later and access all mocks anytime!</div>
+
+        <div class="ob-exam-grid" id="ob-exam-grid"></div>
+
+        <button class="ob-btn ob-btn-prim" id="ob-finish" onclick="obFinish()" disabled>🚀 Start Preparing!</button>
+      </div>
+
+    </div><!-- /ob-body -->
+  </div><!-- /ob-box -->
 </div>
 
 <!-- PROFILE MODAL -->
@@ -1322,6 +1251,7 @@ let CI={};
 function destroyCharts(){Object.values(CI).forEach(c=>{try{if(c&&c.destroy)c.destroy();}catch(e){}});CI={};}
 
 function goPage(id){
+  stopHomeRealtime();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1329,7 +1259,7 @@ function goPage(id){
   document.querySelectorAll('.dock-item').forEach(d=>d.classList.toggle('active',d.id==='dock-'+id));
   destroyCharts();
   const map={home:renderHome,ibps:()=>renderExamPage('ibps'),sbi:()=>renderExamPage('sbi'),rbi:()=>renderExamPage('rbi'),analytics:renderAnalytics,rank:renderRank,settings:renderSettings};
-  if(map[id])setTimeout(()=>map[id](),60);
+  if(map[id])setTimeout(()=>{map[id]();if(id==='home')startHomeRealtime();},60);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1380,9 +1310,9 @@ function renderHome(){
   /* RANK TIERS */
   H+=`<div class="card card-p" style="margin-bottom:16px;">
     <div class="sec-hdr"><div class="sec-title">🏅 Rank Journey</div><div style="font-size:12px;font-weight:700;color:${tier.color};">${tier.icon} ${tier.name} · ${rpData.rp}/${tier.threshold===Infinity?'∞':tier.threshold} RP</div></div>
-    <div class="rank-tiers-row">${RANK_TIERS.map((t,i)=>{const earned=i<=rpdata.rankIndex,isCur=i===rpdata.rankIndex;return`<div class="rank-tier-pill ${earned?'earned':'locked'}" style="color:${earned?t.color:'#999'};border-color:${earned?t.color+'50':'#ddd'};background:${earned?t.color+'12':'#f5f5f5'};${isCur?'box-shadow:0 0 0 2px '+t.color+'40;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;}).join('')}</div>
+    <div class="rank-tiers-row">${RANK_TIERS.map((t,i)=>{const earned=i<=rpData.rankIndex,isCur=i===rpData.rankIndex;return`<div class="rank-tier-pill ${earned?'earned':'locked'}" style="color:${earned?t.color:'#999'};border-color:${earned?t.color+'50':'#ddd'};background:${earned?t.color+'12':'#f5f5f5'};${isCur?'box-shadow:0 0 0 2px '+t.color+'40;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;}).join('')}</div>
     <div style="height:6px;background:var(--border);border-radius:6px;overflow:hidden;"><div style="height:100%;width:${rpPct.toFixed(1)}%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:6px;transition:width 1.2s ease;"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);"><span>${rpData.rp} RP</span><span>→ ${RANK_TIERS[Math.min(rpdata.rankIndex+1,RANK_TIERS.length-1)].name}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);"><span>${rpData.rp} RP</span><span>→ ${RANK_TIERS[Math.min(rpData.rankIndex+1,RANK_TIERS.length-1)].name}</span></div>
   </div>`;
 
   /* STREAK */
@@ -1418,12 +1348,55 @@ function renderHome(){
     H+=`<div class="prog-row"><div class="prog-lbl">${gInfo[g].icon} ${gInfo[g].name}</div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${gInfo[g].color}"></div></div><div class="prog-pct" style="color:${gInfo[g].color}">${pct.toFixed(0)}%</div></div>`;
   });
 
+  /* FAQ — part of home page, rendered every time */
+  H+=`<section class="faq-section" aria-label="Frequently Asked Questions">
+  <h2 class="faq-section-title">⚡ Frequently Asked Questions</h2>
+  <p class="faq-section-sub">Everything you need to know about ThunderStudy Banking and banking exam preparation.</p>
+  <div class="faq-grid">
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">Is ThunderStudy Banking completely free?</span><span class="faq-arrow">▾</span></div><div class="faq-a">Yes — ThunderStudy Banking is 100% free. All mock tests for IBPS PO, SBI PO, RBI Grade B, IBPS Clerk, SBI Clerk and RBI Assistant are available at zero cost with no hidden subscription.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">Which banking exams are covered?</span><span class="faq-arrow">▾</span></div><div class="faq-a">ThunderStudy covers <strong>IBPS PO, IBPS Clerk, IBPS RRB PO, IBPS RRB Clerk, SBI PO, SBI Clerk, RBI Grade B</strong> and <strong>RBI Assistant</strong> — both Prelims and Mains phases with full-length and sectional mocks.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">Do I need to create an account?</span><span class="faq-arrow">▾</span></div><div class="faq-a">No sign-up or email is required. Enter your name and Student ID once during setup. All progress is saved locally in your browser — your data stays on your device.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">How does the live leaderboard work?</span><span class="faq-arrow">▾</span></div><div class="faq-a">After completing mock tests, your score is submitted to a cloud backend and ranked in real time against other aspirants. Pull down to refresh on mobile to see the latest rankings.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">What does the Analytics section show?</span><span class="faq-arrow">▾</span></div><div class="faq-a">Analytics gives you subject-wise score breakdown, accuracy trends over time, time-per-question analysis, a study activity heatmap and an XP-based level system so you can track your long-term progress visually.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">What subjects are in SBI PO Prelims?</span><span class="faq-arrow">▾</span></div><div class="faq-a">SBI PO Prelims has 3 sections: <strong>English Language</strong> (30 Q, 30 marks), <strong>Quantitative Aptitude</strong> (35 Q, 35 marks) and <strong>Reasoning Ability</strong> (35 Q, 35 marks) — 100 questions in 60 minutes total.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">What is the eligibility for IBPS PO?</span><span class="faq-arrow">▾</span></div><div class="faq-a">IBPS PO requires a graduation degree from a recognized university. Age limit is 20–30 years (with relaxation for reserved categories). The selection process has Prelims, Mains and an Interview round.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)" aria-expanded="false"><span class="faq-q-text">Can I use ThunderStudy on mobile?</span><span class="faq-arrow">▾</span></div><div class="faq-a">Yes, ThunderStudy Banking is fully responsive and works on all devices. It also supports PWA installation — tap "Add to Home Screen" in your browser to get an app-like experience with offline access.</div></div>
+  </div>
+</section>`;
+
   document.getElementById('home-content').innerHTML=H;
   setTimeout(()=>{
     const xf=document.getElementById('xp-fill');if(xf)xf.style.width=xpInfo.progress+'%';
     document.querySelectorAll('.prog-fill').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>el.style.width=w,80);});
   },100);
 }
+
+/* ════════════════════════════════════════════════════════
+   REAL-TIME HP / XP / RP AUTO-REFRESH ON HOME PAGE
+   Updates stat cards every 5 seconds when on home
+════════════════════════════════════════════════════════ */
+let _homeRefreshTimer=null;
+function startHomeRealtime(){
+  if(_homeRefreshTimer)return;
+  _homeRefreshTimer=setInterval(()=>{
+    if(getCurrentPage()!=='home')return;
+    /* Only update the number elements — no full re-render to avoid flicker */
+    const results=getAllResults(),xp=calcXP(results),xpInfo=getXPLevel(xp),streak=calcStreak(results);
+    const rpData=getRPData(),tier=getCurrentTier();
+    const totalDone=results.length,avgPct=totalDone?results.reduce((s,r)=>s+(r.percentage||0),0)/totalDone:0;
+    /* stat cards */
+    const scards=document.querySelectorAll('#home-content .stat-card .stat-val');
+    if(scards.length>=4){scards[0].textContent=totalDone;scards[1].textContent=avgPct.toFixed(1)+'%';scards[2].textContent=xp;scards[3].textContent=streak+'🔥';}
+    /* hero stats */
+    const hvals=document.querySelectorAll('#home-content .hero-val');
+    if(hvals.length>=4){hvals[0].textContent=totalDone;hvals[1].textContent=avgPct.toFixed(1)+'%';hvals[2].textContent=xp;hvals[3].textContent=streak+'🔥';}
+    /* XP bar */
+    const xf=document.getElementById('xp-fill');if(xf)xf.style.width=xpInfo.progress+'%';
+    /* RP pill */
+    const rpDiv=document.querySelector('#home-content .sec-title+div');if(rpDiv&&rpDiv.style&&tier){rpDiv.textContent=`${tier.icon} ${tier.name} · ${rpData.rp}/${tier.threshold===Infinity?'∞':tier.threshold} RP`;}
+  },5000);
+}
+function stopHomeRealtime(){clearInterval(_homeRefreshTimer);_homeRefreshTimer=null;}
 
 /* HEATMAP */
 function buildHeatmap(results){
@@ -1950,16 +1923,6 @@ function renderSettings(){
     </div>
   </div>`;
 
-  /* Apps Script code */
-  H+=`<div class="card card-p" style="margin-bottom:14px;">
-    <div class="sec-hdr"><div class="sec-title">🔧 Google Apps Script Setup</div></div>
-    <div style="font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:10px;">Paste this in <a href="https://script.google.com" target="_blank" style="color:var(--acc);">script.google.com</a> to enable the leaderboard:</div>
-    <pre style="background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:14px;font-size:10px;font-family:var(--mono);overflow-x:auto;color:var(--text);line-height:1.6;max-height:300px;overflow-y:auto;">${escH(`// ThunderStudy Banking — Google Apps Script
-// 1. Open script.google.com → New Project
-// 2. Paste this code
-// 3. Deploy → New Deployment → Web App → Anyone
-// 4. Copy the URL and paste in banking.html as GS_URL
-
 const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID'; // Replace with your Sheet ID
 
 function doGet(e) {
@@ -2009,7 +1972,7 @@ function examLabel(id){const m={ibps_po:'IBPS PO',ibps_clerk:'IBPS Clerk',ibps_r
 function getCurrentPage(){const a=document.querySelector('.page.active');if(!a)return'home';return a.id.replace('page-','');}
 
 function openProfileModal(){const p=getProfile();document.getElementById('pf-name').value=p.name||'';document.getElementById('pf-exam').value=p.exam||'ibps_po';openModal('profile-modal');}
-function saveProfile(){const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value};localStorage.setItem('ts_profile',JSON.stringify(p));closeModal('profile-modal');showToast('✅ Profile saved!');renderHome();}
+function saveProfile(){const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value};localStorage.setItem('ts_profile',JSON.stringify(p));closeModal('profile-modal');showToast('✅ Profile saved!');goPage('home');}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-ov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
@@ -2050,85 +2013,100 @@ function obImport(file){
    ONBOARDING
 ════════════════════════════════════════════════════════ */
 let _obSelExam='';
+let _obSIDFetched=false;
+
+/* If SID was auto-fetched it is permanently locked — button does nothing */
+function obSIDAction(){
+  if(_obSIDFetched) return; // locked — no action
+  genSID();
+}
+
 function genSID(){
   const cuetSID=localStorage.getItem('ts_student_id');
   const cuetProfile=JSON.parse(localStorage.getItem('ts_profile')||'{}');
   if(cuetSID){
-    localStorage.setItem('ts_student_id',cuetSID);
-    const el=document.getElementById('ob-sid');if(el){el.value=cuetSID;el.style.color='var(--green)';}
-    if(cuetProfile.name){const ne=document.getElementById('ob-name');if(ne){ne.value=cuetProfile.name;}}
+    // Auto-fetch: lock completely, hide the button
+    const el=document.getElementById('ob-sid');
+    if(el){el.value=cuetSID;el.classList.add('fetched');}
+    if(cuetProfile.name){const ne=document.getElementById('ob-name');if(ne&&!ne.value)ne.value=cuetProfile.name;}
+    const btn=document.getElementById('ob-sid-btn');
+    if(btn) btn.style.display='none'; // hide — no change allowed
+    const st=document.getElementById('ob-cuet-status');
+    if(st) st.innerHTML=`<span style="color:var(--green)">✅ Auto-fetched from ThunderStudy dashboard</span>`;
+    _obSIDFetched=true;
     obVal1();
     return;
   }
+  // No existing SID — generate a new random one
   const id='TB'+String(Math.floor(Math.random()*100000)).padStart(5,'0');
   localStorage.setItem('ts_student_id',id);
-  const el=document.getElementById('ob-sid');if(el){el.value=id;el.style.color='var(--green)';}obVal1();
+  const el=document.getElementById('ob-sid');
+  if(el){el.value=id;el.style.color='var(--acc)';}
+  obVal1();
 }
-function obVal1(){const name=(document.getElementById('ob-name')?.value||'').trim(),sid=(document.getElementById('ob-sid')?.value||'').trim();const btn=document.getElementById('ob-next-1');if(btn)btn.disabled=!(name.length>=2&&sid.length>=2);}
+
+function obVal1(){
+  const name=(document.getElementById('ob-name')?.value||'').trim();
+  const sid=(document.getElementById('ob-sid')?.value||'').trim();
+  const btn=document.getElementById('ob-next-1');
+  if(btn)btn.disabled=!(name.length>=2&&sid.length>=2);
+}
+
 function obNext(step) {
-    // 1. Logic: Hard-hide all steps first
-    const allSteps = document.querySelectorAll('.ob-step');
-    allSteps.forEach(s => {
-        s.classList.remove('active');
-        s.style.display = 'none'; // Force hide
-    });
+  const allSteps = document.querySelectorAll('.ob-step');
+  allSteps.forEach(s => { s.classList.remove('active'); s.style.display='none'; });
 
-    // 2. Prepare content for Step 2
-    if (step === 2) {
-        const nameInput = document.getElementById('ob-name');
-        const sidInput = document.getElementById('ob-sid');
-        
-        // Save data to storage
-        localStorage.setItem('ts_profile', JSON.stringify({ name: nameInput.value.trim() }));
-        localStorage.setItem('ts_student_id', sidInput.value.trim());
+  if (step === 2) {
+    const nameInput = document.getElementById('ob-name');
+    const sidInput = document.getElementById('ob-sid');
+    localStorage.setItem('ts_profile', JSON.stringify({ name: nameInput.value.trim() }));
+    localStorage.setItem('ts_student_id', sidInput.value.trim());
 
-        const grid = document.getElementById('ob-exam-grid');
-        const opts = [
-            {id:'ibps_po',label:'IBPS PO',icon:'🏦',sub:'Probationary Officer'},
-            {id:'ibps_clerk',label:'IBPS Clerk',icon:'📋',sub:'Clerical Cadre'},
-            {id:'ibps_rrb_po',label:'RRB PO',icon:'🌾',sub:'Officer Scale I'},
-            {id:'sbi_po',label:'SBI PO',icon:'🏛️',sub:'Probationary Officer'},
-            {id:'sbi_clerk',label:'SBI Clerk',icon:'📁',sub:'Junior Associates'},
-            {id:'rbi_assistant',label:'RBI Assistant',icon:'🏅',sub:'Assistant'},
-            {id:'rbi_grade_b',label:'RBI Grade B',icon:'⭐',sub:'Officer Grade B'},
-            {id:'ibps_rrb_clerk',label:'RRB Clerk',icon:'📝',sub:'Office Assistant'}
-        ];
-        
-        grid.innerHTML = opts.map(o => `
-            <div class="ob-exam-card" id="obex-${o.id}" onclick="obSelExam('${o.id}')">
-                <div class="ob-exam-icon">${o.icon}</div>
-                <div class="ob-exam-name">${o.label}</div>
-                <div class="ob-exam-sub">${o.sub}</div>
-            </div>
-        `).join('');
-    }
+    const grid = document.getElementById('ob-exam-grid');
+    const opts = [
+      {id:'ibps_po',    label:'IBPS PO',      icon:'👔', sub:'Probationary Officer',  badge:'Most Popular'},
+      {id:'ibps_clerk', label:'IBPS Clerk',    icon:'📋', sub:'Clerical Cadre',        badge:''},
+      {id:'ibps_rrb_po',label:'RRB PO',        icon:'🌾', sub:'Officer Scale I',       badge:''},
+      {id:'sbi_po',     label:'SBI PO',        icon:'🏛️', sub:'Probationary Officer',  badge:'High Demand'},
+      {id:'sbi_clerk',  label:'SBI Clerk',     icon:'📁', sub:'Junior Associates',     badge:''},
+      {id:'rbi_assistant',label:'RBI Assistant',icon:'🏅',sub:'Assistant',             badge:''},
+      {id:'rbi_grade_b',label:'RBI Grade B',   icon:'⭐', sub:'Officer Grade B',       badge:'Prestigious'},
+      {id:'ibps_rrb_clerk',label:'RRB Clerk',  icon:'📝', sub:'Office Assistant',      badge:''},
+    ];
+    grid.innerHTML = opts.map(o => `
+      <div class="ob-exam-card" id="obex-${o.id}" onclick="obSelExam('${o.id}')">
+        ${o.badge?`<div style="position:absolute;top:8px;left:8px;font-size:7px;font-weight:900;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;padding:2px 7px;border-radius:20px;letter-spacing:.3px;text-transform:uppercase;">${o.badge}</div>`:''}
+        <div class="ob-exam-icon">${o.icon}</div>
+        <div class="ob-exam-name">${o.label}</div>
+        <div class="ob-exam-sub">${o.sub}</div>
+      </div>
+    `).join('');
+  }
 
-    // 3. Show the requested step
-    const targetStep = document.getElementById('ob-step-' + step);
-    if (targetStep) {
-        targetStep.classList.add('active');
-        targetStep.style.display = 'block'; // Force block display
-    }
+  const targetStep = document.getElementById('ob-step-' + step);
+  if (targetStep) { targetStep.classList.add('active'); targetStep.style.display='block'; }
 
-    // 4. Update dots
-    [1, 2].forEach(i => {
-        const dot = document.getElementById('ob-dot-' + i);
-        if (dot) dot.classList.toggle('done', i <= step);
-    });
+  [1, 2].forEach(i => {
+    const dot = document.getElementById('ob-dot-' + i);
+    if (dot) dot.classList.toggle('done', i <= step);
+  });
 
-    // 5. Hide the Step 1 "Continue" button explicitly if we are on Step 2
-    const step1Btn = document.getElementById('ob-next-1');
-    if (step === 2 && step1Btn) {
-        step1Btn.style.display = 'none';
-    }
+  const step1Btn = document.getElementById('ob-next-1');
+  if (step === 2 && step1Btn) step1Btn.style.display = 'none';
 }
-function obSelExam(id){_obSelExam=id;document.querySelectorAll('.ob-exam-card').forEach(c=>c.classList.remove('sel'));document.getElementById('obex-'+id)?.classList.add('sel');document.getElementById('ob-finish').disabled=false;}
+
+function obSelExam(id){
+  _obSelExam=id;
+  document.querySelectorAll('.ob-exam-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('obex-'+id)?.classList.add('sel');
+  document.getElementById('ob-finish').disabled=false;
+}
 function obFinish(){
   if(!_obSelExam)return;
   const p=JSON.parse(localStorage.getItem('ts_profile')||'{}');p.exam=_obSelExam;
   localStorage.setItem('ts_profile',JSON.stringify(p));localStorage.setItem('tsb_ob_done','1');
   document.getElementById('ob-overlay').classList.remove('open');
-  renderHome();showToast(`🚀 Welcome, ${p.name}!`);
+  showToast(`🚀 Welcome, ${p.name}!`);goPage('home');
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2162,21 +2140,35 @@ document.addEventListener('keydown',e=>{
 ════════════════════════════════════════════════════════ */
 window.addEventListener('load',()=>{
   setTimeout(()=>{const b=document.getElementById('ts-boot');if(b){b.style.transition='opacity .6s ease';b.style.opacity='0';setTimeout(()=>b.remove(),650);}},2200);
+
+  /* Auto-fetch Student ID and Name from any ThunderStudy dashboard saved data */
+  const _savedSID = localStorage.getItem('ts_student_id');
+  const _savedProf = JSON.parse(localStorage.getItem('ts_profile')||'{}');
+
   if(!localStorage.getItem('tsb_ob_done')){
-    // Auto-fetch CUET data
-const _cuetSID=localStorage.getItem('ts_student_id');
-const _cuetProf=JSON.parse(localStorage.getItem('ts_profile')||'{}');
-if(_cuetSID){
-  localStorage.setItem('ts_student_id',_cuetSID);
-  const ne=document.getElementById('ob-name');const se=document.getElementById('ob-sid');const st=document.getElementById('ob-cuet-status');
-  if(_cuetProf.name&&ne)ne.value=_cuetProf.name;
-  if(se){se.value=_cuetSID;se.style.color='var(--green)';}
-  if(st)st.innerHTML=`<span style="color:var(--green)">✅ Auto-fetched from ThunderStudy CUET dashboard!</span>`;
-  obVal1();
-}
+    /* Pre-fill onboarding fields from saved/CUET data */
+    if(_savedSID || _savedProf.name){
+      const ne=document.getElementById('ob-name');
+      const se=document.getElementById('ob-sid');
+      const st=document.getElementById('ob-cuet-status');
+      const btn=document.getElementById('ob-sid-btn');
+      if(_savedProf.name && ne){ ne.value=_savedProf.name; }
+      if(_savedSID && se){
+        se.value=_savedSID;
+        se.classList.add('fetched');
+        _obSIDFetched=true;
+        if(btn) btn.style.display='none'; // fully hidden — no change allowed
+      }
+      if(st && _savedSID){
+        st.innerHTML=`<span style="color:var(--green)">✅ Auto-fetched from ThunderStudy dashboard</span>`;
+      }
+      obVal1();
+    }
     document.getElementById('ob-overlay').classList.add('open');
   } else {
-    checkSectionGifts();renderHome();
+    checkSectionGifts();
+    renderHome();
+    startHomeRealtime();
   }
 });
 function openAddSubjModal(){
