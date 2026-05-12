@@ -1191,8 +1191,8 @@ function lR(subjId, n){ try{return JSON.parse(localStorage.getItem(RK(subjId,n))
 function lFM(eId, ph, n){ try{return JSON.parse(localStorage.getItem(FK(eId,ph,n)));} catch(e){return null;} }
 function lH(subjId, n){ try{return JSON.parse(localStorage.getItem(HK(subjId,n))||'[]');} catch(e){return[];} }
 
-function getProfile(){ try{return JSON.parse(localStorage.getItem('tsb_profile')||'{}');} catch(e){return{};} }
-function getSID(){ return localStorage.getItem('tsb_sid')||null; }
+function getProfile(){ try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');} catch(e){return{};} }
+function getSID(){ return localStorage.getItem('ts_student_id')||null; }
 
 function getAllResults(){
   const all=[];
@@ -1238,21 +1238,21 @@ const RANK_TIERS=[
 ];
 function calcXP(results){return results.reduce((s,r)=>s+10+Math.round((r.percentage||0)/2),0);}
 function getXPLevel(xp){let l=XP_LEVELS[0];for(const x of XP_LEVELS){if(xp>=x.min)l=x;else break;}const i=XP_LEVELS.indexOf(l),n=XP_LEVELS[i+1],p=n?((xp-l.min)/(n.min-l.min))*100:100;return{...l,xp,nextMin:n?.min,nextName:n?.name,progress:Math.min(p,100)};}
-function getRPData(){try{return JSON.parse(localStorage.getItem('tsb_rp')||'{"ri":0,"rp":0,"log":[]}');}catch(e){return{ri:0,rp:0,log:[]};}}
-function saveRPData(d){localStorage.setItem('tsb_rp',JSON.stringify(d));}
-function getCurrentTier(){const d=getRPData();return RANK_TIERS[d.ri]||RANK_TIERS[0];}
+function getRPData(){try{return JSON.parse(localStorage.getItem('ts_rp_data')||'{"rankIndex":0,"rp":0,"log":[]}');}catch(e){return{rankIndex:0,rp:0,log:[]};}}
+function saveRPData(d){localStorage.setItem('ts_rp_data',JSON.stringify(d));}
+function getCurrentTier(){const d=getRPData();return RANK_TIERS[d.rankIndex]||RANK_TIERS[0];}
 
 function applyTestRP(pct){
   const data=getRPData();const gain=pct>80?80:pct>60?60:pct>35?Math.round(30+(pct-35)/25*30):-30;
-  const rankBefore=RANK_TIERS[data.ri].name;
+  const rankBefore=RANK_TIERS[data.rankIndex].name;
   if(gain>=0){
     data.rp+=gain;
-    if(data.rp>=RANK_TIERS[data.ri].threshold&&data.ri<RANK_TIERS.length-1){data.ri++;data.rp=0;}
+    if(data.rp>=RANK_TIERS[data.rankIndex].threshold&&data.rankIndex<RANK_TIERS.length-1){data.rankIndex++;data.rp=0;}
   } else {
     const rem=data.rp-30;
-    if(rem>=0)data.rp=rem;else if(data.ri>0){data.ri--;data.rp=Math.max(0,RANK_TIERS[data.ri].threshold-Math.abs(rem));}else data.rp=0;
+    if(rem>=0)data.rp=rem;else if(data.rankIndex>0){data.rankIndex--;data.rp=Math.max(0,RANK_TIERS[data.rankIndex].threshold-Math.abs(rem));}else data.rp=0;
   }
-  const rankAfter=RANK_TIERS[data.ri].name;
+  const rankAfter=RANK_TIERS[data.rankIndex].name;
   data.log=data.log||[];
   data.log.unshift({rp:gain,reason:`Test: ${pct.toFixed(1)}%`,date:new Date().toISOString(),rankBefore,rankAfter});
   if(data.log.length>50)data.log=data.log.slice(0,50);
@@ -1380,9 +1380,9 @@ function renderHome(){
   /* RANK TIERS */
   H+=`<div class="card card-p" style="margin-bottom:16px;">
     <div class="sec-hdr"><div class="sec-title">🏅 Rank Journey</div><div style="font-size:12px;font-weight:700;color:${tier.color};">${tier.icon} ${tier.name} · ${rpData.rp}/${tier.threshold===Infinity?'∞':tier.threshold} RP</div></div>
-    <div class="rank-tiers-row">${RANK_TIERS.map((t,i)=>{const earned=i<=rpData.ri,isCur=i===rpData.ri;return`<div class="rank-tier-pill ${earned?'earned':'locked'}" style="color:${earned?t.color:'#999'};border-color:${earned?t.color+'50':'#ddd'};background:${earned?t.color+'12':'#f5f5f5'};${isCur?'box-shadow:0 0 0 2px '+t.color+'40;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;}).join('')}</div>
+    <div class="rank-tiers-row">${RANK_TIERS.map((t,i)=>{const earned=i<=rpdata.rankIndex,isCur=i===rpdata.rankIndex;return`<div class="rank-tier-pill ${earned?'earned':'locked'}" style="color:${earned?t.color:'#999'};border-color:${earned?t.color+'50':'#ddd'};background:${earned?t.color+'12':'#f5f5f5'};${isCur?'box-shadow:0 0 0 2px '+t.color+'40;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;}).join('')}</div>
     <div style="height:6px;background:var(--border);border-radius:6px;overflow:hidden;"><div style="height:100%;width:${rpPct.toFixed(1)}%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:6px;transition:width 1.2s ease;"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);"><span>${rpData.rp} RP</span><span>→ ${RANK_TIERS[Math.min(rpData.ri+1,RANK_TIERS.length-1)].name}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);"><span>${rpData.rp} RP</span><span>→ ${RANK_TIERS[Math.min(rpdata.rankIndex+1,RANK_TIERS.length-1)].name}</span></div>
   </div>`;
 
   /* STREAK */
@@ -2009,7 +2009,7 @@ function examLabel(id){const m={ibps_po:'IBPS PO',ibps_clerk:'IBPS Clerk',ibps_r
 function getCurrentPage(){const a=document.querySelector('.page.active');if(!a)return'home';return a.id.replace('page-','');}
 
 function openProfileModal(){const p=getProfile();document.getElementById('pf-name').value=p.name||'';document.getElementById('pf-exam').value=p.exam||'ibps_po';openModal('profile-modal');}
-function saveProfile(){const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value};localStorage.setItem('tsb_profile',JSON.stringify(p));closeModal('profile-modal');showToast('✅ Profile saved!');renderHome();}
+function saveProfile(){const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value};localStorage.setItem('ts_profile',JSON.stringify(p));closeModal('profile-modal');showToast('✅ Profile saved!');renderHome();}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-ov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
@@ -2054,14 +2054,14 @@ function genSID(){
   const cuetSID=localStorage.getItem('ts_student_id');
   const cuetProfile=JSON.parse(localStorage.getItem('ts_profile')||'{}');
   if(cuetSID){
-    localStorage.setItem('tsb_sid',cuetSID);
+    localStorage.setItem('ts_student_id',cuetSID);
     const el=document.getElementById('ob-sid');if(el){el.value=cuetSID;el.style.color='var(--green)';}
     if(cuetProfile.name){const ne=document.getElementById('ob-name');if(ne){ne.value=cuetProfile.name;}}
     obVal1();
     return;
   }
   const id='TB'+String(Math.floor(Math.random()*100000)).padStart(5,'0');
-  localStorage.setItem('tsb_sid',id);
+  localStorage.setItem('ts_student_id',id);
   const el=document.getElementById('ob-sid');if(el){el.value=id;el.style.color='var(--green)';}obVal1();
 }
 function obVal1(){const name=(document.getElementById('ob-name')?.value||'').trim(),sid=(document.getElementById('ob-sid')?.value||'').trim();const btn=document.getElementById('ob-next-1');if(btn)btn.disabled=!(name.length>=2&&sid.length>=2);}
@@ -2079,8 +2079,8 @@ function obNext(step) {
         const sidInput = document.getElementById('ob-sid');
         
         // Save data to storage
-        localStorage.setItem('tsb_profile', JSON.stringify({ name: nameInput.value.trim() }));
-        localStorage.setItem('tsb_sid', sidInput.value.trim());
+        localStorage.setItem('ts_profile', JSON.stringify({ name: nameInput.value.trim() }));
+        localStorage.setItem('ts_student_id', sidInput.value.trim());
 
         const grid = document.getElementById('ob-exam-grid');
         const opts = [
@@ -2125,8 +2125,8 @@ function obNext(step) {
 function obSelExam(id){_obSelExam=id;document.querySelectorAll('.ob-exam-card').forEach(c=>c.classList.remove('sel'));document.getElementById('obex-'+id)?.classList.add('sel');document.getElementById('ob-finish').disabled=false;}
 function obFinish(){
   if(!_obSelExam)return;
-  const p=JSON.parse(localStorage.getItem('tsb_profile')||'{}');p.exam=_obSelExam;
-  localStorage.setItem('tsb_profile',JSON.stringify(p));localStorage.setItem('tsb_ob_done','1');
+  const p=JSON.parse(localStorage.getItem('ts_profile')||'{}');p.exam=_obSelExam;
+  localStorage.setItem('ts_profile',JSON.stringify(p));localStorage.setItem('tsb_ob_done','1');
   document.getElementById('ob-overlay').classList.remove('open');
   renderHome();showToast(`🚀 Welcome, ${p.name}!`);
 }
@@ -2167,7 +2167,7 @@ window.addEventListener('load',()=>{
 const _cuetSID=localStorage.getItem('ts_student_id');
 const _cuetProf=JSON.parse(localStorage.getItem('ts_profile')||'{}');
 if(_cuetSID){
-  localStorage.setItem('tsb_sid',_cuetSID);
+  localStorage.setItem('ts_student_id',_cuetSID);
   const ne=document.getElementById('ob-name');const se=document.getElementById('ob-sid');const st=document.getElementById('ob-cuet-status');
   if(_cuetProf.name&&ne)ne.value=_cuetProf.name;
   if(se){se.value=_cuetSID;se.style.color='var(--green)';}
