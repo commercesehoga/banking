@@ -1,9 +1,6 @@
-/* ══════════════════════════════════════════════════════
-   ThunderStudy Banking — Service Worker v2.0
-   Caches shell for offline-first PWA experience
-══════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'thunderstudy-banking-v4';
+
+const CACHE_NAME = 'thunderstudy-banking-v5';
 const STATIC_ASSETS = [
   '/banking/',
   '/banking/index.html',
