@@ -582,6 +582,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .faq-item.open .faq-a{display:block;}
 .faq-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;background:rgba(37,99,235,.1);color:var(--acc);margin-right:6px;vertical-align:middle;}
 </style>
+<script>window.TS_PORTAL="banking";</script>
 </head>
 <body>
 
@@ -633,7 +634,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   <div class="page active" id="page-home">
     <div class="topbar">
       <div><div class="page-title" id="home-greeting">👋 Hello, Aspirant!</div><div class="page-sub" id="home-sub">Banking Exam Dashboard</div></div>
-      <div class="topbar-right"><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
+      <div class="topbar-right" id="home-topbar-right"><div id="ts-google-area-home"></div><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
     </div>
     <div id="home-content"></div>
   </div>
@@ -1112,13 +1113,33 @@ function fmUrl(examId, phase, mockNum) {
 /* ════════════════════════════════════════════════════════
    STORAGE
 ════════════════════════════════════════════════════════ */
-const RK = (subjId, n) => `tsb_r_${subjId}_${n}`;
+const RK = (subjId, n) => `thunderstudy_bankingresult_${subjId}_${n}`;
 const FK = (examId, ph, n) => `tsb_fm_${examId}_${ph}_${n}`;
 const HK = (subjId, n) => `tsb_h_${subjId}_${n}`;
 
 function lR(subjId, n){ try{return JSON.parse(localStorage.getItem(RK(subjId,n)));} catch(e){return null;} }
 function lFM(eId, ph, n){ try{return JSON.parse(localStorage.getItem(FK(eId,ph,n)));} catch(e){return null;} }
 function lH(subjId, n){ try{return JSON.parse(localStorage.getItem(HK(subjId,n))||'[]');} catch(e){return[];} }
+
+
+// ═══════════════════════════════════════
+//  LOGIN GUARD — redirects to login if no profile
+//  Student ID & Reg No are set ONLY on login page
+// ═══════════════════════════════════════
+(function tsLoginGuard(){
+  function tsIsLoggedIn(){
+    const sid = localStorage.getItem('ts_student_id');
+    const reg = localStorage.getItem('ts_reg_no');
+    const p   = (function(){try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');}catch{return {};}})();
+    const name = p.name || localStorage.getItem('cbtUserName') || localStorage.getItem('ts_name') || '';
+    return !!(sid && reg && name);
+  }
+  if(!tsIsLoggedIn()){
+    const isLocal = window.location.protocol === 'file:';
+    const loginUrl = isLocal ? 'login.html?portal=banking' : 'https://commercesehoga.github.io/login/?portal=banking';
+    window.location.replace(loginUrl);
+  }
+})();
 
 function getProfile(){ try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');} catch(e){return{};} }
 function getSID(){ return localStorage.getItem('ts_student_id')||null; }
@@ -2006,7 +2027,7 @@ function clearAllData(){
 }
 function obImport(file){
   if(!file)return;const st=document.getElementById('ob-import-st');
-  const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const imp=Object.entries(data).filter(([k])=>k.startsWith('tsb_'));if(!imp.length)throw new Error('No data found');imp.forEach(([k,v])=>localStorage.setItem(k,v));localStorage.setItem('tsb_ob_done','1');st.innerHTML=`<span style="color:var(--green)">✅ Imported! Reloading…</span>`;setTimeout(()=>location.reload(),1500);}catch(err){st.innerHTML=`<span style="color:var(--red)">❌ ${err.message}</span>`;}};reader.readAsText(file);
+  const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const imp=Object.entries(data).filter(([k])=>k.startsWith('tsb_')||k.startsWith('thunderstudy_banking')||k.startsWith('ts_'));if(!imp.length)throw new Error('No data found');imp.forEach(([k,v])=>localStorage.setItem(k,v));localStorage.setItem('tsb_ob_done','1');st.innerHTML=`<span style="color:var(--green)">✅ Imported! Reloading…</span>`;setTimeout(()=>location.reload(),1500);}catch(err){st.innerHTML=`<span style="color:var(--red)">❌ ${err.message}</span>`;}};reader.readAsText(file);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -2104,7 +2125,9 @@ function obSelExam(id){
 function obFinish(){
   if(!_obSelExam)return;
   const p=JSON.parse(localStorage.getItem('ts_profile')||'{}');p.exam=_obSelExam;
-  localStorage.setItem('ts_profile',JSON.stringify(p));localStorage.setItem('tsb_ob_done','1');
+  if(p.name){localStorage.setItem('ts_name',p.name);localStorage.setItem('cbtUserName',p.name);localStorage.setItem('studentName',p.name);}
+  if(!localStorage.getItem('ts_reg_no')){const y=new Date().getFullYear();const l=String.fromCharCode(65+Math.floor(Math.random()*26));localStorage.setItem('ts_reg_no','REG-'+y+'-'+l+Math.floor(1000+Math.random()*9000));}
+  localStorage.setItem('ts_profile',JSON.stringify(p));localStorage.setItem('tsb_ob_done','1');localStorage.setItem('ts_ob_done','1');localStorage.setItem('ssc_ob_done','1');localStorage.setItem('jn_ob_done','1');
   document.getElementById('ob-overlay').classList.remove('open');
   showToast(`🚀 Welcome, ${p.name}!`);goPage('home');
 }
@@ -2146,21 +2169,22 @@ window.addEventListener('load',()=>{
   const _savedProf = JSON.parse(localStorage.getItem('ts_profile')||'{}');
 
   if(!localStorage.getItem('tsb_ob_done')){
-    /* Pre-fill onboarding fields from saved/CUET data */
+    /* Profile comes from login page — name & SID are already set and locked */
     if(_savedSID || _savedProf.name){
       const ne=document.getElementById('ob-name');
       const se=document.getElementById('ob-sid');
       const st=document.getElementById('ob-cuet-status');
       const btn=document.getElementById('ob-sid-btn');
-      if(_savedProf.name && ne){ ne.value=_savedProf.name; }
+      if(_savedProf.name && ne){ ne.value=_savedProf.name; ne.readOnly=true; ne.style.opacity='.65'; }
       if(_savedSID && se){
         se.value=_savedSID;
         se.classList.add('fetched');
+        se.readOnly=true; se.style.opacity='.65';
         _obSIDFetched=true;
-        if(btn) btn.style.display='none'; // fully hidden — no change allowed
+        if(btn) btn.style.display='none';
       }
       if(st && _savedSID){
-        st.innerHTML=`<span style="color:var(--green)">✅ Auto-fetched from ThunderStudy dashboard</span>`;
+        st.innerHTML=`<span style="color:var(--green)">✅ Profile loaded from ThunderStudy login</span>`;
       }
       obVal1();
     }
@@ -2224,5 +2248,234 @@ function toggleFaq(el){
   }
 }
 </script>
+
+<!-- TS Google Sign-In Button (shared across portals) -->
+<style>
+.ts-gsignin-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:30px;border:1.5px solid #dadce0;background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.08);white-space:nowrap;}
+.ts-gsignin-btn:hover{box-shadow:0 4px 16px rgba(0,0,0,.14);transform:translateY(-1px);}
+.ts-guser-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 13px 5px 5px;border-radius:30px;border:1.5px solid var(--border,#e2e8f0);background:var(--card,#fff);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.ts-guser-chip:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);}
+.ts-guser-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;overflow:hidden;flex-shrink:0;}
+
+/* Profile Card Modal */
+#ts-profile-card-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+#ts-profile-card-overlay.open{display:flex;}
+#ts-profile-card{background:#0f172a;color:#f8fafc;border-radius:24px;padding:0;max-width:360px;width:90%;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 80px rgba(0,0,0,.6);animation:pcIn .35s cubic-bezier(.34,1.56,.64,1) both;overflow:hidden;font-family:'Plus Jakarta Sans','Outfit',sans-serif;}
+@keyframes pcIn{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.ts-pc-header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:24px 20px 18px;position:relative;}
+.ts-pc-avatar{width:64px;height:64px;border-radius:20px;border:3px solid rgba(255,255,255,.2);overflow:hidden;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;margin-bottom:12px;}
+.ts-pc-name{font-size:18px;font-weight:900;letter-spacing:-.5px;margin-bottom:2px;}
+.ts-pc-email{font-size:11px;opacity:.6;font-family:'DM Mono',monospace;}
+.ts-pc-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.ts-pc-close:hover{background:rgba(255,255,255,.2);}
+.ts-pc-body{padding:18px 20px;}
+.ts-pc-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.ts-pc-row:last-child{border-bottom:none;}
+.ts-pc-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.ts-pc-label{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;opacity:.5;margin-bottom:2px;}
+.ts-pc-val{font-size:13px;font-weight:800;}
+.ts-pc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px;}
+.ts-pc-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;text-align:center;}
+.ts-pc-stat-num{font-size:18px;font-weight:900;font-family:'DM Mono',monospace;}
+.ts-pc-stat-lbl{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;opacity:.5;margin-top:2px;}
+.ts-pc-sync-btn{width:100%;margin-top:14px;padding:11px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.ts-pc-sync-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,.4);}
+.ts-pc-sync-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.ts-pc-logout{width:100%;margin-top:8px;padding:10px;border-radius:12px;background:rgba(244,63,94,.1);color:#f43f5e;border:1.5px solid rgba(244,63,94,.25);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
+.ts-pc-logout:hover{background:rgba(244,63,94,.2);}
+</style>
+
+<!-- Profile Card Modal HTML -->
+<div id="ts-profile-card-overlay">
+  <div id="ts-profile-card">
+    <div class="ts-pc-header">
+      <button class="ts-pc-close" onclick="tsPCClose()">×</button>
+      <div class="ts-pc-avatar" id="ts-pc-av">S</div>
+      <div class="ts-pc-name" id="ts-pc-name">Student</div>
+      <div class="ts-pc-email" id="ts-pc-email"></div>
+    </div>
+    <div class="ts-pc-body">
+      <div class="ts-pc-row">
+        <div class="ts-pc-icon" style="background:rgba(99,102,241,.15);">🪪</div>
+        <div><div class="ts-pc-label">Student ID</div><div class="ts-pc-val" id="ts-pc-sid">—</div></div>
+      </div>
+      <div class="ts-pc-row">
+        <div class="ts-pc-icon" style="background:rgba(16,185,129,.12);">📋</div>
+        <div><div class="ts-pc-label">Registration No</div><div class="ts-pc-val" id="ts-pc-reg">—</div></div>
+      </div>
+      <div class="ts-pc-row">
+        <div class="ts-pc-icon" style="background:rgba(245,158,11,.12);">🎓</div>
+        <div><div class="ts-pc-label">Class</div><div class="ts-pc-val" id="ts-pc-class">—</div></div>
+      </div>
+      <div class="ts-pc-stats">
+        <div class="ts-pc-stat">
+          <div class="ts-pc-stat-num" id="ts-pc-hp" style="color:#7c3aed;">0</div>
+          <div class="ts-pc-stat-lbl">❤️ HP</div>
+        </div>
+        <div class="ts-pc-stat">
+          <div class="ts-pc-stat-num" id="ts-pc-xp" style="color:#f59e0b;">0</div>
+          <div class="ts-pc-stat-lbl">⚡ XP</div>
+        </div>
+        <div class="ts-pc-stat">
+          <div class="ts-pc-stat-num" id="ts-pc-rp" style="color:#10b981;">0</div>
+          <div class="ts-pc-stat-lbl">🏅 RP</div>
+        </div>
+      </div>
+      <button class="ts-pc-sync-btn" id="ts-pc-sync-btn" onclick="tsPCSync()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Sync to Google Cloud
+      </button>
+      <button class="ts-pc-logout" onclick="tsGoogleRedirectLogout()">Sign Out & Switch Account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════
+   TS GOOGLE SIGN-IN — shared across portals
+   Clicking the button:
+   • If NOT logged into ThunderStudy → redirect to login page
+   • If logged in → show profile card with HP/XP/RP
+═══════════════════════════════════════════════════ */
+function tsGetGoogleUser(){try{return JSON.parse(localStorage.getItem('ts_google_user')||'null');}catch{return null;}}
+function tsIsLoggedIn(){return !!(localStorage.getItem('ts_student_id')||localStorage.getItem('ts_reg_no')||localStorage.getItem('cbtUserName'));}
+
+function tsGetProfileStats(){
+  const sid   = localStorage.getItem('ts_student_id')||'—';
+  const reg   = localStorage.getItem('ts_reg_no')||'—';
+  const prof  = (function(){try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');}catch{return{};}}());
+  const cls   = prof.class||prof.cls||localStorage.getItem('ts_class')||'—';
+  const name  = prof.name||localStorage.getItem('cbtUserName')||localStorage.getItem('ts_name')||'Student';
+  // HP
+  let hp=0;try{hp=(JSON.parse(localStorage.getItem('ts_hp')||'{}')).total||0;}catch{}
+  // XP — sum from various result keys
+  let xp=0;
+  ['ts_results','ts_test_results','banking_results','ssc_results','jee_results','cuet_results'].forEach(k=>{
+    try{const r=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(r))xp+=r.reduce((s,x)=>s+10+Math.round((x.percentage||0)/2),0);}catch{}
+  });
+  // RP
+  let rp=0;try{rp=(JSON.parse(localStorage.getItem('ts_rp_data')||'{}')).rp||0;}catch{}
+  return {sid,reg,cls,name,hp,xp,rp};
+}
+
+function tsShowProfileCard(){
+  if(!tsIsLoggedIn()){
+    // Not logged in → go to login page
+    const portal=window.TS_PORTAL||'login';
+    window.location.href='https://commercesehoga.github.io/login/?portal='+portal;
+    return;
+  }
+  const gu=tsGetGoogleUser();
+  const st=tsGetProfileStats();
+  // Fill card
+  const avEl=document.getElementById('ts-pc-av');
+  if(gu&&gu.picture){
+    avEl.innerHTML=`<img src="${gu.picture}" style="width:100%;height:100%;object-fit:cover;">`;
+  } else {
+    avEl.textContent=(st.name[0]||'S').toUpperCase();
+  }
+  document.getElementById('ts-pc-name').textContent=st.name;
+  document.getElementById('ts-pc-email').textContent=gu?gu.email:'';
+  document.getElementById('ts-pc-sid').textContent=st.sid;
+  document.getElementById('ts-pc-reg').textContent=st.reg;
+  document.getElementById('ts-pc-class').textContent=st.cls;
+  document.getElementById('ts-pc-hp').textContent=st.hp;
+  document.getElementById('ts-pc-xp').textContent=st.xp;
+  document.getElementById('ts-pc-rp').textContent=st.rp;
+  document.getElementById('ts-profile-card-overlay').classList.add('open');
+}
+
+function tsPCClose(){document.getElementById('ts-profile-card-overlay').classList.remove('open');}
+document.addEventListener('click',function(e){if(e.target===document.getElementById('ts-profile-card-overlay'))tsPCClose();});
+
+async function tsPCSync(){
+  const btn=document.getElementById('ts-pc-sync-btn');
+  const gu=tsGetGoogleUser();
+  if(!gu){
+    window.location.href='https://commercesehoga.github.io/login/?portal='+(window.TS_PORTAL||'login');
+    return;
+  }
+  btn.disabled=true;
+  btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .7s linear infinite"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Syncing…';
+  if(!document.querySelector('style#ts-spin-kf')){
+    const s=document.createElement('style');s.id='ts-spin-kf';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(s);
+  }
+  try{
+    // Check Firebase is available
+    if(typeof firebase!=='undefined'&&firebase.apps&&firebase.apps.length){
+      const db=firebase.firestore();
+      const st=tsGetProfileStats();
+      const uid=gu.uid;
+      const payload={
+        uid,name:gu.name,email:gu.email,picture:gu.picture||'',
+        studentId:st.sid,regNo:st.reg,class:st.cls,
+        hp:st.hp,xp:st.xp,rp:st.rp,
+        portal:window.TS_PORTAL||'unknown',
+        syncedAt:firebase.firestore.FieldValue.serverTimestamp()
+      };
+      await db.collection('ts_cloud_sync').doc(uid).set(payload,{merge:true});
+      btn.innerHTML='✅ Synced!';
+      setTimeout(()=>{btn.disabled=false;btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Sync to Google Cloud';},2000);
+    } else {
+      throw new Error('Firebase not available');
+    }
+  }catch(e){
+    btn.disabled=false;
+    btn.innerHTML='❌ Sync Failed — Retry';
+    setTimeout(()=>{btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg> Sync to Google Cloud';},3000);
+  }
+}
+
+function tsGoogleRedirectLogout(){
+  tsPCClose();
+  window.location.href='https://commercesehoga.github.io/login/?portal='+(window.TS_PORTAL||'login');
+}
+
+function tsRenderGoogleBtn(containerId){
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  const gu=tsGetGoogleUser();
+  const loggedIn=tsIsLoggedIn();
+  if(loggedIn&&gu){
+    const initials=(gu.name||'S')[0].toUpperCase();
+    const firstName=(gu.name||'').split(' ')[0];
+    el.innerHTML=`<button class="ts-guser-chip" onclick="tsShowProfileCard()" title="View profile & sync">
+      <div class="ts-guser-avatar" id="ts-topbar-av-${containerId}">${initials}</div>
+      <span style="font-size:12px;font-weight:800;max-width:90px;overflow:hidden;text-overflow:ellipsis;">${firstName}</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="opacity:.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>`;
+    if(gu.picture){
+      const img=new Image();
+      img.onload=()=>{const a=document.getElementById('ts-topbar-av-'+containerId);if(a)a.innerHTML=`<img src="${gu.picture}" style="width:100%;height:100%;object-fit:cover;">`; };
+      img.src=gu.picture;
+    }
+  } else if(loggedIn){
+    // logged in but no google user
+    const name=localStorage.getItem('cbtUserName')||localStorage.getItem('ts_name')||'Student';
+    el.innerHTML=`<button class="ts-guser-chip" onclick="tsShowProfileCard()" title="View profile">
+      <div class="ts-guser-avatar">${(name[0]||'S').toUpperCase()}</div>
+      <span style="font-size:12px;font-weight:800;">${name.split(' ')[0]}</span>
+    </button>`;
+  } else {
+    el.innerHTML=`<button class="ts-gsignin-btn" onclick="tsShowProfileCard()">
+      <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Sign in with Google
+    </button>`;
+  }
+}
+
+
+// Init Google button for banking
+(function initTsGoogle(){
+  tsRenderGoogleBtn('ts-google-area-home');
+})();
+</script>
+
 </body>
 </html>
