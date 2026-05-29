@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -216,6 +217,11 @@
   gtag('js', new Date());
   gtag('config', 'G-11GVYLFSCP');
 </script>
+<!-- Firebase SDKs — must be in this exact order -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -248,7 +254,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .nav-item:hover{background:var(--card2);color:var(--text);transform:translateX(2px);}
 .nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(124,58,237,.08));color:var(--acc);transform:translateX(2px);}
 .nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:linear-gradient(180deg,#2563eb,#7c3aed);border-radius:0 3px 3px 0;}
-.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:inherit;}
 .nav-badge{margin-left:auto;background:var(--acc);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;}
 .nav-badge.green{background:var(--green);}
 .sb-profile{padding:12px 14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .2s;}
@@ -377,6 +383,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .modal-ov.open{display:flex;}
 .modal-box{background:var(--card);border-radius:var(--r2);padding:24px;max-width:480px;width:90%;border:1px solid var(--border);animation:mIn .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
 @keyframes mIn{from{opacity:0;transform:scale(.93) translateY(12px)}to{opacity:1;transform:none}}
+@keyframes syncPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
 .modal-title{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
 .modal-close{cursor:pointer;color:var(--text3);font-size:22px;line-height:1;}
 
@@ -506,9 +513,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   .page{padding:16px 12px;}
   .mobile-dock{display:flex;position:fixed;bottom:10px;left:50%;transform:translateX(-50%);width:calc(100% - 20px);max-width:420px;height:62px;background:#fff;border-radius:26px;border:1px solid var(--border);z-index:100;padding:0 4px;box-shadow:0 4px 24px rgba(0,0,0,.1);align-items:center;justify-content:space-around;}
   .dock-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;height:62px;}
-  .dock-icon{font-size:17px;}
+  .dock-icon{font-size:17px;display:flex;align-items:center;justify-content:center;color:var(--text3);}
   .dock-label{font-size:8px;font-weight:700;color:var(--text3);}
   .dock-item.active .dock-label{color:var(--acc);}
+  .dock-item.active .dock-icon{color:var(--acc);}
 }
 
 /* ── BOOT ── */
@@ -528,9 +536,42 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .ptr-indicator.visible{transform:translateY(0);}
 .ptr-spin{display:inline-block;width:16px;height:16px;border:2.5px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;}
 
-/* ── COLORS ── */
-.c-acc{color:var(--acc);}.c-green{color:var(--green);}.c-red{color:var(--red);}.c-yellow{color:var(--yellow);}.c-text3{color:var(--text3);}
-.bg-acc{background:rgba(37,99,235,.1);}.bg-green{background:rgba(16,185,129,.1);}.bg-red{background:rgba(244,63,94,.1);}.bg-yellow{background:rgba(245,158,11,.1);}
+/* ── NAV BADGE ── */
+.nav-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;background:rgba(37,99,235,.15);color:var(--acc);margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
+.nav-badge.green{background:rgba(16,185,129,.15);color:var(--green);}
+.nav-badge.badge-new{background:linear-gradient(90deg,#4f6ef7,#7c3aed,#ec4899,#f59e0b,#4f6ef7);background-size:300% 100%;animation:badgeShimmer 2.4s linear infinite;box-shadow:0 0 8px rgba(124,58,237,.45);color:#fff;}
+@keyframes badgeShimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+
+/* ── AI PAGE ── */
+.ai-chat-outer{display:flex;flex-direction:column;height:calc(100dvh - 130px);min-height:360px;}
+.ai-mode-bar{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.ai-mode-pill{padding:6px 16px;border-radius:30px;font-size:12px;font-weight:700;border:1.5px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .18s;font-family:var(--fn);}
+.ai-mode-pill.active{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(37,99,235,.3);}
+.ai-mode-pill:hover:not(.active){border-color:var(--acc);color:var(--acc);}
+.ai-messages{flex:1;overflow-y:auto;padding:4px 0 8px;display:flex;flex-direction:column;gap:10px;}
+.ai-messages::-webkit-scrollbar{width:4px;}
+.ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+.ai-msg{display:flex;gap:9px;align-items:flex-end;}
+.ai-msg.user{flex-direction:row-reverse;}
+.ai-bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.65;max-width:84%;word-break:break-word;}
+.ai-msg.bot .ai-bubble{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:4px 16px 16px 16px;}
+.ai-msg.user .ai-bubble{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-radius:16px 4px 16px 16px;}
+.ai-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.ai-msg.bot .ai-av{background:linear-gradient(135deg,#2563eb,#7c3aed);}
+.ai-msg.user .ai-av{background:rgba(37,99,235,.12);font-size:14px;}
+.ai-bar{display:flex;gap:8px;align-items:flex-end;padding-top:8px;border-top:1px solid var(--border);margin-top:4px;}
+.ai-inp{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:14px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--fn);outline:none;resize:none;line-height:1.5;min-height:44px;max-height:110px;}
+.ai-inp:focus{border-color:var(--acc);}
+.ai-send{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#2563eb,#7c3aed);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
+.ai-send:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,.35);}
+.ai-send:disabled{opacity:.4;cursor:not-allowed;}
+.ai-dots{display:flex;gap:4px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:4px 16px 16px 16px;width:fit-content;}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:aiDot 1s infinite;}
+.ai-dot:nth-child(2){animation-delay:.15s;}.ai-dot:nth-child(3){animation-delay:.3s;}
+@keyframes aiDot{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+/* ── DARK MODE ── */
+body.dark-mode{--bg:#0f172a;--sidebar:#1e293b;--card:#1e293b;--card2:#0f172a;--border:#334155;--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;}
 /* ── FOOTER ── */
 .ts-footer-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 20px;border-top:1px solid var(--border);background:var(--card);cursor:pointer;user-select:none;position:relative;transition:background .2s;}
 .ts-footer-bar:hover{background:var(--card2);}
@@ -565,7 +606,21 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .ts-footer-bottom a:hover{color:var(--acc);}
 .ts-ver-pill{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.5px;}
 
-/* ── FAQ SECTION ── */
+/* ── RANK JOURNEY HOME ── */
+.rjh-step{flex:1;min-width:72px;display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer;padding:0 2px;user-select:none;}
+.rjh-connector{position:absolute;top:26px;left:calc(50% + 22px);right:calc(-50% + 22px);height:2px;z-index:0;}
+.rjh-step:last-child .rjh-connector{display:none;}
+.rjh-ring{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;z-index:1;border:2px solid var(--border);background:var(--card);transition:transform .18s,box-shadow .18s;}
+.rjh-step.rjh-active .rjh-ring{transform:scale(1.18);border-width:2.5px;}
+.rjh-step.rjh-locked .rjh-ring{opacity:.38;filter:grayscale(1);}
+.rjh-step-name{font-size:10px;font-weight:700;margin-top:6px;text-align:center;color:var(--text2);}
+.rjh-step.rjh-active .rjh-step-name{color:var(--text);font-weight:900;}
+.rjh-step.rjh-locked .rjh-step-name{color:var(--text3);}
+.rjh-step-xp{font-size:9px;color:var(--text3);text-align:center;margin-top:1px;font-family:var(--mono);}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.rjh-perk{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--card);border:1px solid var(--border);border-radius:9px;font-size:11px;color:var(--text2);}
+.ts-svg-icon{width:1em;height:1em;display:inline-block;vertical-align:middle;flex-shrink:0;}
+.ts-level-pill{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 11px;font-size:11px;font-weight:800;white-space:nowrap;}
 .faq-section{padding:20px 0 40px;border-top:1px solid var(--border);margin-top:16px;}
 .faq-section-title{font-size:18px;font-weight:900;color:var(--text);letter-spacing:-.4px;margin-bottom:6px;}
 .faq-section-sub{font-size:12px;color:var(--text3);margin-bottom:20px;}
@@ -583,7 +638,94 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 .faq-badge{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;background:rgba(37,99,235,.1);color:var(--acc);margin-right:6px;vertical-align:middle;}
 </style>
 <script>window.TS_PORTAL="banking";</script>
-</head>
+
+<script>
+/* ════ FIREBASE INIT ════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAoxORpjq2kIED1hBNAQ2MGJEWlwQ3FCJA",
+  authDomain: "thunderstudy.firebaseapp.com",
+  projectId: "thunderstudy",
+  storageBucket: "thunderstudy.firebasestorage.app",
+  messagingSenderId: "83506167126",
+  appId: "1:83506167126:web:9b3e7017ba871103672af7",
+  measurementId: "G-ZFLKZGW9FV"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const fbDb   = firebase.firestore();
+const fbAuth = firebase.auth();
+const fbProvider = new firebase.auth.GoogleAuthProvider();
+
+/* ════ PUSH NOTIFICATIONS ════ */
+const TS_VAPID_KEY = "BHtAaNeesR8gp26BN2yFc8Jr00aTJaoMFpby0auIXZMTUCs6qGXRxNcwOQ6Bb7uw1KYGMs-GooQzrCoIDP_7IT8";
+let fbMessaging;
+try { fbMessaging = firebase.messaging(); } catch(e) {}
+
+async function tsInitPush() {
+  if (!fbMessaging || !('Notification' in window) || !('serviceWorker' in navigator)) return;
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+    const reg = await navigator.serviceWorker.ready;
+    const token = await fbMessaging.getToken({ vapidKey: TS_VAPID_KEY, serviceWorkerRegistration: reg });
+    if (!token) return;
+    const uid = localStorage.getItem('ts_student_id') || 'anon_' + Date.now();
+    await fbDb.collection('fcm_tokens').doc(uid).set({
+      token, uid,
+      name: (JSON.parse(localStorage.getItem('ts_profile')||'{}')).name || localStorage.getItem('cbtUserName') || 'Student',
+      updatedAt: new Date().toISOString(),
+      platform: /Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+    }, { merge: true });
+  } catch (err) { console.warn('[TS Push]', err.message); }
+}
+if (fbMessaging) {
+  fbMessaging.onMessage(function(payload) {
+    const title = (payload.notification && payload.notification.title) || 'Thunderstudy';
+    const body  = (payload.notification && payload.notification.body)  || '';
+    if (typeof showToast === 'function') showToast('🔔 <strong>' + title + '</strong>: ' + body, 'info', 6000);
+  });
+}
+window.addEventListener('load', function() { setTimeout(tsInitPush, 3000); });
+
+/* ════ AUTH GUARD ════ */
+function tsGuardAuth() {
+  const sid  = localStorage.getItem('ts_student_id');
+  const p    = (function(){try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');}catch{return{};}})();
+  const name = p.name || localStorage.getItem('cbtUserName');
+  if (!sid || !name) {
+    window.location.href = window.location.protocol === 'file:' ? 'login.html?portal=banking' : 'https://commercesehoga.github.io/login/?portal=banking';
+  }
+}
+
+/* ════ LOGIN HELPERS ════ */
+function goLoginPage() {
+  window.location.href = window.location.protocol === 'file:' ? 'login.html?portal=banking' : 'https://commercesehoga.github.io/login/?portal=banking';
+}
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('ts_dark_mode', isDark ? '1' : '0');
+  // update topbar toggle icon
+  const btn = document.getElementById('dark-toggle-btn');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  // update sidebar SVG moon/sun
+  const sdi = document.getElementById('sidebar-dark-icon');
+  if (sdi) sdi.innerHTML = isDark
+    ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
+    : `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  const sdl = document.getElementById('sidebar-dark-label');
+  if (sdl) sdl.textContent = isDark ? 'Light Mode' : 'Night Mode';
+  // update settings page button if visible
+  const si = document.getElementById('settings-dark-icon');
+  const sl = document.getElementById('settings-dark-label');
+  if (si) si.textContent = isDark ? '☀️' : '🌙';
+  if (sl) sl.textContent = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+}
+// Restore dark mode
+if (localStorage.getItem('ts_dark_mode') === '1') {
+  document.body.classList.add('dark-mode');
+  // sidebar icon will be updated by toggleDarkMode syncs; initial SVG is already moon
+}
+</script>
 <body>
 
 <!-- BOOT -->
@@ -601,7 +743,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sb-logo">
-    <div class="sb-logo-icon">⚡</div>
+    <div class="sb-logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
     <div class="sb-logo-col">
       <div class="sb-logo-name">Thunder<span>Study</span></div>
       <div class="sb-logo-sub">Banking · by Wondermayank</div>
@@ -609,15 +751,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   </div>
   <div class="sb-nav">
     <div class="sb-section-label">Main</div>
-    <div class="nav-item active" onclick="goPage('home')"><span class="nav-icon">🏠</span> Home</div>
+    <div class="nav-item active" onclick="goPage('home')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span> Home</div>
     <div class="sb-section-label" style="margin-top:10px;">Exams</div>
-    <div class="nav-item" onclick="goPage('ibps')"><span class="nav-icon">🏦</span> IBPS</div>
-    <div class="nav-item" onclick="goPage('sbi')"><span class="nav-icon">🏛️</span> SBI</div>
-    <div class="nav-item" onclick="goPage('rbi')"><span class="nav-icon">🏅</span> RBI</div>
+    <div class="nav-item" onclick="goPage('ibps')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></span> IBPS</div>
+    <div class="nav-item" onclick="goPage('sbi')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="13" rx="1"/><path d="M8 9V5a4 4 0 0 1 8 0v4"/><line x1="12" y1="13" x2="12" y2="17"/></svg></span> SBI</div>
+    <div class="nav-item" onclick="goPage('rbi')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span> RBI</div>
     <div class="sb-section-label" style="margin-top:10px;">Tools</div>
-    <div class="nav-item" onclick="goPage('analytics')"><span class="nav-icon">📈</span> Analytics <span class="nav-badge green">NEW</span></div>
-    <div class="nav-item" onclick="goPage('rank')"><span class="nav-icon">🏆</span> Class Rank <span class="nav-badge">LIVE</span></div>
-    <div class="nav-item" onclick="goPage('settings')"><span class="nav-icon">⚙️</span> Settings</div>
+    <div class="nav-item" onclick="goPage('analytics')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> Analytics <span class="nav-badge green">NEW</span></div>
+    <div class="nav-item" onclick="goPage('rank')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 6 12 2 16 6"/><line x1="12" y1="2" x2="12" y2="15"/><path d="M20 12a8 8 0 1 1-16 0"/></svg></span> Class Rank <span class="nav-badge">LIVE</span></div>
+    <div class="nav-item" id="nav-notices-item" onclick="showAllNoticesModal()">
+      <span class="nav-icon">
+        <svg class="ts-svg-icon" data-icon="bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;display:inline-block;vertical-align:middle;">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 01-3.46 0"/>
+        </svg>
+      </span>
+      Notices
+      <span class="nav-badge" id="notices-badge" style="display:none;background:var(--red);">0</span>
+    </div>
+    <div class="nav-item" onclick="goPage('settings')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Settings</div>
+    <div class="nav-item" onclick="toggleDarkMode()" style="cursor:pointer;" title="Toggle Night Mode"><span class="nav-icon" id="sidebar-dark-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span> <span id="sidebar-dark-label">Night Mode</span></div>
+    <div class="nav-item" id="nav-ai" onclick="goPage('ai')"><span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="16" y1="15" x2="16" y2="15"/></svg></span> AI Tutor <span class="nav-badge badge-new">NEW</span></div>
   </div>
   <div class="sb-profile" onclick="openProfileModal()">
     <div class="sb-av" id="sb-av">S</div>
@@ -634,7 +788,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   <div class="page active" id="page-home">
     <div class="topbar">
       <div><div class="page-title" id="home-greeting">👋 Hello, Aspirant!</div><div class="page-sub" id="home-sub">Banking Exam Dashboard</div></div>
-      <div class="topbar-right" id="home-topbar-right"><div id="ts-google-area-home"></div><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
+      <div class="topbar-right" id="home-topbar-right"><div id="ts-google-area-home"></div><button class="btn btn-ghost" onclick="toggleDarkMode()" id="dark-toggle-btn" title="Toggle Night Mode" style="padding:7px 10px;font-size:16px;line-height:1;">🌙</button><button class="btn btn-prim" onclick="openProfileModal()">✏️ Edit Profile</button></div>
     </div>
     <div id="home-content"></div>
   </div>
@@ -671,6 +825,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   <div class="page" id="page-settings">
     <div class="topbar"><div><div class="page-title">⚙️ Settings</div><div class="page-sub">Profile, data & sync</div></div></div>
     <div id="settings-content"></div>
+  </div>
+
+  <!-- AI TUTOR PAGE -->
+  <div class="page" id="page-ai">
+    <div class="topbar">
+      <div>
+        <div class="page-title">🤖 AI Tutor</div>
+        <div class="page-sub" id="ai-topbar-sub">Powered by Thunderstudy AI · Chat or Ask Questions</div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" onclick="clearAIChat()" title="Clear chat">🗑️ Clear</button>
+      </div>
+    </div>
+    <div id="ai-content"></div>
   </div>
 
 </div><!-- /main -->
@@ -893,12 +1061,28 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
   <div class="modal-box">
     <div class="modal-title"><span>✏️ Edit Profile</span><span class="modal-close" onclick="closeModal('profile-modal')">×</span></div>
     <div class="form-row"><div class="form-lbl">Full Name</div><input class="form-inp" id="pf-name" placeholder="Your name"></div>
+    <div class="form-row">
+      <div class="form-lbl">Student ID <span style="color:var(--text3);font-size:9px;">🔒 permanent</span></div>
+      <input class="form-inp" id="pf-sid-display" style="opacity:.5;cursor:not-allowed;font-family:var(--mono);" disabled>
+    </div>
+    <div class="form-row">
+      <div class="form-lbl">Registration No <span style="color:var(--text3);font-size:9px;">🔒 permanent</span></div>
+      <input class="form-inp" id="pf-reg-display" style="opacity:.5;cursor:not-allowed;font-family:var(--mono);" disabled>
+    </div>
     <div class="form-row"><div class="form-lbl">Target Exam</div>
       <select class="form-inp" id="pf-exam">
         <option value="ibps_po">IBPS PO</option><option value="ibps_clerk">IBPS Clerk</option>
         <option value="ibps_rrb_po">IBPS RRB PO</option><option value="ibps_rrb_clerk">IBPS RRB Clerk</option>
         <option value="sbi_po">SBI PO</option><option value="sbi_clerk">SBI Clerk</option>
         <option value="rbi_assistant">RBI Assistant</option><option value="rbi_grade_b">RBI Grade B</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <div class="form-lbl">Gender</div>
+      <select class="form-inp" id="pf-gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Prefer not to say</option>
       </select>
     </div>
     <button class="btn btn-prim" onclick="saveProfile()" style="width:100%;justify-content:center;">💾 Save</button>
@@ -932,13 +1116,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--fn);display:flex;f
 
 <!-- MOBILE DOCK -->
 <nav class="mobile-dock">
-  <div class="dock-item active" id="dock-home" onclick="goPage('home')"><div class="dock-icon">🏠</div><div class="dock-label">Home</div></div>
-  <div class="dock-item" id="dock-ibps" onclick="goPage('ibps')"><div class="dock-icon">🏦</div><div class="dock-label">IBPS</div></div>
-  <div class="dock-item" id="dock-sbi" onclick="goPage('sbi')"><div class="dock-icon">🏛️</div><div class="dock-label">SBI</div></div>
-  <div class="dock-item" id="dock-rbi" onclick="goPage('rbi')"><div class="dock-icon">🏅</div><div class="dock-label">RBI</div></div>
-  <div class="dock-item" id="dock-analytics" onclick="goPage('analytics')"><div class="dock-icon">📈</div><div class="dock-label">Stats</div></div>
-  <div class="dock-item" id="dock-rank" onclick="goPage('rank')"><div class="dock-icon">🏆</div><div class="dock-label">Rank</div></div>
-  <div class="dock-item" id="dock-settings" onclick="goPage('settings')"><div class="dock-icon">⚙️</div><div class="dock-label">Settings</div></div>
+  <div class="dock-item active" id="dock-home" onclick="goPage('home')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="dock-label">Home</div></div>
+  <div class="dock-item" id="dock-ibps" onclick="goPage('ibps')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></div><div class="dock-label">IBPS</div></div>
+  <div class="dock-item" id="dock-sbi" onclick="goPage('sbi')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="13" rx="1"/><path d="M8 9V5a4 4 0 0 1 8 0v4"/><line x1="12" y1="13" x2="12" y2="17"/></svg></div><div class="dock-label">SBI</div></div>
+  <div class="dock-item" id="dock-rbi" onclick="goPage('rbi')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="dock-label">RBI</div></div>
+  <div class="dock-item" id="dock-analytics" onclick="goPage('analytics')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="dock-label">Stats</div></div>
+  <div class="dock-item" id="dock-rank" onclick="goPage('rank')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 6 12 2 16 6"/><line x1="12" y1="2" x2="12" y2="15"/><path d="M20 12a8 8 0 1 1-16 0"/></svg></div><div class="dock-label">Rank</div></div>
+  <div class="dock-item" id="dock-settings" onclick="goPage('settings')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div><div class="dock-label">Settings</div></div>
+  <div class="dock-item" id="dock-ai" onclick="goPage('ai')"><div class="dock-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="11"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="16" y1="15" x2="16" y2="15"/></svg></div><div class="dock-label">AI</div></div>
 </nav>
 <script>
   
@@ -1141,8 +1326,12 @@ function lH(subjId, n){ try{return JSON.parse(localStorage.getItem(HK(subjId,n))
   }
 })();
 
+const TS_KEYS={PROFILE:'ts_profile',STUDENT_ID:'ts_student_id',DARK_MODE:'ts_dark_mode',REG_NO:'ts_reg_no',GENDER:'ts_gender'};
+function selectGender(g){localStorage.setItem(TS_KEYS.GENDER,g);}
 function getProfile(){ try{return JSON.parse(localStorage.getItem('ts_profile')||'{}');} catch(e){return{};} }
 function getSID(){ return localStorage.getItem('ts_student_id')||null; }
+function getRegNo(){ return localStorage.getItem('ts_reg_no')||localStorage.getItem('registrationNo')||localStorage.getItem('regNo')||''; }
+function getGoogleUser(){ try{return JSON.parse(localStorage.getItem('ts_google_user')||'null');}catch{return null;} }
 
 function getAllResults(){
   const all=[];
@@ -1169,13 +1358,17 @@ function syncHistory(subjId, n, r){
 /* ════════════════════════════════════════════════════════
    XP / LEVELS / RANK
 ════════════════════════════════════════════════════════ */
+const RANK_SVG_BASE='https://commercesehoga.github.io/dashboard/RANK/';
+function rankSvgImg(name,size=20){return`<img src="${RANK_SVG_BASE}${name}.svg" width="${size}" height="${size}" alt="${name}" style="vertical-align:middle;display:inline-block;" onerror="this.style.display='none'">`;}
 const XP_LEVELS=[
-  {level:1,min:0,   name:'Beginner', icon:'📚',color:'#9298b5'},
-  {level:2,min:200, name:'Learner',  icon:'🎓',color:'#06b6d4'},
-  {level:3,min:500, name:'Scholar',  icon:'📖',color:'#2563eb'},
-  {level:4,min:1000,name:'Analyst',  icon:'🌟',color:'#10b981'},
-  {level:5,min:2000,name:'Expert',   icon:'🏆',color:'#f59e0b'},
-  {level:6,min:3500,name:'Thunder',  icon:'⚡',color:'#f97316'},
+  {level:1,min:0,   name:'Rookie', svgName:'Rookie',  color:'#9298b5',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>'},
+  {level:2,min:200, name:'Learner',svgName:'Explorer', color:'#06b6d4',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'},
+  {level:3,min:500, name:'Scholar',svgName:'Bronze',   color:'#4f6ef7',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>'},
+  {level:4,min:1000,name:'Expert', svgName:'Silver',   color:'#10b981',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'},
+  {level:5,min:2000,name:'Elite',  svgName:'Elite',    color:'#a855f7',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'},
+  {level:6,min:3500,name:'Master', svgName:'Gold',     color:'#f59e0b',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2"/><path d="M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2"/><path d="M6 3h12v10a6 6 0 01-12 0V3z"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>'},
+  {level:7,min:6000,name:'Thunder',svgName:'Thunder',  color:'#f97316',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'},
+  {level:8,min:10000,name:'Thunder Elite',svgName:'Elite',color:'#e11d48',icon:'<svg class="ts-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'},
 ];
 const RANK_TIERS=[
   {name:'Probationer',icon:'🥉',color:'#cd7f32',threshold:100},
@@ -1279,7 +1472,7 @@ function goPage(id){
   document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')===`goPage('${id}')`)n.classList.add('active');});
   document.querySelectorAll('.dock-item').forEach(d=>d.classList.toggle('active',d.id==='dock-'+id));
   destroyCharts();
-  const map={home:renderHome,ibps:()=>renderExamPage('ibps'),sbi:()=>renderExamPage('sbi'),rbi:()=>renderExamPage('rbi'),analytics:renderAnalytics,rank:renderRank,settings:renderSettings};
+  const map={home:renderHome,ibps:()=>renderExamPage('ibps'),sbi:()=>renderExamPage('sbi'),rbi:()=>renderExamPage('rbi'),analytics:renderAnalytics,rank:renderRank,settings:renderSettings,ai:renderAI};
   if(map[id])setTimeout(()=>{map[id]();if(id==='home')startHomeRealtime();},60);
 }
 
@@ -1306,34 +1499,132 @@ function renderHome(){
 
   let H='';
 
-  /* HERO */
-  H+=`<div class="hero-card">
-    <div style="position:relative;z-index:1;">
-      <div class="level-pill">${xpInfo.icon} Level ${xpInfo.level} · ${xpInfo.name}&nbsp;&nbsp;|&nbsp;&nbsp;${tier.icon} ${tier.name}</div>
-      <div class="hero-name">${escH(uname)}</div>
-      <div style="font-size:11px;opacity:.75;margin-bottom:16px;">🪪 ${sid||'No ID'} · ${prof.exam?examLabel(prof.exam):'Banking Aspirant'}</div>
-      <div class="hero-stats">
-        <div><div class="hero-val">${totalDone}</div><div class="hero-lbl">Mocks Done</div></div>
-        <div><div class="hero-val">${avgPct.toFixed(1)}%</div><div class="hero-lbl">Avg Score</div></div>
-        <div><div class="hero-val">${xp}</div><div class="hero-lbl">XP Earned</div></div>
-        <div><div class="hero-val">${streak}🔥</div><div class="hero-lbl">Day Streak</div></div>
+  /* HERO — Variant 3: White theme, accent top bar, identity grid */
+  const _reg  = getRegNo() || '—';
+  const _sid  = localStorage.getItem('ts_student_id') || '—';
+  const _prof = getProfile();
+  const _gu   = getGoogleUser();
+  const _gender = _prof.gender || localStorage.getItem(TS_KEYS.GENDER) || 'male';
+  const _genderLabel = _gender === 'female' ? 'Female' : _gender === 'other' ? 'Other' : 'Male';
+  const _genderIcon  = _gender === 'female'
+    ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="21"/><line x1="9" y1="18" x2="15" y2="18"/></svg>`
+    : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="14" r="5"/><line x1="19" y1="5" x2="14.65" y2="9.35"/><polyline points="15 5 19 5 19 9"/></svg>`;
+  const _genderStyle = _gender === 'female'
+    ? 'background:#FBEAF0;color:#72243E;border:0.5px solid #F4C0D1;'
+    : 'background:#EEEDFE;color:#3C3489;border:0.5px solid #AFA9EC;';
+  const _avStyle = _gender === 'female'
+    ? 'background:#FBEAF0;border:2px solid #F4C0D1;'
+    : 'background:#E6F1FB;border:2px solid #B5D4F4;';
+  const _avIconColor = _gender === 'female' ? '#993556' : '#185FA5';
+  const _avatarInner = (_gu && _gu.picture)
+    ? `<img src="${_gu.picture}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+    : `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="${_avIconColor}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+  const _lvlBadge = rankSvgImg(xpInfo.svgName||'Rookie', 22);
+
+  H += `
+<div style="width:100%;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--border);margin-bottom:18px;">
+  <div style="height:3px;background:#1e3abf;"></div>
+  <div style="padding:18px 22px;">
+    <!-- Header row: Avatar + Name + Logo -->
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+      <div style="width:56px;height:56px;border-radius:50%;${_avStyle}display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+        ${_avatarInner}
       </div>
-      <div style="margin-top:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;opacity:.75;margin-bottom:5px;">
-          <span>⚡ XP Progress</span><span>${xpInfo.progress.toFixed(0)}% to ${xpInfo.nextName||'MAX'}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap;">
+          <span style="font-size:20px;font-weight:900;color:var(--text);">${escH(uname)}</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;${_genderStyle}">
+            ${_genderIcon} ${_genderLabel}
+          </span>
         </div>
-        <div class="xp-track"><div class="xp-fill-bar" id="xp-fill" style="width:0%"></div></div>
-        <div class="xp-nums"><span>${xp} XP</span><span>${xpInfo.nextMin?xpInfo.nextMin+' XP':''}</span></div>
+        <div style="font-size:12px;color:var(--text3);">${prof.exam ? examLabel(prof.exam) : 'Banking Aspirant'}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:12px;padding:8px 14px;border:1px solid var(--border);flex-shrink:0;">
+        <div style="width:30px;height:30px;border-radius:8px;background:#1e3abf;display:flex;align-items:center;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:800;color:var(--text);line-height:1.2;">ThunderStudy</div>
+          <div style="font-size:10px;color:var(--text3);">Banking Portal</div>
+        </div>
       </div>
     </div>
-  </div>`;
+    <!-- Identity grid: Student No + Reg No -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <div style="background:var(--card2);border-radius:10px;padding:9px 12px;border:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Student No.
+        </div>
+        <div style="font-size:13px;font-weight:900;color:var(--text);font-family:var(--mono);">${_sid}</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:9px 12px;border:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Reg. No.
+        </div>
+        <div style="font-size:13px;font-weight:900;color:var(--text);font-family:var(--mono);">${_reg}</div>
+      </div>
+    </div>
+    <!-- Stat tiles -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin-bottom:12px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;border:1px solid var(--border);">
+        <div style="font-size:18px;font-weight:900;font-family:var(--mono);color:var(--text);">${totalDone}</div>
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;">Mocks done</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;border:1px solid var(--border);">
+        <div style="font-size:18px;font-weight:900;font-family:var(--mono);color:${rClr(avgPct)};">${avgPct.toFixed(1)}%</div>
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;">Avg score</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;border:1px solid var(--border);">
+        <div style="font-size:18px;font-weight:900;font-family:var(--mono);color:var(--text);">${xp}</div>
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;">XP earned</div>
+      </div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;border:1px solid var(--border);">
+        <div style="font-size:18px;font-weight:900;font-family:var(--mono);color:var(--orange);">${streak} 🔥</div>
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;">Day streak</div>
+      </div>
+    </div>
+    <!-- Level pills + XP bar row -->
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+      <div class="ts-level-pill" style="background:${xpInfo.color}18;color:${xpInfo.color};border:1.5px solid ${xpInfo.color}40;">
+        Level ${xpInfo.level}
+      </div>
+      <div class="ts-level-pill" style="background:${xpInfo.color}18;color:${xpInfo.color};border:1.5px solid ${xpInfo.color}40;">
+        <span style="display:inline-flex;align-items:center;">${xpInfo.icon}</span> ${xpInfo.name}
+      </div>
+      <div style="flex:1;min-width:80px;">
+        <div style="height:5px;background:var(--card2);border-radius:5px;overflow:hidden;border:1px solid var(--border);">
+          <div id="xp-fill" style="height:100%;width:0%;background:${xpInfo.color};border-radius:5px;transition:width 1.4s cubic-bezier(.34,1.56,.64,1);"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:3px;">
+          <span>${xp} XP</span>
+          <span>${xpInfo.nextName ? xpInfo.progress.toFixed(0)+'% to '+xpInfo.nextName : '⚡ MAX · ∞'}</span>
+          <span>${xpInfo.nextMin ? xpInfo.nextMin + ' XP' : ''}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
 
-  /* RANK TIERS */
-  H+=`<div class="card card-p" style="margin-bottom:16px;">
-    <div class="sec-hdr"><div class="sec-title">🏅 Rank Journey</div><div style="font-size:12px;font-weight:700;color:${tier.color};">${tier.icon} ${tier.name} · ${rpData.rp}/${tier.threshold===Infinity?'∞':tier.threshold} RP</div></div>
-    <div class="rank-tiers-row">${RANK_TIERS.map((t,i)=>{const earned=i<=rpData.rankIndex,isCur=i===rpData.rankIndex;return`<div class="rank-tier-pill ${earned?'earned':'locked'}" style="color:${earned?t.color:'#999'};border-color:${earned?t.color+'50':'#ddd'};background:${earned?t.color+'12':'#f5f5f5'};${isCur?'box-shadow:0 0 0 2px '+t.color+'40;':''}">${t.icon} ${t.name}${isCur?' ◀':''}</div>`;}).join('')}</div>
-    <div style="height:6px;background:var(--border);border-radius:6px;overflow:hidden;"><div style="height:100%;width:${rpPct.toFixed(1)}%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:6px;transition:width 1.2s ease;"></div></div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:var(--mono);"><span>${rpData.rp} RP</span><span>→ ${RANK_TIERS[Math.min(rpData.rankIndex+1,RANK_TIERS.length-1)].name}</span></div>
+  /* RANK JOURNEY — interactive XP widget */
+  (function(){
+    const _rjXP = xp;
+    const _rjIdx = (function(){let i=0;for(let k=0;k<XP_LEVELS.length;k++){if(_rjXP>=XP_LEVELS[k].min)i=k;}return i;})();
+    const _rjR = XP_LEVELS[_rjIdx];
+    const _rjNext = XP_LEVELS[_rjIdx+1];
+    const _rjPct = _rjNext ? Math.min(100,Math.round((_rjXP-_rjR.min)/(_rjNext.min-_rjR.min)*100)) : 100;
+    window._rjSelected = _rjIdx;
+    window._rjUserXP = _rjXP;
+  })();
+  H+=`<div class="card card-p" style="margin-bottom:16px;" id="rank-journey-card">
+    <div class="sec-hdr">
+      <div class="sec-title">🏅 Rank Journey</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text3);">Your XP: <span style="color:var(--yellow);font-family:var(--mono);">${xp}</span></div>
+    </div>
+    <div id="rj-path-home" style="display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;"></div>
+    <div id="rj-detail-home" style="border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;background:var(--card2);"></div>
+    <div id="rj-pills-home" style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:12px;"></div>
   </div>`;
 
   /* STREAK */
@@ -1369,6 +1660,10 @@ function renderHome(){
     H+=`<div class="prog-row"><div class="prog-lbl">${gInfo[g].icon} ${gInfo[g].name}</div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${gInfo[g].color}"></div></div><div class="prog-pct" style="color:${gInfo[g].color}">${pct.toFixed(0)}%</div></div>`;
   });
 
+  /* ADMIN NOTICES */
+  const noticesHTML = buildAdminNoticesHTML();
+  if (noticesHTML) H += noticesHTML;
+
   /* FAQ — part of home page, rendered every time */
   H+=`<section class="faq-section" aria-label="Frequently Asked Questions">
   <h2 class="faq-section-title">⚡ Frequently Asked Questions</h2>
@@ -1386,6 +1681,11 @@ function renderHome(){
 </section>`;
 
   document.getElementById('home-content').innerHTML=H;
+  renderRankJourneyHome(xp);
+  renderHomeTopbar();
+  // Sync dark mode toggle icon
+  const _dBtn=document.getElementById('dark-toggle-btn');
+  if(_dBtn)_dBtn.textContent=document.body.classList.contains('dark-mode')?'☀️':'🌙';
   setTimeout(()=>{
     const xf=document.getElementById('xp-fill');if(xf)xf.style.width=xpInfo.progress+'%';
     document.querySelectorAll('.prog-fill').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>el.style.width=w,80);});
@@ -1418,6 +1718,108 @@ function startHomeRealtime(){
   },5000);
 }
 function stopHomeRealtime(){clearInterval(_homeRefreshTimer);_homeRefreshTimer=null;}
+
+/* ════════════════════════════════════════════════════════
+   RANK JOURNEY HOME WIDGET
+════════════════════════════════════════════════════════ */
+const RJ_BASE='https://commercesehoga.github.io/dashboard/RANK/';
+const RJ_LEVELS=[
+  {name:'Rookie',       level:1,xp:0,    next:200,  color:'#9298b5',bg:'rgba(146,152,181,.12)',svg:'Rookie',  icon:'📚', perks:['Access all mock tests','Basic analytics']},
+  {name:'Learner',      level:2,xp:200,  next:500,  color:'#06b6d4',bg:'rgba(6,182,212,.1)',   svg:'Explorer',icon:'🎓', perks:['Detailed test reviews','Study heatmap']},
+  {name:'Scholar',      level:3,xp:500,  next:1000, color:'#4f6ef7',bg:'rgba(79,110,247,.1)',  svg:'Bronze',  icon:'📖', perks:['Leaderboard entry','Weekly challenges']},
+  {name:'Expert',       level:4,xp:1000, next:2000, color:'#10b981',bg:'rgba(16,185,129,.1)',  svg:'Silver',  icon:'🌟', perks:['Priority leaderboard','Advanced analytics']},
+  {name:'Elite',        level:5,xp:2000, next:3500, color:'#a855f7',bg:'rgba(168,85,247,.1)',  svg:'Elite',   icon:'💜', perks:['Elite badge unlocked','Purple frame']},
+  {name:'Master',       level:6,xp:3500, next:6000, color:'#f59e0b',bg:'rgba(245,158,11,.1)',  svg:'Gold',    icon:'🏆', perks:['Gold badge + frame','Custom profile tag']},
+  {name:'Thunder',      level:7,xp:6000, next:10000,color:'#f97316',bg:'rgba(249,115,22,.1)',  svg:'Thunder', icon:'⚡', perks:['Thunder badge + frame','Elite leaderboard slot']},
+  {name:'Thunder Elite',level:8,xp:10000,next:null,  color:'#e11d48',bg:'rgba(225,29,72,.1)',   svg:'Elite',   icon:'🔥', perks:['⚡ Hall of Fame entry','Thunder Elite badge','Infinite XP — no cap','Prestige profile frame']},
+];
+let _rjSelIdx=0,_rjXP=0;
+
+function _rjGetIdx(xp){let i=0;for(let k=0;k<RJ_LEVELS.length;k++){if(xp>=RJ_LEVELS[k].xp)i=k;}return i;}
+function _rjPct(xp,r){if(!r.next)return 100;return Math.min(100,Math.round((xp-r.xp)/(r.next-r.xp)*100));}
+function _rjBadge(r,sz){return`<img src="${RJ_BASE}${r.svg}.svg" width="${sz}" height="${sz}" style="object-fit:contain;" alt="${r.name}" onerror="this.textContent='${r.icon}';this.style.fontSize='${Math.round(sz*.65)}px';">`;}
+
+function _rjRenderPath(){
+  const el=document.getElementById('rj-path-home');if(!el)return;
+  const ei=_rjGetIdx(_rjXP);
+  el.innerHTML=RJ_LEVELS.map((r,i)=>{
+    const earned=i<=ei,active=i===_rjSelIdx,locked=i>ei,isMax=!r.next;
+    const conn=i<ei?r.color:'var(--border)';
+    const ringStyle=active
+      ?(isMax?`border-color:${r.color};box-shadow:0 0 0 4px ${r.color}35,0 0 12px ${r.color}40;background:${r.bg};`
+             :`border-color:${r.color};box-shadow:0 0 0 3px ${r.color}30;background:${r.bg};`)
+      :earned?`border-color:${r.color};background:${r.bg};`:'';
+    return`<div class="rjh-step ${active?'rjh-active':''} ${locked?'rjh-locked':''}" onclick="_rjSelect(${i})">
+      <div class="rjh-connector" style="background:${conn};"></div>
+      <div class="rjh-ring" style="${ringStyle}">${_rjBadge(r,32)}</div>
+      <div class="rjh-step-name">${r.name}</div>
+      <div class="rjh-step-xp" style="${isMax?'color:var(--orange);font-weight:800;':''}">${isMax?'⚡∞':r.xp+'+'}</div>
+    </div>`;
+  }).join('');
+}
+
+function _rjRenderDetail(){
+  const el=document.getElementById('rj-detail-home');if(!el)return;
+  const r=RJ_LEVELS[_rjSelIdx];
+  const ei=_rjGetIdx(_rjXP);
+  const isCur=_rjSelIdx===ei,isEarned=_rjSelIdx<ei,isLocked=_rjSelIdx>ei;
+  const isMax=!r.next;
+  const prog=isCur?_rjPct(_rjXP,r):isEarned?100:0;
+  const xpLabel=isCur
+    ?(isMax?`${_rjXP-r.xp} XP beyond max · ∞`:`${_rjXP-r.xp} / ${r.next-r.xp} XP · ${prog}%`)
+    :isEarned?'Completed ✓'
+    :`Needs ${r.xp} XP`;
+  const statusTxt=isCur?(isMax?'⚡ MAX LEVEL':'Current'):isEarned?'Earned':'Locked';
+  const statusClr=isCur?(isMax?'var(--orange)':'var(--acc)'):isEarned?'var(--green)':'var(--text3)';
+  const prev=_rjSelIdx>0?RJ_LEVELS[_rjSelIdx-1]:null;
+  const next=_rjSelIdx<RJ_LEVELS.length-1?RJ_LEVELS[_rjSelIdx+1]:null;
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;">
+      <div style="width:62px;height:62px;border-radius:50%;background:${r.bg};border:2px solid ${r.color}50;display:flex;align-items:center;justify-content:center;flex-shrink:0;${isCur&&isMax?`box-shadow:0 0 0 4px ${r.color}30;`:''}">${_rjBadge(r,46)}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
+          <span style="font-size:17px;font-weight:900;color:var(--text);">${r.name}</span>
+          <span style="font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;background:${isCur&&isMax?'rgba(249,115,22,.15)':isCur?'rgba(37,99,235,.1)':isEarned?'rgba(16,185,129,.1)':'rgba(0,0,0,.05)'};color:${statusClr};">${statusTxt}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);">Level ${r.level} · ${r.xp} XP${isMax?' · <span style="color:var(--orange);font-weight:800;">⚡ ∞ Unlimited</span>':' – '+r.next+' XP'}</div>
+        <div style="margin-top:8px;">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px;font-family:var(--mono);"><span>XP progress</span><span style="color:${r.color};font-weight:700;">${xpLabel}</span></div>
+          ${isMax&&isCur
+            ?`<div style="height:5px;border-radius:5px;overflow:hidden;background:linear-gradient(90deg,${r.color},#fbbf24,${r.color});background-size:200%;animation:shimmer 1.8s infinite linear;"></div>`
+            :`<div style="height:5px;background:var(--border);border-radius:5px;overflow:hidden;"><div id="rjh-bar" style="height:100%;width:0%;background:${r.color};border-radius:5px;transition:width .8s cubic-bezier(.34,1.56,.64,1);"></div></div>`
+          }
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
+      ${r.perks.map(p=>`<div class="rjh-perk"><span style="color:${r.color};font-size:13px;">✓</span>${p}</div>`).join('')}
+    </div>
+    <div style="display:flex;gap:7px;">
+      ${prev?`<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:11px;padding:6px 8px;" onclick="_rjSelect(${_rjSelIdx-1})"><span style="opacity:.7;">${_rjBadge(prev,14)}</span> ${prev.name}</button>`:'<span style="flex:1;"></span>'}
+      ${next?`<button class="btn btn-ghost" style="flex:1;justify-content:center;font-size:11px;padding:6px 8px;" onclick="_rjSelect(${_rjSelIdx+1})">${next.name} <span style="opacity:.7;">${_rjBadge(next,14)}</span></button>`:`<div style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:6px 8px;border-radius:10px;background:linear-gradient(135deg,${r.color}18,${r.color}08);border:1.5px solid ${r.color}30;font-size:11px;font-weight:800;color:${r.color};">⚡ Max Level · ∞</div>`}
+    </div>`;
+  setTimeout(()=>{const b=document.getElementById('rjh-bar');if(b)b.style.width=prog+'%';},60);
+}
+
+function _rjRenderPills(){
+  const el=document.getElementById('rj-pills-home');if(!el)return;
+  const ei=_rjGetIdx(_rjXP);
+  el.innerHTML=RJ_LEVELS.map((r,i)=>`
+    <div onclick="_rjSelect(${i})" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 3px;border-radius:10px;border:1.5px solid ${i===_rjSelIdx?r.color:'var(--border)'};background:${i===_rjSelIdx?r.bg:'var(--card)'};cursor:pointer;transition:all .15s;${i>ei?'opacity:.35;filter:grayscale(1);':''}">
+      ${_rjBadge(r,24)}
+      <span style="font-size:9px;font-weight:700;color:${i===_rjSelIdx?r.color:'var(--text3)'};">${r.name}</span>
+    </div>`).join('');
+}
+
+function _rjSelect(i){_rjSelIdx=i;_rjRenderPath();_rjRenderDetail();_rjRenderPills();}
+
+function renderRankJourneyHome(userXP){
+  _rjXP=userXP||0;
+  _rjSelIdx=_rjGetIdx(_rjXP);
+  _rjRenderPath();
+  _rjRenderDetail();
+  _rjRenderPills();
+}
 
 /* HEATMAP */
 function buildHeatmap(results){
@@ -1746,7 +2148,606 @@ function deleteBM(sId,n){if(!confirm('Remove bookmark?'))return;const bms=getBMs
 /* ════════════════════════════════════════════════════════
    LEADERBOARD PAGE
 ════════════════════════════════════════════════════════ */
-const GS_URL = 'https://script.google.com/macros/s/YOUR_BANKING_SCRIPT_ID/exec'; // Replace with your Apps Script URL
+const GS_URL = 'https://script.google.com/macros/s/AKfycbwvvH2EnCmyzTGxloDXXIHukOifvd-VqjHtQZlmlo8DMPYm03gyNlmXgLiGtMKR8ew/exec';
+
+/* ════════════════════════════════════════════════════════
+   NOTICES SYSTEM
+════════════════════════════════════════════════════════ */
+const NOTICES_URL = "https://script.google.com/macros/s/AKfycbz300__XPoTsb2hZ4EEMWRgA503M4v4BPAaLyVym8gRDrXQSXTNnxyTanKYgkrEqwV_Fw/exec";
+
+window._noticesFetchPromise = fetchLiveNoticesAndExams().then(() => updateNoticesBadge()).catch(() => {});
+
+function getAdminNotices() {
+  try { return JSON.parse(sessionStorage.getItem('ts_live_notices') || '[]'); } catch(e) { return []; }
+}
+
+function getAdminExams() {
+  try {
+    const live  = JSON.parse(sessionStorage.getItem('ts_live_exams') || '[]');
+    const local = JSON.parse(localStorage.getItem('ts_admin_exams') || '[]');
+    if (!live.length && !local.length) return [];
+    if (!live.length) return local;
+    if (!local.length) return live;
+    const merged = [...live];
+    local.forEach(le => { if (!merged.find(x => String(x.id) === String(le.id))) merged.push(le); });
+    return merged;
+  } catch(e) { return []; }
+}
+
+function getMyRewards(studentName) {
+  try {
+    const all = JSON.parse(localStorage.getItem('ts_admin_rewards') || '[]');
+    return all.filter(r => !r.claimed && r.studentName.toLowerCase().trim() === studentName.toLowerCase().trim());
+  } catch(e) { return []; }
+}
+
+async function fetchLiveNoticesAndExams() {
+  try {
+    const timeout = (ms) => new Promise((_,r) => setTimeout(() => r(new Error('timeout')), ms));
+    const [nRes, eRes] = await Promise.all([
+      Promise.race([
+        fetch(NOTICES_URL + '?action=getNotices').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+        timeout(8000)
+      ]).catch(e => { console.log('Notices fetch failed:', e.message); return null; }),
+      Promise.race([
+        fetch(NOTICES_URL + '?action=getExams').then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+        timeout(8000)
+      ]).catch(e => { console.log('Exams fetch failed:', e.message); return null; })
+    ]);
+    if (nRes && Array.isArray(nRes)) sessionStorage.setItem('ts_live_notices', JSON.stringify(nRes));
+    if (eRes && Array.isArray(eRes)) sessionStorage.setItem('ts_live_exams', JSON.stringify(eRes));
+  } catch(e) {
+    console.log('Notice fetch failed:', e);
+  }
+}
+
+function parseNoticeMessage(text) {
+  if (!text) return '';
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
+  const parts = text.split(urlRegex);
+  let result = '';
+  parts.forEach(function(part) {
+    if (/^https?:\/\//.test(part)) {
+      let btnLabel = '🔗 Open Link', btnColor = '#4f6ef7';
+      if (/t\.me|telegram/i.test(part))      { btnLabel = '📱 Open Telegram'; btnColor = '#0088cc'; }
+      else if (/instagram\.com/i.test(part)) { btnLabel = '📸 Instagram'; btnColor = '#e1306c'; }
+      else if (/youtube\.com|youtu\.be/i.test(part)) { btnLabel = '▶ YouTube'; btnColor = '#ff0000'; }
+      else if (/wa\.me|whatsapp/i.test(part)){ btnLabel = '💬 WhatsApp'; btnColor = '#25d366'; }
+      else if (/drive\.google\.com/i.test(part)) { btnLabel = '📁 Google Drive'; btnColor = '#4285f4'; }
+      else if (/forms\.gle|docs\.google\.com\/forms/i.test(part)) { btnLabel = '📝 Open Form'; btnColor = '#7c3aed'; }
+      result += '<a href="' + part + '" target="_blank" rel="noopener" style="'
+        + 'display:inline-flex;align-items:center;gap:4px;'
+        + 'background:' + btnColor + ';color:#fff;border-radius:20px;'
+        + 'padding:3px 11px;font-size:11px;font-weight:700;'
+        + 'text-decoration:none;font-family:var(--fn);vertical-align:middle;margin:0 2px;">'
+        + btnLabel + '</a>';
+    } else {
+      result += escH(part).replace(/\n/g, '<br>');
+    }
+  });
+  return result;
+}
+
+function buildNewspaperCol(label, borderColor, bgColor, dividerColor, titleColor, subtitleColor, noticeList) {
+  const hasNotices = noticeList.length > 0;
+  const emoji = label.split(' ')[0];
+  const labelText = label.split(' ').slice(1).join(' ');
+  return `<div style="border-radius:16px;overflow:hidden;background:${bgColor};border:1.5px solid ${borderColor}22;transition:transform .2s,box-shadow .2s;"
+    onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px ${borderColor}22'"
+    onmouseleave="this.style.transform='none';this.style.boxShadow='none'">
+    <div style="padding:10px 13px 9px;background:${borderColor}18;border-bottom:1.5px solid ${borderColor}22;display:flex;align-items:center;gap:7px;">
+      <div style="width:26px;height:26px;border-radius:8px;background:${borderColor};display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">${emoji}</div>
+      <div style="font-size:11px;font-weight:800;color:${titleColor};flex:1;">${labelText}</div>
+      ${hasNotices
+        ? `<div style="background:${borderColor};color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;min-width:20px;text-align:center;">${noticeList.length}</div>`
+        : `<div style="width:8px;height:8px;border-radius:50%;background:${borderColor}40;"></div>`}
+    </div>
+    <div style="padding:11px 13px;">
+      ${hasNotices
+        ? noticeList.map((n, i) => `
+          <div onclick="openNoticePopup('${encodeURIComponent(JSON.stringify(n))}')"
+            style="${i < noticeList.length - 1 ? `padding-bottom:9px;margin-bottom:9px;border-bottom:1px solid ${borderColor}20;` : ''}
+            display:flex;align-items:flex-start;gap:8px;cursor:pointer;border-radius:8px;padding:6px 4px;transition:background .15s;"
+            onmouseenter="this.style.background='rgba(0,0,0,.04)'"
+            onmouseleave="this.style.background='transparent'">
+            <div style="width:5px;height:5px;border-radius:50%;background:${borderColor};margin-top:5px;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:12px;font-weight:800;color:${titleColor};margin-bottom:3px;line-height:1.35;
+                overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">
+                ${escH(n.title)}
+              </div>
+              <div style="font-size:10.5px;color:${subtitleColor};line-height:1.6;">${parseNoticeMessage(n.message)}</div>
+              ${n.expiry
+                ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;background:${borderColor}18;border-radius:20px;padding:2px 8px;font-size:9px;font-weight:700;color:${subtitleColor};">
+                    ⏱ ${new Date(n.expiry).toLocaleDateString('en-IN')}</div>`
+                : ''}
+              <div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;background:${borderColor}18;border-radius:20px;padding:2px 9px;font-size:9px;font-weight:700;color:${subtitleColor};">
+                👆 Tap to view
+              </div>
+            </div>
+          </div>`).join('')
+        : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 0;gap:6px;">
+            <div style="width:32px;height:32px;border-radius:50%;background:${borderColor}15;display:flex;align-items:center;justify-content:center;font-size:14px;">${emoji}</div>
+            <div style="font-size:10px;color:${subtitleColor};font-weight:600;opacity:.7;">No notices</div>
+          </div>`
+      }
+    </div>
+  </div>`;
+}
+
+function buildAdminNoticesHTML() {
+  const notices = getAdminNotices().filter(n => {
+    if (!n.active) return false;
+    if (n.expiry && new Date(n.expiry) < new Date()) return false;
+    return true;
+  });
+  const prof   = getProfile();
+  const myName = (prof.name || '').trim().toLowerCase();
+  const rewards = myName ? getMyRewards(myName) : [];
+  const now     = new Date();
+  const exams   = getAdminExams()
+    .filter(e => e.active && new Date(e.date) > now)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (!notices.length && !rewards.length && !exams.length) return '';
+
+  let H = `<div style="margin-bottom:24px;">`;
+
+  H += `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:9px;">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#4f6ef7,#7c3aed);
+        display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(79,110,247,.3);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"
+            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:900;color:var(--text);">Admin Notices</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:1px;">
+          ${notices.length} active · ${exams.length} exam${exams.length !== 1 ? 's' : ''} upcoming
+        </div>
+      </div>
+    </div>
+    ${notices.length ? `<div style="display:flex;align-items:center;gap:5px;background:rgba(79,110,247,.08);
+      border:1.5px solid rgba(79,110,247,.2);border-radius:30px;padding:4px 12px;">
+      <div style="width:7px;height:7px;border-radius:50%;background:#4f6ef7;
+        animation:syncPulse 1.5s ease-in-out infinite;"></div>
+      <span style="font-size:10px;font-weight:800;color:var(--acc);">LIVE</span>
+    </div>` : ''}
+  </div>`;
+
+  const infoNotices  = notices.filter(n => n.type === 'info' || n.type === 'urgent');
+  const alertNotices = notices.filter(n => n.type === 'alert');
+  const warnNotices  = notices.filter(n => n.type === 'warning');
+  const eventNotices = notices.filter(n => n.type === 'event');
+  const examNotices  = notices.filter(n => n.type === 'exam');
+
+  const hasAnyNotices = infoNotices.length || alertNotices.length || warnNotices.length || eventNotices.length;
+  if (hasAnyNotices) {
+    H += `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:10px;margin-bottom:12px;">`;
+    H += buildNewspaperCol('ℹ Info',    '#378ADD','#EEF5FD','#B5D4F4','#0C447C','#185FA5', infoNotices);
+    H += buildNewspaperCol('🚨 Alert',  '#E24B4A','#FDF2F2','#F7C1C1','#7A1F1F','#A32D2D', alertNotices);
+    H += buildNewspaperCol('⚠ Warning', '#BA7517','#FDF6EA','#FAC775','#633806','#854F0B', warnNotices);
+    H += buildNewspaperCol('📅 Event',  '#3B9922','#EEF7EA','#B8DDA8','#1A5009','#2E7A14', eventNotices);
+    H += `</div>`;
+  }
+
+  if (examNotices.length) {
+    H += `<div style="background:linear-gradient(135deg,rgba(127,119,221,.08),rgba(83,74,183,.05));
+      border:1.5px solid rgba(127,119,221,.25);border-radius:16px;overflow:hidden;margin-bottom:4px;">
+      <div style="padding:11px 16px 10px;border-bottom:1px solid rgba(127,119,221,.15);
+        display:flex;align-items:center;gap:8px;">
+        <div style="width:26px;height:26px;border-radius:8px;background:rgba(127,119,221,.2);
+          display:flex;align-items:center;justify-content:center;">📝</div>
+        <div style="font-size:12px;font-weight:800;color:#534AB7;">Exam Notices</div>
+        <div style="margin-left:auto;background:#7F77DD;color:#fff;font-size:9px;
+          font-weight:800;padding:2px 8px;border-radius:20px;">${examNotices.length}</div>
+      </div>
+      <div style="padding:12px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:9px;">
+        ${examNotices.map(n => `
+          <div style="padding:11px 13px;background:rgba(206,203,246,.4);
+            border:1px solid rgba(127,119,221,.2);border-radius:12px;transition:background .2s;"
+            onmouseenter="this.style.background='rgba(206,203,246,.7)'"
+            onmouseleave="this.style.background='rgba(206,203,246,.4)'">
+            <div style="font-size:12px;font-weight:800;color:#26215C;margin-bottom:4px;line-height:1.35;">
+              ${escH(n.title)}
+            </div>
+            <div style="font-size:10px;color:#534AB7;line-height:1.55;">${escH(n.message)}</div>
+            ${n.expiry ? `<div style="display:inline-flex;align-items:center;gap:4px;margin-top:6px;
+              background:rgba(127,119,221,.2);border-radius:20px;padding:2px 8px;
+              font-size:9px;font-weight:700;color:#7F77DD;">
+              ⏱ ${new Date(n.expiry).toLocaleDateString('en-IN')}</div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  const readPopups = JSON.parse(localStorage.getItem('ts_read_popups') || '[]');
+  const allActive  = notices;
+  const unreadCount = allActive.filter(n => {
+    const key = String(n.id || n.title || '');
+    return key && !readPopups.includes(key);
+  }).length;
+
+  H += `<div style="display:flex;align-items:center;justify-content:center;margin-top:14px;">
+    <button onclick="showAllNoticesModal()" style="display:inline-flex;align-items:center;gap:8px;
+      padding:10px 24px;border-radius:30px;
+      background:linear-gradient(135deg,rgba(79,110,247,.1),rgba(124,58,237,.07));
+      border:1.5px solid rgba(79,110,247,.25);
+      font-size:12px;font-weight:800;color:var(--acc);
+      cursor:pointer;font-family:var(--fn);transition:all .2s;"
+      onmouseenter="this.style.background='linear-gradient(135deg,rgba(79,110,247,.18),rgba(124,58,237,.12))';this.style.transform='translateY(-1px)'"
+      onmouseleave="this.style.background='linear-gradient(135deg,rgba(79,110,247,.1),rgba(124,58,237,.07))';this.style.transform='none'">
+      🔔 View All Notices
+      <div style="background:var(--acc);color:#fff;font-size:10px;font-weight:900;
+        padding:3px 9px;border-radius:20px;min-width:22px;text-align:center;">
+        ${allActive.length}
+      </div>
+      ${unreadCount > 0 ? `<div style="background:#f43f5e;color:#fff;font-size:10px;font-weight:900;
+        padding:3px 9px;border-radius:20px;min-width:22px;text-align:center;
+        display:flex;align-items:center;gap:4px;animation:syncPulse 1.5s ease-in-out infinite;">
+        <div style="width:6px;height:6px;border-radius:50%;background:#fff;opacity:.8;"></div>
+        ${unreadCount} unread</div>` : ''}
+    </button>
+  </div>`;
+
+  H += `</div>`;
+
+  (async () => {
+    try {
+      if (window._noticesFetchPromise) {
+        await window._noticesFetchPromise;
+        window._noticesFetchPromise = null;
+      }
+      await new Promise(r => setTimeout(r, 300));
+      const freshNotices = getAdminNotices().filter(n => {
+        if (!n.active) return false;
+        if (n.expiry && new Date(n.expiry) < new Date()) return false;
+        return true;
+      });
+      const read = JSON.parse(localStorage.getItem('ts_read_popups') || '[]');
+      const popupNotices = freshNotices.filter(n =>
+        n.popup &&
+        !read.includes(String(n.id || '')) &&
+        !read.includes(String(n.title || ''))
+      );
+      if (popupNotices.length > 0) showAdminPopup(popupNotices);
+    } catch(e) {}
+  })();
+
+  return H;
+}
+
+function renderAdminNotices() {
+  const home = document.getElementById('home-content');
+  if (home && document.getElementById('page-home') &&
+      document.getElementById('page-home').classList.contains('active')) {
+    if (typeof renderHome === 'function') renderHome();
+  }
+}
+
+function openNoticePopup(encodedNotice) {
+  try {
+    const notice = JSON.parse(decodeURIComponent(encodedNotice));
+    showAdminPopup([notice]);
+  } catch(e) {
+    console.log('Notice popup error:', e);
+  }
+}
+
+function showAdminPopup(noticesList) {
+  if (!noticesList || !noticesList.length) return;
+  let notices = [...noticesList];
+  let current = 0;
+
+  const existing = document.getElementById('adminPopupOverlay');
+  if (existing) existing.remove();
+
+  const grads = [
+    'linear-gradient(135deg,rgba(80,160,255,0.62),rgba(60,120,240,0.52))',
+    'linear-gradient(135deg,rgba(80,220,180,0.62),rgba(60,180,200,0.52))',
+    'linear-gradient(135deg,rgba(220,130,255,0.62),rgba(180,100,240,0.52))',
+    'linear-gradient(135deg,rgba(255,170,80,0.62),rgba(240,130,60,0.52))',
+    'linear-gradient(135deg,rgba(255,100,140,0.62),rgba(220,60,100,0.52))',
+  ];
+  const getGrad = i => grads[i % grads.length];
+
+  function extractLink(notice) {
+    if (notice.link && notice.link.startsWith('http')) return notice.link;
+    const match = (notice.message || '').match(/https?:\/\/[^\s<>"']+/);
+    return match ? match[0] : null;
+  }
+
+  function getLinkLabel(url) {
+    if (!url) return '🔗 Open Link';
+    if (/t\.me|telegram/i.test(url))       return '📱 Open Telegram';
+    if (/instagram\.com/i.test(url))       return '📸 Instagram';
+    if (/youtube\.com|youtu\.be/i.test(url)) return '▶ YouTube';
+    if (/wa\.me|whatsapp/i.test(url))      return '💬 WhatsApp';
+    if (/drive\.google\.com/i.test(url))   return '📁 Google Drive';
+    if (/forms\.gle|docs\.google/i.test(url)) return '📝 Open Form';
+    return '🔗 Open Link';
+  }
+
+  const overlay = document.createElement('div');
+  overlay.id = 'adminPopupOverlay';
+  overlay.style.cssText = `position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:20px;`;
+
+  function buildBackCards() {
+    let html = '';
+    const backCount = Math.min(2, notices.length - 1);
+    for (let i = backCount; i >= 1; i--) {
+      const idx = (current + i) % notices.length;
+      html += `<div style="position:absolute;inset:0;border-radius:22px;background:${getGrad(idx)};
+        border:1px solid rgba(255,255,255,0.38);
+        transform:rotate(${i * 5}deg) translate(${i * 14}px,${i * 9}px);
+        transition:transform 0.35s ease;"></div>`;
+    }
+    return html;
+  }
+
+  function buildDots() {
+    return notices.map((_, i) => `<div style="
+      width:${i === current ? '18px' : '6px'};height:6px;border-radius:6px;
+      background:${i === current ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.3)'};
+      transition:all 0.3s ease;"></div>`).join('');
+  }
+
+  function renderNotice() {
+    const notice = notices[current];
+    const linkUrl = extractLink(notice);
+    const linkLabel = getLinkLabel(linkUrl);
+
+    overlay.innerHTML = `
+    <div style="position:relative;width:300px;height:380px;cursor:pointer;" id="apop-stack">
+      ${buildBackCards()}
+      <div id="apop-front" style="position:absolute;inset:0;border-radius:22px;
+        background:${getGrad(current)};border:1px solid rgba(255,255,255,0.5);
+        backdrop-filter:blur(18px);display:flex;flex-direction:column;padding:24px;
+        transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.25s;
+        box-shadow:0 16px 48px rgba(0,0,0,0.15);">
+        <button onclick="popupGotIt()" style="position:absolute;top:14px;right:16px;
+          background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+          border-radius:50%;width:28px;height:28px;font-size:16px;font-weight:700;
+          color:rgba(255,255,255,0.85);cursor:pointer;display:flex;align-items:center;
+          justify-content:center;font-family:var(--fn);">×</button>
+
+        <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.65);
+          text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">
+          ${(notice.type || 'notice').toUpperCase()}
+        </div>
+
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.18);
+          border:1.5px solid rgba(255,255,255,0.38);display:flex;align-items:center;
+          justify-content:center;font-size:22px;margin-bottom:14px;flex-shrink:0;">
+          ${{ event:'📅', alert:'🚨', warning:'⚠️', exam:'📝', info:'ℹ️', update:'🔄' }[(notice.type||'').toLowerCase()] || '🔔'}
+        </div>
+
+        <div style="font-size:18px;font-weight:900;color:#fff;line-height:1.35;margin-bottom:10px;">
+          ${escH(notice.title || '')}
+        </div>
+
+        <div style="font-size:12px;color:rgba(255,255,255,0.78);line-height:1.7;flex:1;overflow:hidden;
+          display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;">
+          ${parseNoticeMessage(notice.message)}
+        </div>
+
+        ${linkUrl ? `<a href="${linkUrl}" target="_blank" rel="noopener" style="display:flex;
+          align-items:center;justify-content:center;gap:7px;margin-top:14px;padding:10px;
+          border-radius:30px;background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.4);
+          font-size:12px;font-weight:800;color:#fff;text-decoration:none;font-family:var(--fn);">
+          ${linkLabel}</a>` : ''}
+
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px;">
+          ${notices.length > 1 ? `<div style="display:flex;justify-content:center;gap:5px;">${buildDots()}</div>` : ''}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+            <button onclick="popupGotIt()" style="padding:9px 8px;border-radius:14px;
+              border:1.5px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);
+              color:rgba(255,255,255,0.85);font-size:11px;font-weight:800;cursor:pointer;
+              font-family:var(--fn);">👍 Got it</button>
+            <button onclick="popupReadIt('${escH(String(notice.id || notice.title || ''))}')"
+              style="padding:9px 8px;border-radius:14px;border:none;background:rgba(255,255,255,0.22);
+              color:#fff;font-size:11px;font-weight:800;cursor:pointer;font-family:var(--fn);">
+              ✅ Read it</button>
+          </div>
+          ${notices.length > 1 ? `<div style="text-align:center;font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px;">
+            ${current + 1} / ${notices.length} — tap card to continue</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+
+    setTimeout(() => {
+      const stack = document.getElementById('apop-stack');
+      if (stack) stack.addEventListener('click', e => {
+        if (e.target.closest('button') || e.target.closest('a')) return;
+        if (notices.length > 1) flipToNext();
+      });
+    }, 50);
+  }
+
+  function flipToNext() {
+    const front = document.getElementById('apop-front');
+    if (!front) return;
+    front.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1),opacity 0.18s';
+    front.style.transform = 'rotate(-10deg) translateX(-40px) scale(0.9)';
+    front.style.opacity = '0';
+    setTimeout(() => {
+      current = (current + 1) % notices.length;
+      renderNotice();
+      const newFront = document.getElementById('apop-front');
+      if (!newFront) return;
+      newFront.style.transition = 'none';
+      newFront.style.transform = 'rotate(8deg) translateX(30px) scale(0.93)';
+      newFront.style.opacity = '0';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        newFront.style.transition = 'transform 0.42s cubic-bezier(0.34,1.56,0.64,1),opacity 0.28s';
+        newFront.style.transform = 'rotate(0) translateX(0) scale(1)';
+        newFront.style.opacity = '1';
+      }));
+    }, 220);
+  }
+
+  window.popupGotIt = function() { if (overlay && overlay.parentNode) overlay.remove(); };
+
+  window.popupReadIt = function(noticeId) {
+    try {
+      const read = JSON.parse(localStorage.getItem('ts_read_popups') || '[]');
+      const key = String(noticeId || '');
+      if (key && !read.includes(key)) { read.push(key); localStorage.setItem('ts_read_popups', JSON.stringify(read)); }
+    } catch(e) {}
+    notices = notices.filter((_, i) => i !== current);
+    if (!notices.length) { if (overlay && overlay.parentNode) overlay.remove(); return; }
+    current = current % notices.length;
+    flipToNext();
+  };
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) popupGotIt(); });
+  document.body.appendChild(overlay);
+  renderNotice();
+
+  const front = document.getElementById('apop-front');
+  if (front) {
+    front.style.opacity = '0';
+    front.style.transform = 'scale(0.88) translateY(20px)';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      front.style.transition = 'transform 0.45s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s';
+      front.style.opacity = '1';
+      front.style.transform = 'scale(1) translateY(0)';
+    }));
+  }
+}
+
+function showAllNoticesModal() {
+  const existing = document.getElementById('all-notices-modal-ov');
+  if (existing) { existing.remove(); return; }
+
+  const notices = getAdminNotices().filter(n => {
+    if (!n.active) return false;
+    if (n.expiry && new Date(n.expiry) < new Date()) return false;
+    return true;
+  });
+  const exams = getAdminExams()
+    .filter(e => e.active && new Date(e.date) > new Date())
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const typeConfig = {
+    info:    { label: 'Info',    color: '#185FA5', bg: '#EEF5FD', border: '#B5D4F4', icon: 'ℹ️' },
+    alert:   { label: 'Alert',   color: '#A32D2D', bg: '#FDF2F2', border: '#F7C1C1', icon: '🚨' },
+    warning: { label: 'Warning', color: '#854F0B', bg: '#FDF6EA', border: '#FAC775', icon: '⚠️' },
+    event:   { label: 'Event',   color: '#2E7A14', bg: '#EEF7EA', border: '#B8DDA8', icon: '📅' },
+    exam:    { label: 'Exam',    color: '#534AB7', bg: '#EDE9FE', border: '#CECBF6', icon: '📝' },
+    update:  { label: 'Update',  color: '#854F0B', bg: '#FDF6EA', border: '#FAC775', icon: '🔄' },
+  };
+
+  const ov = document.createElement('div');
+  ov.id = 'all-notices-modal-ov';
+  ov.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;
+    display:flex;align-items:flex-start;justify-content:center;
+    backdrop-filter:blur(8px);padding:16px;overflow-y:auto;`;
+
+  const grouped = {};
+  notices.forEach(n => {
+    const t = (n.type || 'info').toLowerCase();
+    if (!grouped[t]) grouped[t] = [];
+    grouped[t].push(n);
+  });
+
+  let noticeCardsHTML = '';
+  if (!notices.length) {
+    noticeCardsHTML = `<div style="text-align:center;padding:32px;color:var(--text3);">
+      <div style="font-size:40px;margin-bottom:10px;">🔔</div>
+      <div style="font-size:15px;font-weight:700;">No active notices right now</div>
+    </div>`;
+  } else {
+    Object.entries(grouped).forEach(([type, list]) => {
+      const cfg = typeConfig[type] || typeConfig.info;
+      list.forEach(n => {
+        const expStr = n.expiry
+          ? new Date(n.expiry).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})
+          : null;
+        const linkMatch = (n.message || '').match(/https?:\/\/[^\s<>"']+/);
+        const link = n.link || (linkMatch ? linkMatch[0] : null);
+        let btnLabel = '🔗 Open Link';
+        if (link) {
+          if (/t\.me|telegram/i.test(link))        btnLabel = '📱 Open Telegram';
+          else if (/instagram\.com/i.test(link))   btnLabel = '📸 Instagram';
+          else if (/youtube\.com|youtu\.be/i.test(link)) btnLabel = '▶ YouTube';
+          else if (/wa\.me|whatsapp/i.test(link))  btnLabel = '💬 WhatsApp';
+          else if (/drive\.google\.com/i.test(link)) btnLabel = '📁 Google Drive';
+          else if (/forms\.gle|docs\.google/i.test(link)) btnLabel = '📝 Open Form';
+        }
+        noticeCardsHTML += `
+        <div style="background:${cfg.bg};border:1.5px solid ${cfg.border};border-radius:18px;padding:16px 18px;
+          transition:transform .2s,box-shadow .2s;"
+          onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,.08)'"
+          onmouseleave="this.style.transform='none';this.style.boxShadow='none'">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.7);
+              border:1px solid ${cfg.border};border-radius:20px;padding:4px 11px;
+              font-size:11px;font-weight:800;color:${cfg.color};">${cfg.icon} ${cfg.label}</div>
+            ${expStr ? `<div style="font-size:10px;color:${cfg.color};opacity:.7;">⏱ ${expStr}</div>` : ''}
+          </div>
+          <div style="font-size:14px;font-weight:900;color:#1a1d2e;margin-bottom:7px;line-height:1.4;">
+            ${escH(n.title || '')}
+          </div>
+          <div style="font-size:12px;color:#5a5f7a;line-height:1.75;margin-bottom:${link ? '12px' : '0'};">
+            ${parseNoticeMessage(n.message)}
+          </div>
+          ${link ? `<a href="${link}" target="_blank" rel="noopener"
+            style="display:inline-flex;align-items:center;gap:7px;background:${cfg.color};color:#fff;
+            border-radius:22px;padding:8px 16px;font-size:12px;font-weight:800;
+            text-decoration:none;font-family:var(--fn);">${btnLabel}</a>` : ''}
+        </div>`;
+      });
+    });
+  }
+
+  ov.innerHTML = `
+    <div style="background:var(--card);border-radius:24px;width:100%;max-width:640px;
+      max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+      <div style="padding:20px 20px 0;position:sticky;top:0;background:var(--card);z-index:10;
+        border-bottom:1px solid var(--border);margin-bottom:0;padding-bottom:14px;
+        display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:16px;font-weight:900;color:var(--text);">🔔 All Notices</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">${notices.length} active notices</div>
+        </div>
+        <button onclick="document.getElementById('all-notices-modal-ov').remove()"
+          style="width:32px;height:32px;border-radius:50%;border:none;background:var(--card2);
+          color:var(--text2);font-size:18px;cursor:pointer;display:flex;align-items:center;
+          justify-content:center;font-family:var(--fn);">×</button>
+      </div>
+      <div style="padding:16px 20px;display:grid;gap:12px;">
+        ${noticeCardsHTML}
+      </div>
+    </div>`;
+
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function updateNoticesBadge() {
+  const badge = document.getElementById('notices-badge');
+  if (!badge) return;
+  const notices = getAdminNotices().filter(n => {
+    if (!n.active) return false;
+    if (n.expiry && new Date(n.expiry) < new Date()) return false;
+    return true;
+  });
+  const read = JSON.parse(localStorage.getItem('ts_read_popups') || '[]');
+  const unread = notices.filter(n => {
+    const key = String(n.id || n.title || '');
+    return key && !read.includes(key);
+  }).length;
+  if (unread > 0) {
+    badge.textContent = unread;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
 
 function renderRank(){
   document.getElementById('rank-content').innerHTML=`<div style="text-align:center;padding:40px;color:var(--text3);"><div style="width:32px;height:32px;border:2.5px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;"></div>Loading class data…</div>`;
@@ -1918,10 +2919,44 @@ function renderSettings(){
 
   H+=`<div class="card card-p" style="margin-bottom:14px;">
     <div class="sec-hdr"><div class="sec-title">📦 Backup & Restore</div></div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Back up your results to a file or restore from a previous backup.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-prim" onclick="exportData()">⬇️ Export Backup</button>
-      <button class="btn btn-ghost" onclick="openModal('ie-modal')">📂 Import Backup</button>
+      <button class="btn btn-prim" onclick="exportData()">⬇️ Export Backup (.json)</button>
+      <button class="btn btn-ghost" onclick="openImportModal()">📂 Import Backup</button>
     </div>
+  </div>`;
+
+  H+=`<div class="card card-p" style="margin-bottom:14px;background:linear-gradient(135deg,rgba(79,110,247,.06),rgba(124,58,237,.04));border:1.5px solid rgba(79,110,247,.2);">
+    <div class="sec-hdr"><div class="sec-title">☁️ Cloud Sync</div></div>
+    ${!fbAuth.currentUser?`
+      <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Sign in with Google to sync your data across devices.</div>
+      <button onclick="goLoginPage()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 16px;border-radius:12px;border:1.5px solid #dadce0;background:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fn);">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18"> Sign in with Google
+      </button>
+    `:`
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;background:rgba(16,185,129,.08);border:1.5px solid rgba(16,185,129,.25);border-radius:13px;padding:9px 14px;">
+        ${getGoogleUser()?.picture?`<img src="${getGoogleUser().picture}" width="30" height="30" style="border-radius:50%;flex-shrink:0;" onerror="this.style.display='none'">`:``}
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:800;">${getGoogleUser()?.name||'Signed In'}</div>
+          <div style="font-size:10px;color:var(--text3);">Last save: ${localStorage.getItem('ts_cloud_last_save')?new Date(localStorage.getItem('ts_cloud_last_save')).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Never'}</div>
+        </div>
+        <div style="font-size:10px;color:var(--green);font-weight:700;">✅ Connected</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="cloudSaveFromSettings(this)" class="btn btn-prim" style="flex:1;justify-content:center;font-size:12px;">☁️ Save to Cloud</button>
+        <button onclick="cloudFetchFromSettings()" class="btn btn-ghost" id="cloud-fetch-btn" style="flex:1;justify-content:center;font-size:12px;">⬇️ Restore from Cloud</button>
+      </div>
+      <div id="cloud-settings-status" style="font-size:12px;font-weight:600;min-height:16px;margin-top:8px;text-align:center;"></div>
+    `}
+  </div>`;
+
+  H+=`<div class="card card-p" style="margin-bottom:14px;">
+    <div class="sec-hdr"><div class="sec-title">🌙 Night Mode</div></div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">One-tap dark theme for late-night studying. Saved to your device.</div>
+    <button class="btn btn-ghost" onclick="toggleDarkMode()" id="settings-dark-btn" style="display:flex;align-items:center;gap:8px;">
+      <span id="settings-dark-icon">${document.body.classList.contains('dark-mode')?'☀️':'🌙'}</span>
+      <span id="settings-dark-label">${document.body.classList.contains('dark-mode')?'Switch to Light Mode':'Switch to Dark Mode'}</span>
+    </button>
   </div>`;
 
   H+=`<div class="card card-p" style="margin-bottom:14px;">
@@ -1992,33 +3027,169 @@ function getAll() {
 function examLabel(id){const m={ibps_po:'IBPS PO',ibps_clerk:'IBPS Clerk',ibps_rrb_po:'IBPS RRB PO',ibps_rrb_clerk:'IBPS RRB Clerk',sbi_po:'SBI PO',sbi_clerk:'SBI Clerk',rbi_assistant:'RBI Assistant',rbi_grade_b:'RBI Grade B'};return m[id]||id;}
 function getCurrentPage(){const a=document.querySelector('.page.active');if(!a)return'home';return a.id.replace('page-','');}
 
-function openProfileModal(){const p=getProfile();document.getElementById('pf-name').value=p.name||'';document.getElementById('pf-exam').value=p.exam||'ibps_po';openModal('profile-modal');}
-function saveProfile(){const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value};localStorage.setItem('ts_profile',JSON.stringify(p));closeModal('profile-modal');showToast('✅ Profile saved!');goPage('home');}
+function openProfileModal(){
+  const p=getProfile();
+  document.getElementById('pf-name').value=p.name||'';
+  document.getElementById('pf-exam').value=p.exam||'ibps_po';
+  const _sid = localStorage.getItem('ts_student_id') || '—';
+  const _reg = getRegNo() || '—';
+  if (document.getElementById('pf-sid-display'))
+    document.getElementById('pf-sid-display').value = _sid;
+  if (document.getElementById('pf-reg-display'))
+    document.getElementById('pf-reg-display').value = _reg;
+  if (document.getElementById('pf-name-display'))
+    document.getElementById('pf-name-display').value = p.name || localStorage.getItem('cbtUserName') || '';
+  if (document.getElementById('pf-gender'))
+    document.getElementById('pf-gender').value = p.gender || localStorage.getItem(TS_KEYS.GENDER) || 'male';
+  openModal('profile-modal');
+}
+function saveProfile(){const g=document.getElementById('pf-gender')?document.getElementById('pf-gender').value:'male';const p={name:document.getElementById('pf-name').value.trim(),exam:document.getElementById('pf-exam').value,gender:g};localStorage.setItem('ts_profile',JSON.stringify(p));selectGender(g);closeModal('profile-modal');showToast('✅ Profile saved!');goPage('home');}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-ov').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');}));
 
-function exportData(){
-  const data={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(k.startsWith('tsb_')))data[k]=localStorage.getItem(k);}
-  data['_exported_at']=new Date().toISOString();data['_version']='1';
-  const p=getProfile();const a=document.createElement('a');
-  a.download=`thunderstudy_banking_${(p.name||'student').replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.json`;
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.click();
-  showToast('⬇️ Backup saved!');
+function showStudentIdentityCard() {
+  const prof = getProfile();
+  const sid  = localStorage.getItem('ts_student_id') || '—';
+  const reg  = getRegNo() || 'Not set';
+  const gu   = getGoogleUser();
+
+  const existing = document.getElementById('ts-id-card-popup');
+  if (existing) { existing.remove(); return; }
+
+  const popup = document.createElement('div');
+  popup.id = 'ts-id-card-popup';
+  popup.style.cssText = `
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(0,0,0,.5);backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+  popup.innerHTML = `
+    <div style="background:var(--card);border-radius:24px;padding:28px 24px;
+      width:100%;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,.25);
+      animation:mIn .3s cubic-bezier(.34,1.56,.64,1) both;">
+      <div style="text-align:center;margin-bottom:20px;">
+        ${gu && gu.picture
+          ? `<img src="${gu.picture}" width="64" height="64" style="border-radius:50%;border:3px solid var(--acc);margin-bottom:10px;">`
+          : `<div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#4f6ef7,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin:0 auto 10px;">
+              ${(prof.name||'S')[0].toUpperCase()}
+            </div>`
+        }
+        <div style="font-size:18px;font-weight:900;color:var(--text);">${prof.name || 'Student'}</div>
+        ${gu ? `<div style="font-size:12px;color:var(--text3);margin-top:3px;">${gu.email}</div>` : ''}
+      </div>
+
+      <div style="display:grid;gap:10px;margin-bottom:20px;">
+        <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);">Student ID</div>
+          <div style="font-size:13px;font-weight:900;font-family:var(--mono);color:var(--acc);">${sid}</div>
+        </div>
+        <div style="background:var(--card2);border:1.5px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--text3);">Registration No</div>
+          <div style="font-size:13px;font-weight:900;font-family:var(--mono);color:var(--text);">${reg}</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:14px;">
+        To change, <a href="https://commercesehoga.github.io/login" style="color:var(--acc);font-weight:700;">visit the login page</a>
+      </div>
+
+      <button onclick="document.getElementById('ts-id-card-popup').remove()"
+        style="width:100%;padding:12px;border-radius:14px;border:1.5px solid var(--border);
+          background:var(--card2);font-size:13px;font-weight:800;cursor:pointer;
+          color:var(--text);font-family:var(--fn);">Close</button>
+    </div>`;
+  popup.addEventListener('click', e => { if (e.target === popup) popup.remove(); });
+  document.body.appendChild(popup);
 }
+
+function exportData(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(k.startsWith('tsb_')||k.startsWith('ts_')||k==='cbtUserName'))data[k]=localStorage.getItem(k);}
+  const prof=getProfile(),allRes=getAllResults(),sid=getSID()||'';
+  const rpData=(typeof getRPData==='function')?getRPData():{rankIndex:0};
+  const xp=(typeof calcXP==='function')?calcXP(allRes):0;
+  const rankName=(typeof RANK_TIERS!=='undefined'&&RANK_TIERS[rpData.rankIndex])?RANK_TIERS[rpData.rankIndex].name:'Rookie';
+  data['_exported_at']=new Date().toISOString();
+  data['_version']='3';
+  data['_meta']=JSON.stringify({studentName:prof.name||'Student',studentId:sid,totalTests:allRes.length,totalXP:xp,currentRank:rankName,exportedFrom:'thunderstudy-banking',exportedAt:new Date().toISOString()});
+  const safeName=(prof.name||'student').replace(/\s+/g,'_');
+  const fname=`thunderstudy_banking_${safeName}_${sid?sid+'_':''}${new Date().toISOString().split('T')[0]}.json`;
+  const a=document.createElement('a');
+  a.download=fname;
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.click();
+  showToast(`✅ Backup saved — ${allRes.length} results exported`,'success',3000);
+}
+
 function importData(file){
-  if(!file)return;const st=document.getElementById('ie-status');st.innerHTML=`<span style="color:var(--yellow)">⏳ Reading…</span>`;
+  if(!file)return;
+  const st=document.getElementById('ie-status');
+  if(st)st.innerHTML=`<span style="color:var(--yellow)">⏳ Reading file…</span>`;
   const reader=new FileReader();
   reader.onload=e=>{
     try{
-      const data=JSON.parse(e.target.result);const importable=Object.entries(data).filter(([k])=>k.startsWith('tsb_'));
-      if(!importable.length)throw new Error('No ThunderStudy Banking data found');
-      if(!confirm(`Import ${importable.length} records? This overwrites current data.`))return;
-      importable.forEach(([k,v])=>localStorage.setItem(k,v));
-      st.innerHTML=`<span style="color:var(--green)">✅ Imported! Reloading…</span>`;
-      setTimeout(()=>location.reload(),1500);
-    }catch(err){st.innerHTML=`<span style="color:var(--red)">❌ ${err.message}</span>`;}
-  };reader.readAsText(file);
+      const data=JSON.parse(e.target.result);
+      if(!data||typeof data!=='object')throw new Error('Invalid format');
+      let meta={};if(data['_meta']){try{meta=JSON.parse(data['_meta']);}catch(x){}}
+      const importable=Object.entries(data).filter(([k])=>k.startsWith('tsb_')||k.startsWith('ts_')||k==='cbtUserName');
+      if(!importable.length)throw new Error('No ThunderStudy data found in this file');
+      const previewName=meta.studentName||'Unknown';
+      const previewId=meta.studentId||'—';
+      const previewTests=meta.totalTests||'?';
+      const previewXP=meta.totalXP||'?';
+      const previewRank=meta.currentRank||'?';
+      const exportedAt=data['_exported_at']?new Date(data['_exported_at']).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'Unknown';
+      const confirmed=confirm(`Import this backup?\n\n👤 Student: ${previewName}\n🪪 ID: ${previewId}\n📝 Tests: ${previewTests}\n⚡ XP: ${previewXP}\n🏅 Rank: ${previewRank}\n📅 Exported: ${exportedAt}\n📦 Keys: ${importable.length}\n\n⚠️ This will OVERWRITE your current data!`);
+      if(!confirmed){if(st)st.innerHTML=`<span style="color:var(--text3)">Import cancelled.</span>`;return;}
+      let count=0;importable.forEach(([k,v])=>{localStorage.setItem(k,v);count++;});
+      if(data['ts_profile'])localStorage.setItem('tsb_ob_done','1');
+      if(st)st.innerHTML=`<span style="color:var(--green)">✅ Imported ${count} records! Reloading in 2s…</span>`;
+      showToast(`✅ ${count} records imported!`,'success',2000);
+      setTimeout(()=>location.reload(),2000);
+    }catch(err){if(st)st.innerHTML=`<span style="color:var(--red)">❌ ${err.message}. Use a valid ThunderStudy .json backup.</span>`;}
+  };
+  reader.readAsText(file);
+}
+
+function openImportModal(){
+  const existing=document.getElementById('ie-modal-ov');if(existing){existing.remove();return;}
+  const ov=document.createElement('div');
+  ov.id='ie-modal-ov';
+  ov.style.cssText=`position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);animation:mIn .25s cubic-bezier(.34,1.56,.64,1);`;
+  ov.innerHTML=`
+    <div style="background:var(--card);border-radius:24px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);">
+        <div style="font-size:15px;font-weight:900;color:var(--text);">📦 Import / Export Data</div>
+        <button onclick="document.getElementById('ie-modal-ov').remove()" style="width:30px;height:30px;border-radius:50%;border:none;background:var(--card2);color:var(--text2);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:var(--fn);">×</button>
+      </div>
+      <div style="padding:20px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:13px;font-weight:800;margin-bottom:7px;">⬇️ Export Backup</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">Download all your data as a .json file.</div>
+          <button class="btn btn-prim" onclick="exportData()" style="width:100%;justify-content:center;">⬇️ Download Backup (.json)</button>
+        </div>
+        <div style="height:1px;background:var(--border);margin-bottom:20px;"></div>
+        <div>
+          <div style="font-size:13px;font-weight:800;margin-bottom:7px;">📂 Import Backup</div>
+          <div style="font-size:12px;color:var(--text3);margin-bottom:10px;">⚠️ This will <strong>overwrite</strong> your current data.</div>
+          <div id="ie-drop" style="border:2px dashed var(--border);border-radius:16px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px;background:var(--card2);"
+            onclick="document.getElementById('ie-file-input-modal').click()"
+            ondragover="event.preventDefault();this.style.borderColor='var(--acc)';this.style.background='rgba(79,110,247,.05)'"
+            ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--card2)'"
+            ondrop="event.preventDefault();this.style.borderColor='var(--border)';this.style.background='var(--card2)';const f=event.dataTransfer.files[0];if(f&&f.name.endsWith('.json'))importData(f);else document.getElementById('ie-status').innerHTML='<span style=color:var(--red)>Drop a .json file</span>'">
+            <div style="font-size:32px;margin-bottom:8px;">📁</div>
+            <div style="font-size:13px;font-weight:700;color:var(--text);">Click or drag your .json file here</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:4px;">ThunderStudy backup files only</div>
+          </div>
+          <input type="file" id="ie-file-input-modal" accept=".json" style="display:none" onchange="importData(this.files[0])">
+          <button onclick="document.getElementById('ie-file-input-modal').click()" class="btn btn-ghost" style="width:100%;justify-content:center;">📂 Choose File</button>
+          <div id="ie-status" style="margin-top:9px;font-size:12px;font-weight:600;text-align:center;"></div>
+        </div>
+      </div>
+    </div>`;
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
 }
 function clearAllData(){
   if(!confirm('Delete all banking results? Cannot be undone.'))return;
@@ -2197,6 +3368,177 @@ window.addEventListener('load',()=>{
 });
 function openAddSubjModal(){
   openProfileModal();
+}
+
+/* ════════════════════════════════════════════════════════
+   AI TUTOR — Clean Chat (Local Claude API) + Full AI iframe toggle
+════════════════════════════════════════════════════════ */
+const _AI = {
+  CHAT_KEY : 'tsb_ai_chat',   // stores {messages:[{role,text}]}
+  MODE_KEY : 'tsb_ai_mode',   // 'local' | 'iframe'
+  busy     : false,
+
+  getMode(){ return localStorage.getItem(this.MODE_KEY) || 'local'; },
+  setMode(m){ localStorage.setItem(this.MODE_KEY, m); renderAI(); },
+
+  getMsgs(){
+    try{ return JSON.parse(localStorage.getItem(this.CHAT_KEY) || '[]'); }
+    catch(e){ return []; }
+  },
+  saveMsgs(msgs){
+    localStorage.setItem(this.CHAT_KEY, JSON.stringify(msgs.slice(-80)));
+  },
+  clearChat(){
+    if(!confirm('Clear chat history?')) return;
+    localStorage.removeItem(this.CHAT_KEY);
+    renderAI();
+  },
+
+  sysPrompt(){
+    const p = getProfile();
+    const r = getAllResults();
+    const avg = r.length ? (r.reduce((s,x)=>s+(x.percentage||0),0)/r.length).toFixed(1) : '0';
+    return `You are an expert AI Tutor on ThunderStudy Banking — India's free banking exam prep portal.
+Student: ${p.name||'Aspirant'} | Exam: ${p.exam ? examLabel(p.exam) : 'Banking'} | Mocks done: ${r.length} | Avg: ${avg}%
+
+Help with: IBPS PO/Clerk/RRB, SBI PO/Clerk, RBI Grade B/Assistant.
+Subjects: Quantitative Aptitude (percentage, ratio, time-work, DI), Reasoning (puzzles, syllogism, blood relations, coding), English (RC, error detection, cloze), General/Banking Awareness.
+
+Style:
+- Step-by-step solutions with shortcut tricks for maths
+- Logical diagrams in text for reasoning
+- Concise and exam-focused — no fluff
+- End with a quick tip when relevant`;
+  },
+
+  renderMsgs(){
+    const box = document.getElementById('ai-msg-box');
+    if(!box) return;
+    const msgs = this.getMsgs();
+    if(!msgs.length){
+      box.innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--text3);">
+        <div style="font-size:36px;margin-bottom:10px;">🤖</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Hi ${getProfile().name||'Aspirant'}! Ready to help.</div>
+        <div style="font-size:12px;line-height:1.8;margin-bottom:16px;">Ask me anything — Quant, Reasoning, English, Banking GK…</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+          ${['Shortcut for percentage problems','Explain syllogism with tricks','Important RBI functions for exam','Seating arrangement approach','Blood relation shortcut'].map(q=>`<button onclick="_AI.quickAsk(this)" data-q="${q}" style="background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;font-family:var(--fn);transition:all .15s" onmouseover="this.style.borderColor='var(--acc)'" onmouseout="this.style.borderColor='var(--border)'">${q}</button>`).join('')}
+        </div>
+      </div>`;
+      return;
+    }
+    box.innerHTML = msgs.map(m => `
+      <div class="ai-msg ${m.role==='user'?'user':'bot'}">
+        <div class="ai-av">${m.role==='user'?'👤':'🤖'}</div>
+        <div class="ai-bubble">${m.role==='user' ? escH(m.text) : m.text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code style="background:var(--card2);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:11px">$1</code>')}</div>
+      </div>`).join('') +
+      `<div id="ai-typing-row" style="display:none;" class="ai-msg bot"><div class="ai-av">🤖</div><div class="ai-dots"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div></div>`;
+    box.scrollTop = box.scrollHeight;
+  },
+
+  quickAsk(btn){ const inp=document.getElementById('ai-inp'); if(inp){inp.value=btn.dataset.q; this.send();} },
+
+  async send(){
+    if(this.busy) return;
+    const inp = document.getElementById('ai-inp');
+    if(!inp) return;
+    const text = inp.value.trim();
+    if(!text) return;
+    inp.value = '';
+    inp.style.height = '44px';
+
+    const msgs = this.getMsgs();
+    msgs.push({role:'user', text});
+    this.saveMsgs(msgs);
+    this.renderMsgs();
+
+    // show typing
+    const tr = document.getElementById('ai-typing-row');
+    if(tr) tr.style.display = 'flex';
+    const btn = document.getElementById('ai-send-btn');
+    if(btn) btn.disabled = true;
+    this.busy = true;
+
+    try {
+      // build API messages (last 14 turns)
+      const apiMsgs = msgs.slice(-14).map(m => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }));
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: this.sysPrompt(),
+          messages: apiMsgs
+        })
+      });
+
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const reply = (data.content && data.content[0] && data.content[0].text) || 'Sorry, no response. Please try again.';
+      msgs.push({role:'assistant', text: reply});
+      this.saveMsgs(msgs);
+
+    } catch(err) {
+      msgs.push({role:'assistant', text: `⚠️ Error: ${err.message}. Please check your connection and try again.`});
+      this.saveMsgs(msgs);
+    }
+
+    this.busy = false;
+    if(btn) btn.disabled = false;
+    this.renderMsgs();
+    const box = document.getElementById('ai-msg-box');
+    if(box) box.scrollTop = box.scrollHeight;
+  }
+};
+
+function clearAIChat(){ _AI.clearChat(); }
+
+function renderAI(){
+  const container = document.getElementById('ai-content');
+  if(!container) return;
+  const mode = _AI.getMode();
+
+  if(mode === 'iframe'){
+    container.innerHTML = `
+      <div class="ai-mode-bar">
+        <button class="ai-mode-pill" onclick="_AI.setMode('local')">💬 Local AI</button>
+        <button class="ai-mode-pill active">🌐 Full AI</button>
+        <div style="flex:1;"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:10px;">Extended AI interface — sign in with your ThunderStudy account for more.</div>
+      <iframe src="https://thunderstudyai.vercel.app/" style="width:100%;border:none;border-radius:14px;height:calc(100dvh - 200px);min-height:400px;" allow="microphone"></iframe>`;
+    return;
+  }
+
+  // Local AI chat
+  container.innerHTML = `
+    <div class="ai-chat-outer">
+      <div class="ai-mode-bar">
+        <button class="ai-mode-pill active">💬 Local AI</button>
+        <button class="ai-mode-pill" onclick="_AI.setMode('iframe')">🌐 Full AI</button>
+        <div style="flex:1;"></div>
+        <button onclick="clearAIChat()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:var(--fn);padding:4px 8px;border-radius:8px;" title="Clear chat">🗑️ Clear</button>
+      </div>
+      <div class="ai-messages" id="ai-msg-box"></div>
+      <div class="ai-bar">
+        <textarea class="ai-inp" id="ai-inp"
+          placeholder="Ask about Quant, Reasoning, English, Banking GK… (Enter to send, Shift+Enter for new line)"
+          rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();_AI.send();}"
+          oninput="this.style.height='44px';this.style.height=Math.min(this.scrollHeight,110)+'px';"></textarea>
+        <button class="ai-send" id="ai-send-btn" onclick="_AI.send()" title="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>`;
+
+  _AI.renderMsgs();
 }
 </script>
 
@@ -2451,14 +3793,14 @@ function tsRenderGoogleBtn(containerId){
       img.src=gu.picture;
     }
   } else if(loggedIn){
-    // logged in but no google user
     const name=localStorage.getItem('cbtUserName')||localStorage.getItem('ts_name')||'Student';
     el.innerHTML=`<button class="ts-guser-chip" onclick="tsShowProfileCard()" title="View profile">
       <div class="ts-guser-avatar">${(name[0]||'S').toUpperCase()}</div>
       <span style="font-size:12px;font-weight:800;">${name.split(' ')[0]}</span>
     </button>`;
   } else {
-    el.innerHTML=`<button class="ts-gsignin-btn" onclick="tsShowProfileCard()">
+    // Not logged in — clicking goes directly to login page
+    el.innerHTML=`<button class="ts-gsignin-btn" onclick="window.location.href='https://commercesehoga.github.io/login/?portal=banking'">
       <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -2471,9 +3813,188 @@ function tsRenderGoogleBtn(containerId){
 }
 
 
+/* ════════════════════════════════════════════════════════
+   CLOUD SAVE / FETCH (Firestore)
+════════════════════════════════════════════════════════ */
+async function cloudSave(uid, silent){
+  try{
+    const data={};
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&(k.startsWith('tsb_')||k.startsWith('ts_')||k==='cbtUserName'))data[k]=localStorage.getItem(k);}
+    const prof=getProfile();
+    data['_savedAt']=new Date().toISOString();
+    data['_portal']='banking';
+    data['_name']=prof.name||'';
+    await fbDb.collection('ts_backups').doc(uid).set(data,{merge:true});
+    localStorage.setItem('ts_cloud_last_save',new Date().toISOString());
+    return {ok:true};
+  }catch(e){return {ok:false,msg:e.message};}
+}
+
+async function cloudFetchCritical(uid){
+  try{
+    const doc=await fbDb.collection('ts_backups').doc(uid).get();
+    if(!doc.exists)return{ok:true,data:null};
+    return{ok:true,data:doc.data()};
+  }catch(e){return{ok:false,msg:e.message};}
+}
+
+async function applyCloudData(data){
+  if(!data)return;
+  Object.entries(data).forEach(([k,v])=>{
+    if(k.startsWith('tsb_')||k.startsWith('ts_')||k==='cbtUserName')
+      localStorage.setItem(k,v);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   HOME TOPBAR — Google + Sync dots
+════════════════════════════════════════════════════════ */
+function renderHomeTopbar(){
+  const gu=getGoogleUser();
+  const area=document.getElementById('ts-google-area-home');
+  if(!area)return;
+  const cloudSynced=!!localStorage.getItem('ts_cloud_last_save');
+  const syncedKeys=JSON.parse(localStorage.getItem('ts_synced')||'{}');
+  const sheetSynced=Object.keys(syncedKeys).length>0;
+
+  const cloudDot=`<div onclick="openSyncStatusPopup('cloud')" title="Cloud Sync" style="width:10px;height:10px;border-radius:50%;background:${cloudSynced?'#10b981':'#f59e0b'};cursor:pointer;flex-shrink:0;box-shadow:0 0 0 2px ${cloudSynced?'rgba(16,185,129,.25)':'rgba(245,158,11,.25)'};transition:all .3s;"></div>`;
+  const sheetDot=`<div onclick="openSyncStatusPopup('sheet')" title="Sheet Sync" style="width:10px;height:10px;border-radius:50%;background:${sheetSynced?'#10b981':'#f59e0b'};cursor:pointer;flex-shrink:0;box-shadow:0 0 0 2px ${sheetSynced?'rgba(16,185,129,.25)':'rgba(245,158,11,.25)'};transition:all .3s;"></div>`;
+  const syncPill=`<div onclick="openSyncStatusPopup('cloud')" style="display:flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border);border-radius:30px;padding:4px 10px;cursor:pointer;" title="Sync Status">${cloudDot}${sheetDot}<span style="font-size:10px;font-weight:700;color:var(--text2);">Sync</span></div>`;
+
+  const loggedIn=!!(localStorage.getItem('ts_student_id')||localStorage.getItem('ts_reg_no')||localStorage.getItem('cbtUserName'));
+
+  if(loggedIn&&gu){
+    area.innerHTML=`<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+      <img onclick="showStudentIdentityCard()" src="${gu.picture||''}" width="28" height="28" style="border-radius:50%;border:2px solid var(--acc);flex-shrink:0;cursor:pointer;" onerror="this.style.display='none'">
+      <span onclick="showStudentIdentityCard()" style="font-size:12px;font-weight:800;color:var(--text);cursor:pointer;">${(gu.name||'').split(' ')[0]}</span>
+      ${syncPill}
+    </div>`;
+  }else if(loggedIn){
+    area.innerHTML=`<div style="display:flex;align-items:center;gap:7px;">${syncPill}</div>`;
+  }else{
+    area.innerHTML=`<div style="display:flex;align-items:center;gap:7px;">
+      <button onclick="goLoginPage()" style="display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:30px;border:1.5px solid #dadce0;background:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fn);">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="14"> Sign in
+      </button>
+      ${syncPill}
+    </div>`;
+  }
+}
+
+function openSyncStatusPopup(focus){
+  const existing=document.getElementById('sync-status-popup');
+  if(existing){existing.remove();return;}
+  const gu=getGoogleUser();
+  const cloudSynced=!!localStorage.getItem('ts_cloud_last_save');
+  const cloudLastSave=localStorage.getItem('ts_cloud_last_save')?new Date(localStorage.getItem('ts_cloud_last_save')).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'Never';
+  const syncedKeys=JSON.parse(localStorage.getItem('ts_synced')||'{}');
+  const sheetSynced=Object.keys(syncedKeys).length>0;
+  const sheetCount=Object.keys(syncedKeys).length;
+  const allRes=getAllResults();
+
+  const popup=document.createElement('div');
+  popup.id='sync-status-popup';
+  popup.style.cssText=`position:fixed;top:68px;right:16px;z-index:9999;background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:18px;width:300px;box-shadow:0 8px 40px rgba(0,0,0,.18);animation:mIn .25s cubic-bezier(.34,1.56,.64,1);`;
+  popup.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-size:14px;font-weight:900;">☁️ Sync Status</div>
+      <span onclick="document.getElementById('sync-status-popup').remove()" style="cursor:pointer;color:var(--text3);font-size:22px;line-height:1;">×</span>
+    </div>
+    <div style="background:${cloudSynced?'rgba(16,185,129,.06)':'rgba(245,158,11,.06)'};border:1.5px solid ${cloudSynced?'rgba(16,185,129,.25)':'rgba(245,158,11,.25)'};border-radius:14px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="width:9px;height:9px;border-radius:50%;background:${cloudSynced?'#10b981':'#f59e0b'};flex-shrink:0;"></div>
+        <div style="font-size:12px;font-weight:800;color:${cloudSynced?'var(--green)':'var(--yellow)'};">☁️ Google Cloud — ${cloudSynced?'Synced':'Not Synced'}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:10px;">${gu?'Signed in as '+gu.email:'Not signed in'}<br>Last save: <strong>${cloudLastSave}</strong></div>
+      ${gu?`<button id="ssp-cloud-btn" onclick="cloudSaveFromHomeTopbar(this)" style="width:100%;padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);">☁️ Sync to Cloud Now</button>`
+          :`<button onclick="goLoginPage()" style="width:100%;padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#4f6ef7,#7c3aed);color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);">Sign in with Google</button>`}
+    </div>
+    <div style="background:${sheetSynced?'rgba(16,185,129,.06)':'rgba(245,158,11,.06)'};border:1.5px solid ${sheetSynced?'rgba(16,185,129,.25)':'rgba(245,158,11,.25)'};border-radius:14px;padding:12px 14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <div style="width:9px;height:9px;border-radius:50%;background:${sheetSynced?'#10b981':'#f59e0b'};flex-shrink:0;"></div>
+        <div style="font-size:12px;font-weight:800;color:${sheetSynced?'var(--green)':'var(--yellow)'};">📊 Class Sheet — ${sheetSynced?'Synced':'Not Synced'}</div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:10px;">${sheetCount} of ${allRes.length} results synced to leaderboard</div>
+      <button id="ssp-sheet-btn" onclick="sheetSyncFromHomeTopbar(this)" style="width:100%;padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);">⬆️ Sync to Sheet Now</button>
+    </div>
+    <button onclick="document.getElementById('sync-status-popup').remove();cloudFetchFromSettings();" style="width:100%;padding:9px;border-radius:10px;border:1.5px solid rgba(79,110,247,.3);background:rgba(79,110,247,.07);color:var(--acc);font-size:12px;font-weight:800;cursor:pointer;font-family:var(--fn);">⬇️ Fetch / Restore from Cloud</button>`;
+
+  document.body.appendChild(popup);
+  setTimeout(()=>{
+    document.addEventListener('click',function handler(e){
+      if(!popup.contains(e.target)){popup.remove();document.removeEventListener('click',handler);}
+    });
+  },100);
+}
+
+async function cloudSaveFromHomeTopbar(btn){
+  const user=fbAuth.currentUser;
+  if(!user){showToast('❌ Sign in with Google first','error');return;}
+  btn.disabled=true;btn.innerHTML='⏳ Saving…';
+  const r=await cloudSave(user.uid,true);
+  if(r.ok){
+    btn.innerHTML='✅ Saved!';
+    showToast('☁️ Cloud sync done!','success');
+    setTimeout(()=>{document.getElementById('sync-status-popup')?.remove();renderHomeTopbar();},1200);
+  }else{btn.innerHTML='❌ Failed. Retry?';btn.disabled=false;}
+}
+
+async function sheetSyncFromHomeTopbar(btn){
+  btn.disabled=true;btn.innerHTML='⏳ Syncing…';
+  try{
+    await syncToSheet();
+    const synced=JSON.parse(localStorage.getItem('ts_synced')||'{}');
+    const cnt=Object.keys(synced).length;
+    btn.innerHTML=`✅ ${cnt} synced!`;
+    setTimeout(()=>{document.getElementById('sync-status-popup')?.remove();renderHomeTopbar();},1200);
+  }catch(e){btn.innerHTML='❌ Failed. Retry?';btn.disabled=false;}
+}
+
+async function cloudSaveFromSettings(btn){
+  const user=fbAuth.currentUser;
+  if(!user){showToast('❌ Not signed in to Google','error');return;}
+  if(btn){btn.disabled=true;btn.innerHTML='⏳ Saving…';}
+  const statusEl=document.getElementById('cloud-settings-status');
+  if(statusEl)statusEl.innerHTML='<span style="color:var(--yellow)">⏳ Saving to cloud…</span>';
+  const r=await cloudSave(user.uid,true);
+  if(r.ok){
+    if(btn)btn.innerHTML='✅ Saved!';
+    if(statusEl)statusEl.innerHTML='<span style="color:var(--green)">✅ Saved to cloud!</span>';
+    showToast('☁️ Cloud sync done!','success');
+    setTimeout(renderSettings,1500);
+  }else{
+    if(btn){btn.innerHTML='❌ Failed. Retry?';btn.disabled=false;}
+    if(statusEl)statusEl.innerHTML=`<span style="color:var(--red)">❌ Failed: ${r.msg||'Error'}</span>`;
+  }
+}
+
+async function cloudFetchFromSettings(){
+  const user=fbAuth.currentUser;
+  const statusEl=document.getElementById('cloud-settings-status');
+  const btn=document.getElementById('cloud-fetch-btn');
+  if(!user){showToast('❌ Sign in with Google first','error');return;}
+  if(btn){btn.disabled=true;btn.innerHTML='⏳ Fetching…';}
+  if(statusEl)statusEl.innerHTML='<span style="color:var(--yellow)">⏳ Fetching from cloud…</span>';
+  const result=await cloudFetchCritical(user.uid);
+  if(!result.ok){
+    if(btn){btn.innerHTML='❌ Failed';btn.disabled=false;}
+    if(statusEl)statusEl.innerHTML=`<span style="color:var(--red)">❌ ${result.msg||'Network error'}</span>`;
+    return;
+  }
+  if(!result.data){
+    if(btn){btn.innerHTML='⬇️ No backup found';btn.disabled=false;}
+    if(statusEl)statusEl.innerHTML='<span style="color:var(--text3)">No cloud backup found for this account.</span>';
+    return;
+  }
+  await applyCloudData(result.data);
+  if(statusEl)statusEl.innerHTML='<span style="color:var(--green)">✅ Restored! Reloading in 2s…</span>';
+  showToast('✅ Cloud data restored!','success');
+  setTimeout(()=>location.reload(),2000);
+}
+
 // Init Google button for banking
 (function initTsGoogle(){
-  tsRenderGoogleBtn('ts-google-area-home');
+  renderHomeTopbar();
 })();
 </script>
 
