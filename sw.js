@@ -1,6 +1,6 @@
 
 
-const CACHE_NAME = 'thunderstudy-banking-v6.1';
+const CACHE_NAME = 'thunderstudy-banking-v7.1';
 const STATIC_ASSETS = [
   '/banking/',
   '/banking/index.html',
